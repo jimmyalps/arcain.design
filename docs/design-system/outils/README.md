@@ -6,7 +6,8 @@ celles des étapes suivantes : [`../fondations.md`](../fondations.md),
 [`../marque-motion.md`](../marque-motion.md) et
 [`../documentation.md`](../documentation.md), avec le contrôle de
 [`../DESIGN.md`](../DESIGN.md). Pour le kit de marque :
-[`../reference-drapz.md`](../reference-drapz.md).
+[`../reference-drapz.md`](../reference-drapz.md) et
+[`../kit-motifs.md`](../kit-motifs.md).
 
 Ils ne font que lire : ni le code du site ni le fichier Figma ne sont modifiés.
 Aucune dépendance à installer. Il faut Node 24 (voir `.nvmrc`), et un
@@ -40,6 +41,9 @@ Toutes les commandes se lancent depuis la racine du dépôt.
 | `verifier-design-md.mjs` | Étape 4, partie 2 : contrôle de structure du `DESIGN.md`, sans dépendance ni réseau. Clés en double, couleurs et dimensions au format CSS, propriétés connues du format, références `{groupe.jeton}` résolues, ordre des huit sections canoniques. Les jetons qu'aucun composant ne cite sont comptés à part : le lint du format ne les signale qu'en avertissement. Sort en erreur s'il trouve un problème. |
 | `capture-pages.mjs` | Kit de marque, partie 0 : capture pleine page d'une liste d'URL de référence, en 1440 × 900. Défile lentement jusqu'en bas (images paresseuses, apparitions), masque les calques fixes du bas de l'écran, puis écrit une image entière, des tranches de 1800 px et un JSON par page (titre, texte, polices, images et leur taille d'origine). Les captures restent hors du dépôt. |
 | `mesure-planches.mjs` | Kit de marque, partie 0 : pour les planches d'une page capturée (images affichées sur toute la largeur), couleur du fond, marges, part du cadre occupée et écarts entre objets, en %, lus pixel par pixel en 2048 px. Ne vaut que pour une planche à fond uni. |
+| `tuiles-courbes.mjs` | Kit de marque, partie 1 : tuile raccordable de courbes de niveau, en SVG. Relief de `public/evdata.json` ou `public/mbdata.json` décodé comme le code, recadré, pente moyenne retirée, bords en fondu sur quelques cases ; puis marching squares du code sur le tore (Everest : tous les 90 m ; Mont Blanc : 72 niveaux, une maîtresse sur cinq). Écrit le SVG (tracé noir de 1 px, sans fond : couleur et opacité se posent dans Figma) et affiche les mesures : cases, segments, longueur, écart moyen entre courbes. |
+| `tuile-lacets.mjs` | Kit de marque, partie 1 : tuile raccordable de la trace en lacets, en SVG. Traverses droites en alternance et virages en épingle en arc de cercle ; la trace entre en bas et ressort en haut au même point. La forme est une construction : le code n'a pas de lacets. |
+| `apercu-tuiles.mjs` | Kit de marque, partie 1 : aperçu local de tuiles SVG, chacune répétée en 2 × 2 (raccords au centre), couleur de fond, couleur et opacité du trait cuites dans une copie. Rendu en PNG par le navigateur sans fenêtre. Sert à comparer les échelles et les raccords avant l'import dans Figma. |
 
 Commandes :
 
@@ -109,13 +113,23 @@ node docs/design-system/outils/verifier-design-md.mjs docs/design-system/DESIGN.
 # des planches à fond uni (page:indice, indice compté à partir de 0)
 node docs/design-system/outils/capture-pages.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> https://drapz.design/projects/fugitive https://drapz.design/projects/radiantui https://drapz.design/projects/lumora https://drapz.design/projects/kinect https://drapz.design/projects/stomic https://drapz.design/projects/skillio
 node docs/design-system/outils/mesure-planches.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> fugitive:1 fugitive:2 fugitive:3 radiantui:1 radiantui:3 lumora:2 lumora:3 lumora:4 stomic:3 skillio:1 skillio:3
+
+# Kit de marque, partie 1 : les trois SVG importés dans la page Kit Motifs.
+# Courbes : <recette> <i0> <j0> <n> <m> <largeur> <hauteur> <fondu, en cases>
+node docs/design-system/outils/tuiles-courbes.mjs . courbes-everest.svg everest 137 83 40 40 480 480 14
+node docs/design-system/outils/tuiles-courbes.mjs . courbes-montblanc.svg montblanc 79 110 40 67 480 480 14
+# Lacets : <largeur> <hauteur> <traverses> <x gauche> <x droite> <rayon des épingles>
+node docs/design-system/outils/tuile-lacets.mjs trace-lacets.svg 240 240 6 16 224 6
+# Aperçu en 2 × 2 : <tuile.svg:fond:trait:opacité[:opacité des maîtresses]>
+node docs/design-system/outils/apercu-tuiles.mjs <chemin du navigateur> <dossier de profil> apercu.png courbes-everest.svg:#F5F5F5:#111111:.4 courbes-montblanc.svg:#111111:#F5F5F5:.28:.75
 ```
 
 `grain-rendu.mjs` utilise le port 9336, `grain-mesure.mjs` le 9337,
 `cta-mobile.mjs` le 9338, `mesure-petits-composants.mjs` le 9339,
 `mesure-grands-composants.mjs` le 9340, `capture-scene.mjs` le 9342,
 `mesure-logo.mjs` le 9343, `webp-jpeg.mjs` le 9344,
-`capture-pages.mjs` le 9345, `mesure-planches.mjs` le 9346.
+`capture-pages.mjs` le 9345, `mesure-planches.mjs` le 9346,
+`apercu-tuiles.mjs` le 9347.
 
 ## Mesurer une preview plutôt que la prod
 
