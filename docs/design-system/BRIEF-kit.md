@@ -33,6 +33,8 @@ Des fonds composés, pas des aplats, sur ces formats :
 - fonds d'écran : 2560×1440 et 1179×2556.
 Pour chaque format, au moins trois fonds : un sur bleu, un sur encre, un sur papier. STOP.
 
+> Parties 1 et 2 remplacées le 9 octobre 2026 par la nouvelle méthode : voir « Partie 1 rejetée, nouvelle méthode », plus bas.
+
 Partie 3 : Templates (page « Kit Templates »)
 Avec mes vrais contenus (Jimmy Ocks, « Pour que ta marque tienne en altitude », jimmyferon.com, @jimmy.ocks) :
 - affiches A4 et A3 ;
@@ -60,24 +62,42 @@ Référence validée : `docs/design-system/reference-drapz.md`. Les six question
 
 La partie 1 se fera dans une nouvelle session.
 
-## Partie 1 : motifs (9 octobre 2026)
+## Partie 1 rejetée, nouvelle méthode (9 octobre 2026)
 
-Construite dans Figma et contrôlée, en attente de validation : page Kit Motifs
-(`328:2`), six jeux de tuiles — courbes de niveau, trace en lacets, neige
-pixel, crête, logo en répétition, grain — et la planche du filigrane (A1). Le
-détail est dans `docs/design-system/kit-motifs.md` : identifiants,
-construction de chaque motif, mesures, contrôle. Outils :
-`outils/tuiles-courbes.mjs`, `outils/tuile-lacets.mjs`,
-`outils/apercu-tuiles.mjs`.
+La partie 1 est rejetée : les tuiles sont plates, génériques et sans
+composition. La page Kit Motifs (`328:2`) n'était déjà plus dans le fichier
+Figma à l'ouverture de la session suivante : il n'y avait rien à supprimer.
+`kit-motifs.md` et les trois outils de tuiles (`tuiles-courbes.mjs`,
+`tuile-lacets.mjs`, `apercu-tuiles.mjs`) sont retirés du dépôt ; l'historique
+les garde (`7480e62`, `4475302`).
 
-Huit choix sont à valider (§6 de `kit-motifs.md`) :
+La méthode suivante remplace les parties 1 et 2. Les parties 3 et 4 restent à
+venir.
 
-1. courbes : cases de 12 px, tuiles de 480 ;
-2. courbes : raccord par fondu sur 14 cases, pente moyenne retirée ;
-3. courbes : le fond décide de la recette, et le bleu sur papier reprend le
-   tracé du hero en bleu .4 ;
-4. trace en lacets : forme construite, .95 dans toutes les couleurs ;
-5. neige : encre et bleu seulement, `neige-pixels.png` laissé hors du kit ;
-6. crête : variante mobile et son reflet, frise de 780 × 200 ;
-7. logo en répétition : grille carrée, 34 px, écart de 13 ;
-8. filigrane : jamais sur papier ni sur bleu.
+Nouvelle méthode
+1. Plus de tuiles. Des compositions, comme les pros : une idée par visuel, beaucoup d'air, des échelles extrêmes (signe petit et centré, ou énorme et coupé par le bord), un titre franc et de petites mentions alignées aux bords.
+2. Les montagnes sont rendues par le code du site lui-même. Écris un script à part, sans toucher au site, qui réutilise le rendu de l'Everest du hero et du Mont Blanc de Benefits : mêmes données, même style de trait, perspective et fondu de profondeur. Caméra, cadrage, couleurs de ma palette et taille de sortie sont au choix. Exporte en PNG haute définition, et en SVG quand c'est possible. L'épaisseur du trait suit la taille d'export pour garder le rendu du site.
+3. Mon logo tracé en courbes de niveau : ses contours décalés en lignes fines, comme une carte topographique, construits à partir du SVG du logo.
+4. La lumière : ma lueur bleue et mon grain sur l'encre, comme sur le site.
+5. Palette, typos et logo restent fermés. La composition et les rendus générés sont libres.
+
+Première livraison, et seulement celle-ci : 6 planches maîtresses en 1920×1080, sur une nouvelle page « Kit Direction » :
+- l'Everest en perspective sur encre, avec la lueur bleue et le logo petit et centré ;
+- le logo en courbes de niveau, énorme et coupé par le bord, sur bleu ;
+- une affiche bleue avec un grand titre et une bande de crête en trait fin ;
+- le Mont Blanc en perspective sur papier, en trait encre, avec de petites mentions aux bords ;
+- une planche typo sur encre, avec la lueur ;
+- une paire de cartes de visite, recto bleu et verso encre.
+
+Fais une capture de chaque planche et juge-la toi-même : une seule idée, de l'air, un contraste d'échelle, une hiérarchie typo nette. Si une planche ressemble à un fond d'écran générique ou à un exercice scolaire, refais-la avant de me la montrer. Commite le script, puis STOP.
+
+Ce que la méthode change dans les arbitrages de la partie 0 :
+
+- **A6 tombe.** Il n'y a plus de tuiles ; la perspective et le fondu de
+  profondeur vont à toutes les montagnes, y compris au Mont Blanc, que
+  Benefits dessine sans brouillard.
+- **A1 reste** (filigrane papier .12 sur encre), mais la page Kit Motifs qui
+  devait le documenter n'existe plus : il ira aux guidelines (partie 4).
+- **Le logo en courbes de niveau** (point 3) lève, pour ce rendu, l'interdit
+  « pas de contour ni de trame » de `reference-drapz.md` (§3.2). Le dessin du
+  logo ne change pas : ses courbes sont calculées à partir de son SVG.
