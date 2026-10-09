@@ -199,3 +199,172 @@ du code sont gardées telles quelles.
 7. **Cartes** : recto gravé du logo en courbes plutôt que logo plein ; lueur
    sur le verso.
 8. **Affiche** : titre sans point final, comme le hero l'écrit.
+
+## Retours sur la livraison 1 (10 octobre 2026)
+
+1. **Everest sur encre** : l'idée est à retravailler. Explorer d'autres
+   cadrages et d'autres scènes parmi les trois du code, le lac compris.
+2. **Logo en courbes** : adoré, mais abîmé : il a des pattes qu'il n'a pas.
+   Le SVG brut déborde du cercle et le site coupe ces débordements par son
+   masque : appliquer le masque d'abord, calculer les courbes ensuite.
+3. **Mont Blanc sur papier** : rendu aimé, mais la montagne prend trop de
+   place en 16:9 ; une montagne aussi haute est faite pour le 4:5 et le 9:16.
+4. **Cartes de visite** : présentation aimée ; le verso encre est trop
+   basique, il lui faut un détail fort tiré de la marque.
+5. **Affiche bleue** : la préférée, mais la montagne est une image, floue.
+   Les montagnes passent en vectoriel (le SVG du script) partout, à défaut en
+   PNG 4x.
+6. **Planche typo** : à refaire.
+
+En général : la typo est trop petite partout. Une échelle typo dédiée au kit
+(polices, graisses et approches du système, seules les tailles sont nouvelles),
+appliquée à toutes les planches, mentions comprises, chaque texte lié à un
+style. Chaque planche aimée se décline en 4:5 (1080 × 1350), carré
+(1080 × 1080) et 9:16 (1080 × 1920), recomposée et non recadrée. Des essais de
+logo collé, comme Radiant : en bande bord à bord, et accolé au titre ; usage
+graphique, exception à la zone de protection, à documenter comme le filigrane.
+
+## Livraison 2 (10 octobre 2026)
+
+Page Kit Direction (`346:2`) réorganisée en sept sections, une par planche :
+24 cadres, chacun exporté en PNG 1x (les pixels exacts du format) et 2x. Les
+trois planches écartées (Everest sur encre, Mont Blanc en 16:9, typo) sont
+retirées de la page ; l'historique des versions de Figma les garde.
+
+| Section | Planche | Nœud | Format | Fond | L'idée |
+|---|---|---|---|---|---|
+| 1 · Visuel clé, essais | `planche/1a-lac` | `379:22` | 1920 × 1080 | encre | le signe se lève sur le lac d'Allos : logo de 56 px dans la lueur, au-dessus du plateau et de ses hachures d'eau bleues |
+| | `planche/1b-carte` | `379:34` | 1920 × 1080 | encre | le lac vu du ciel, plein cadre comme une carte ; la lueur posée sur l'eau, le lac devient la source de lumière |
+| | `planche/1c-voie-royale` | `380:27` | 1920 × 1080 | encre | le Mont Blanc au téléobjectif, la voie royale bleue monte l'arête ; la lueur se lève derrière le sommet, l'altimètre y est posé comme une étiquette |
+| | `planche/1d-sommet` | `380:33` | 1920 × 1080 | encre | la pyramide de l'Everest et ses drapeaux bleus, étiquetés comme dans le hero (altitude puis nom) |
+| 2 · Logo en courbes | `planche/2-logo-16x9` | `346:6` | 1920 × 1080 | bleu | celle de la livraison 1, logo corrigé |
+| | `planche/2-logo-4x5`, `-1x1`, `-9x16` | `374:7`, `374:11`, `374:14` | | bleu | même idée recomposée : zone calme en haut pour les mentions, logo coupé à gauche, à droite et en bas (carré : coupé à droite et en bas) |
+| 3 · Affiche bleue | `planche/3-affiche-16x9` | `346:8` | 1920 × 1080 | bleu | celle de la livraison 1, crête vectorielle, titre en 180 |
+| | `planche/3-affiche-4x5`, `-1x1`, `-9x16` | `376:7`, `376:13`, `376:19` | | bleu | titre sur trois lignes en 120 (4:5, carré) ou quatre lignes en 180 (9:16), crête recadrée par la caméra pour chaque largeur |
+| 4 · Mont Blanc sur papier | `planche/4-mont-blanc-4x5`, `-1x1`, `-9x16` | `377:7`, `377:15`, `377:23` | | papier | la gravure de la livraison 1, du ciel au-dessus du sommet, barre d'information en bas |
+| 5 · Typo | `planche/5-typo` | `384:28` | 1920 × 1080 | papier | la voix de la marque : le manifeste du site en 120, avec son retrait de première ligne et sa fin grise, le sous-texte en Roboto, une barre qui nomme les trois voix |
+| 6 · Cartes de visite | `planche/6-cartes-16x9` | `346:14` | 1920 × 1080 | papier | la paire de la livraison 1 ; verso refait |
+| | `planche/6-cartes-4x5`, `-1x1`, `-9x16` | `378:3196`, `378:3229`, `378:3262` | | papier | la paire empilée en miroir (4:5, 9:16), en chevauchement (carré), cartes à la même taille partout |
+| 7 · Logo collé, essais | `planche/7a-bande-4x5` | `385:27` | 1080 × 1350 | bleu | titre en haut, trame de logos papier tangents sur le tiers bas, coupée à gauche, à droite et en bas |
+| | `planche/7b-bande-16x9` | `385:189` | 1920 × 1080 | papier | frise de huit logos bleus de 240 px, d'un bord à l'autre |
+| | `planche/7c-titre-16x9` | `386:174` | 1920 × 1080 | encre | le logo accolé devant « L'ascension de ta marque. » |
+| | `planche/7d-titre-4x5` | `386:186` | 1080 × 1350 | papier | le logo accolé après « altitude », dernier signe du titre en 180 |
+
+### Corrigé, et mesuré
+
+- **Logo** : 19 bords des branches sur 45 traversent le cercle de découpe ;
+  le script les gardait entiers dès que leur milieu tombait dans le cercle, et
+  leur partie extérieure (jusqu'à 150 unités de 1140 hors du cercle) dessinait
+  les pattes. Le masque est maintenant appliqué d'abord : chaque bord est coupé
+  au cercle par intersection exacte, puis privé de ce qui tombe dans une autre
+  branche. Le contour du logo suit le cercle, comme sur le site.
+- **Vectoriel partout** : les 17 rendus sont posés en SVG, importés comme
+  vecteurs Figma (un vecteur par niveau d'opacité). Simplification de
+  Douglas-Peucker à 0,1 px et coordonnées au dixième : sur la crête, 0,012 %
+  de pixels différents (l'anticrénelage seul), SVG 40 % plus léger. Le trait
+  reste à 1 px à la taille de la planche.
+- **Non-régression** : avec le script modifié, les rendus Everest, crête et
+  Mont Blanc de la livraison 1 se refont à l'octet près (SHA-1 égal à
+  l'`imageHash` de Figma).
+- **Liaisons** : traits liés à `color/text/primary` (papier en mode sombre,
+  encre en mode clair) ou `color/accent/default`. Figma impose à une peinture
+  liée l'alpha de sa variable : l'opacité de chaque niveau (le fondu de
+  profondeur compris) est donc portée par le calque, ce qui donne le même rendu
+  pour un tracé seul.
+- **Lueur** : le vecteur hérité de la livraison 1 portait un contour noir de
+  1 px, flouté avec la tache ; `.foot-glow` n'en a pas, il est retiré.
+- **Contrôle final** : 24 planches ; 99 textes, tous liés à un style
+  `kit/…` ; 926 peintures pleines, toutes liées à une variable et conformes à
+  sa valeur résolue (4 recalées en cours de route : verso de la carte en 16:9,
+  blanc stocké au lieu du papier) ; 768 vecteurs de rendu ; un grain par
+  planche, par le style de peinture `effect/grain`.
+
+### L'échelle typo du kit
+
+Quinze styles `kit/…`, au pas de ×1,5 arrondi : 16, 24, 36, 54, 80, 120, 180,
+270, 400, 600. Chacun reprend d'un style du site la police, la graisse,
+l'approche, l'interlignage (en %, donc au même rapport) et la casse ; seule la
+taille change. Bricolage suit la règle du navigateur : taille optique égale à
+la taille, plafonnée à 96, le maximum de la police. Les titres de la livraison
+1 étaient rendus en `opsz 14`, le dessin du texte courant.
+
+| Style | Source | Police | Approche | Interlignage | Tailles |
+|---|---|---|---|---|---|
+| `kit/display-…` | `text/desktop/display` | Bricolage Grotesque SemiBold | −2,5 % | 102 % | 600, 400, 270, 180, 120, 80, 54 |
+| `kit/manifeste-120` | `text/desktop/display` | Bricolage Grotesque SemiBold | −2,5 % | 102 % | 120, retrait de première ligne de 309 px (144 px pour 56 sur le site, même rapport) |
+| `kit/lead-36` | `text/desktop/lead` | Roboto Medium | 0 | 138 % | 36 |
+| `kit/body-24` | `text/desktop/body` | Roboto Regular | 0 | 160 % | 24 |
+| `kit/label-…` | `text/desktop/label` | Space Mono Regular, capitales | +18 % | 160 % | 24, 16 |
+| `kit/altimeter-24` | `text/desktop/altimeter-ev` | Space Mono Regular, capitales | +18 % | 200 % | 24 |
+| `kit/meta-…` | `text/desktop/meta` | Space Mono Regular | 0 | 160 % | 24, 16 |
+
+Emplois : mentions en `label-24` partout (1,25 % de la largeur en 16:9, 2,2 %
+en 1080), à 56 px des bords mesurés sur l'encre des lettres ; altimètres en
+`altimeter-24` ; titres en `display-180` (16:9, 9:16) ou `display-120` (4:5,
+carré) ; sur la carte, nom en `display-54`, métier en `body-24`, coordonnées
+en `meta-24` (7,7 pt à l'échelle réelle de la carte).
+
+### Le verso de la carte
+
+Le détail fort est le lac d'Allos de Let's talk, plateau en courbes et
+hachures d'eau bleues, dans le quart bas droit, coupé par le bord, sous la
+lueur du footer. C'est la scène de la prise de contact sur le site, qui écrit
+« On en discute, idéalement au bord d'un lac » : le verso porte les
+coordonnées. Identité en haut à gauche, coordonnées en haut à droite, nom et
+métier en bas à gauche.
+
+### A7 — Le logo collé (proposé, à valider)
+
+Usage graphique, pas une signature, comme le filigrane (A1) : il ne remplace
+jamais le logo, qui garde ailleurs sa zone de protection (13/34 D) et sa
+taille minimum (34 px). Deux formes :
+
+- **La bande** : le logo répété bord à bord, tangent à ses voisins (écart
+  nul), en grille droite ou en frise d'une seule rangée, coupé par le cadre ou
+  calé d'un bord à l'autre. Une seule version (encre, papier ou bleu) et une
+  seule orientation par bande ; chaque logo garde au moins 34 px. La
+  quinconce a été essayée et écartée : les branches s'imbriquent et le logo ne
+  se lit plus.
+- **Le logo accolé au titre** : il prend la hauteur des capitales du titre
+  (0,65 em en Bricolage SemiBold), se pose sur sa ligne de base, à 0,1 em du
+  premier ou du dernier mot, dans la couleur du titre.
+
+Il se documente avec le filigrane dans les guidelines (partie 4).
+
+### Ce qui a été refait avant de montrer
+
+- **Visuel clé** : les vues d'ensemble de l'Everest restent un paysage
+  filaire uniforme, le téléobjectif lointain empile ses traits en ondes ;
+  gardé le sommet et ses drapeaux. Ajouté le lac, deux fois, et le Mont Blanc
+  au téléobjectif. Sur la voie royale, l'altimètre tombait sur les courbes :
+  posé au sommet, comme une étiquette.
+- **Mont Blanc vertical** : les premiers cadrages montraient une moitié basse
+  de plaine et un sommet petit ; repris depuis la caméra de la livraison 1,
+  cadre resserré, sommet vers le tiers haut.
+- **Verso** : le lac tombait sur les coordonnées ; redescendu dans le quart
+  bas droit, plus petit.
+- **Typo** : un premier essai posait l'échelle en chaîne de « A » sur un
+  filet, la taille dessous comme une altitude. Écarté : il se lisait comme un
+  tableau d'échelle, et le A de Bricolage a le sommet plat. Remplacé par le
+  manifeste.
+- **Logo collé** : la trame en quinconce, illisible, refaite en grille droite ;
+  le titre de 7d, en haut sur un cadre vide aux deux tiers, recomposé en 180
+  et ancré en bas.
+
+### Choix à valider
+
+1. **Visuel clé** : lequel des quatre essais garder (ou lesquels) ; il sera
+   décliné ensuite dans les trois formats.
+2. **Échelle typo** : pas de ×1,5, mentions à 24 px partout ; interlignages et
+   approches de la source ; taille optique plafonnée à 96.
+3. **Mont Blanc en 16:9** : retiré, remplacé par le 4:5, le carré et le 9:16.
+4. **Verso** : le lac de Let's talk et la lueur.
+5. **Typo** : le manifeste sur papier. Son accent gris vient de la primitive
+   `color/grain-accent` (`#63636a`), qu'aucune variable sémantique ne porte :
+   en créer une ?
+6. **Texte sur bleu** : `color/text/on-accent` (blanc) plutôt que le label du
+   mode sombre à .55, peu lisible sur le bleu.
+7. **A7, le logo collé** : la règle ci-dessus.
+8. **Construction** : les cadres sont à leur taille finale (1080 de large pour
+   les réseaux), exportés en 1x et 2x ; la construction à la moitié (A3) reste
+   abandonnée.
