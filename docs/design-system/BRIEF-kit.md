@@ -101,3 +101,101 @@ Ce que la méthode change dans les arbitrages de la partie 0 :
 - **Le logo en courbes de niveau** (point 3) lève, pour ce rendu, l'interdit
   « pas de contour ni de trame » de `reference-drapz.md` (§3.2). Le dessin du
   logo ne change pas : ses courbes sont calculées à partir de son SVG.
+
+## Livraison 1 : planches maîtresses (9 octobre 2026)
+
+Construite dans Figma et contrôlée, en attente de validation : page
+Kit Direction (`346:2`), placée après Motion, six planches de 1920 × 1080,
+chacune avec un export PNG 2x (3840 × 2160).
+
+| Planche | Nœud | Fond | L'idée |
+|---|---|---|---|
+| `planche/1-everest` | `346:3` | encre | le signe se lève sur le sommet : logo de 56 px au centre, dans la lueur ; la pyramide de l'Everest monte du bord bas |
+| `planche/2-logo` | `346:6` | bleu | le logo est une carte : moulinet entier, coupé en haut, à droite et en bas, gravé en courbes tous les 6 px, halo de courbes qui s'effacent |
+| `planche/3-affiche` | `346:8` | bleu | « Pour que ta marque tienne en altitude » en 168 px, la crête du Mont Blanc en traits fins ferme le bas |
+| `planche/4-mont-blanc` | `346:10` | papier | le Mont Blanc en gravure, voie royale en seul trait bleu, posé sur un filet au-dessus d'une barre d'information |
+| `planche/5-typo` | `346:12` | encre | « altitude » en 590 px, coupé par le bas, la lueur derrière ; au-dessus, Titres, Texte, Mentions |
+| `planche/6-cartes` | `346:14` | papier | la paire en miroir : recto bleu gravé du logo, verso encre (identité, contacts, lueur en angle) |
+
+### Les rendus
+
+Tous viennent de `outils/rendu-courbes.mjs` ; les cinq commandes sont dans
+`outils/README.md` et reproduisent à l'octet près les images posées dans Figma
+(leur SHA-1 est l'`imageHash` de Figma). PNG en 2x, fond transparent, trait de
+2 px, soit 1 px à la taille de la planche. Les fichiers ne sont pas versionnés :
+le script les refait.
+
+| Rendu | Recette | Caméra et cadrage | Trait |
+|---|---|---|---|
+| Everest (planche 1) | `everest` | position du hero, regard levé vers le sommet ; avant-plan hors cadre | papier .4, brouillard 110 à 340, comme le code |
+| Logo (planche 2) | `logo` | centre 1350, 560 ; diamètre 1500 ; courbes tous les 6 px ; 18 courbes dehors | papier .28, maîtresses .75 (le contour du logo en est une) |
+| Crête (planche 3) | `montblanc` | vu du nord-ouest, au téléobjectif (13,5°), bande de 1920 × 480 | papier .28 et .75, brouillard 7,5 à 12,5 |
+| Mont Blanc (planche 4) | `montblanc` | face au sommet, champ de 36,5° | encre .28 et .75, voie royale bleue .95, brouillard 5,4 à 10,4 |
+| Recto (planche 6) | `logo` | carte de 748 × 484, diamètre 700, courbes tous les 5 px | papier .28 et .75 |
+
+**Fidélité au site, mesurée.** La même scène, rendue par Three.js r128 avec le
+code d'`Everest.js` et de `Benefits.js` recopié, se superpose au rendu du
+script : corrélation 0,992 (Everest) et 0,998 (Mont Blanc) après un flou de
+7 px, aucune frange de décalage. Le script pose 12 % (Everest) et 16 %
+(Mont Blanc) d'encre en moins : WebGL dessine chaque segment à part et
+redouble chaque jonction, le script trace des courbes continues. Les opacités
+du code sont gardées telles quelles.
+
+### Valeurs
+
+- **Couleurs** : 49 peintures sur 49 liées à une variable. Fonds en
+  `color/bg/primary` (mode clair ou sombre posé sur chaque planche) ou
+  `color/accent/default` ; textes en `color/text/primary`, `/label`, `/muted` ;
+  filet en `color/border/default`.
+- **Logo** : instances du composant `logo` (papier en mode sombre).
+- **Lueur** : la tache de `.foot-glow`, 660 × 420 avec les rayons de bordure du
+  CSS, inclinée comme dans `footMorph`, en `color/glow`, opacité .5, style
+  `blur/glow-footer`.
+- **Grain** : un rectangle par planche, au-dessus de tout, style
+  `effect/grain`.
+- **Typo** : 28 textes sur 30 portent un style du système (`label`,
+  `altimeter-ev`, `meta`, `body`, `body-sm`, `heading-2`, `heading-4`). Les
+  deux autres sont les titres à échelle extrême, 168 et 590 px, qu'aucun style
+  ne couvre : Bricolage Grotesque SemiBold, en phrase, serrés à −3 %, comme
+  les titres du site.
+- **Textes** : ceux du site (`lib/i18n.js`, `data/evmarks.json`,
+  `Benefits.js`, `Footer.js`) et le nom « Jimmy Ocks » (A2). Libellés propres
+  au kit : Titres, Texte, Mentions, les noms des trois familles, et
+  « 85 × 55 mm ».
+- **Mentions** à 56 px des bords, comme le menu du header.
+
+### Ce qui a été refait avant de montrer
+
+- **Everest** : les vues d'ensemble donnaient un paysage filaire uniforme,
+  sans sujet. Caméra passée sur l'axe du hero, sous le sommet ; avant-plan
+  sorti du cadre ; la lueur en ellipse parfaite faisait projecteur, remplacée
+  par la tache du site.
+- **Logo** : les premiers cadrages, trop serrés, ne se lisaient plus comme le
+  logo (motif de fond d'écran). Moulinet entier, courbes resserrées de 12 à
+  6 px, éclats le long de l'axe des branches écartés.
+- **Affiche** : l'Everest au téléobjectif empilait ses traits à .4 en nuages
+  blancs ; crête refaite avec la recette du Mont Blanc. L'altimètre tombait
+  sur les traits : passé sur le bord droit.
+- **Mont Blanc** : le bord des données coupait le relief en un mur vertical,
+  cadrage resserré ; les mentions des coins du bas tombaient sur les traits,
+  remplacées par la barre d'information.
+- **Typo** : le mot, d'abord à 70 % de la largeur et posé sur le bord, est
+  agrandi et franchement coupé ; la ligne des spécimens, qui flottait, rejoint
+  le mot.
+
+### Choix à valider
+
+1. **Taille des planches** : construites à 1920 × 1080 et exportées en 2x, pas
+   à la moitié comme le voulait A3 : les titres sont à échelle libre, et les
+   rendus fixent leur trait à la taille de la planche.
+2. **Trait** : 1 px à la taille de la planche, avec les opacités du code ; le
+   rendu est 12 à 16 % plus léger que le WebGL du site. Garder, ou compenser ?
+3. **Fondu sur le Mont Blanc** : Benefits n'en a pas ; il est ajouté pour
+   suivre la méthode et efface le bord des données.
+4. **Logo en courbes** : courbes tous les 6 px (5 sur la carte), 18 courbes
+   dehors en fondu, opacités de Benefits. Plus serré, plus ouvert ?
+5. **Mentions** aux tailles du site (10 et 12 px) : petites sur 1920.
+6. **Planche 4** : barre d'information plutôt que mentions aux coins du bas.
+7. **Cartes** : recto gravé du logo en courbes plutôt que logo plein ; lueur
+   sur le verso.
+8. **Affiche** : titre sans point final, comme le hero l'écrit.
