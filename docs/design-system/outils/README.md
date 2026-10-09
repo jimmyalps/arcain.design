@@ -5,7 +5,8 @@ celles des étapes suivantes : [`../fondations.md`](../fondations.md),
 [`../composants.md`](../composants.md),
 [`../marque-motion.md`](../marque-motion.md) et
 [`../documentation.md`](../documentation.md), avec le contrôle de
-[`../DESIGN.md`](../DESIGN.md).
+[`../DESIGN.md`](../DESIGN.md). Pour le kit de marque :
+[`../reference-drapz.md`](../reference-drapz.md).
 
 Ils ne font que lire : ni le code du site ni le fichier Figma ne sont modifiés.
 Aucune dépendance à installer. Il faut Node 24 (voir `.nvmrc`), et un
@@ -37,6 +38,8 @@ Toutes les commandes se lancent depuis la racine du dépôt.
 | `mesure-logo.mjs` | Étape 4 : vide autour du logo du header, en haut de page et en compact, en 1440 × 900 puis en 390 × 844 au doigt. C'est la mesure qui fixe la zone de protection. |
 | `webp-jpeg.mjs` | Étape 4 : convertit une image WebP du site en JPEG avec le navigateur, car Figma n'affiche pas les WebP importés. |
 | `verifier-design-md.mjs` | Étape 4, partie 2 : contrôle de structure du `DESIGN.md`, sans dépendance ni réseau. Clés en double, couleurs et dimensions au format CSS, propriétés connues du format, références `{groupe.jeton}` résolues, ordre des huit sections canoniques. Les jetons qu'aucun composant ne cite sont comptés à part : le lint du format ne les signale qu'en avertissement. Sort en erreur s'il trouve un problème. |
+| `capture-pages.mjs` | Kit de marque, partie 0 : capture pleine page d'une liste d'URL de référence, en 1440 × 900. Défile lentement jusqu'en bas (images paresseuses, apparitions), masque les calques fixes du bas de l'écran, puis écrit une image entière, des tranches de 1800 px et un JSON par page (titre, texte, polices, images et leur taille d'origine). Les captures restent hors du dépôt. |
+| `mesure-planches.mjs` | Kit de marque, partie 0 : pour les planches d'une page capturée (images affichées sur toute la largeur), couleur du fond, marges, part du cadre occupée et écarts entre objets, en %, lus pixel par pixel en 2048 px. Ne vaut que pour une planche à fond uni. |
 
 Commandes :
 
@@ -101,12 +104,18 @@ node docs/design-system/outils/webp-jpeg.mjs <chemin du navigateur> <dossier de 
 
 # Structure du DESIGN.md (étape 4, partie 2)
 node docs/design-system/outils/verifier-design-md.mjs docs/design-system/DESIGN.md
+
+# Kit de marque, partie 0 : les six projets de Drapz en entier, puis les marges
+# des planches à fond uni (page:indice, indice compté à partir de 0)
+node docs/design-system/outils/capture-pages.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> https://drapz.design/projects/fugitive https://drapz.design/projects/radiantui https://drapz.design/projects/lumora https://drapz.design/projects/kinect https://drapz.design/projects/stomic https://drapz.design/projects/skillio
+node docs/design-system/outils/mesure-planches.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> fugitive:1 fugitive:2 fugitive:3 radiantui:1 radiantui:3 lumora:2 lumora:3 lumora:4 stomic:3 skillio:1 skillio:3
 ```
 
 `grain-rendu.mjs` utilise le port 9336, `grain-mesure.mjs` le 9337,
 `cta-mobile.mjs` le 9338, `mesure-petits-composants.mjs` le 9339,
 `mesure-grands-composants.mjs` le 9340, `capture-scene.mjs` le 9342,
-`mesure-logo.mjs` le 9343, `webp-jpeg.mjs` le 9344.
+`mesure-logo.mjs` le 9343, `webp-jpeg.mjs` le 9344,
+`capture-pages.mjs` le 9345, `mesure-planches.mjs` le 9346.
 
 ## Mesurer une preview plutôt que la prod
 
