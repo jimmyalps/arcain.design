@@ -59,3 +59,25 @@ Référence validée : `docs/design-system/reference-drapz.md`. Les six question
 - A6 — Tuiles de motifs vues de dessus, avec le trait, l'opacité et les courbes maîtresses du code. La perspective et le fondu de profondeur vont aux fonds de la partie 2.
 
 La partie 1 se fera dans une nouvelle session.
+
+## Partie 1 : motifs (9 octobre 2026)
+
+Construite dans Figma et contrôlée, en attente de validation : page Kit Motifs
+(`328:2`), six jeux de tuiles — courbes de niveau, trace en lacets, neige
+pixel, crête, logo en répétition, grain — et la planche du filigrane (A1). Le
+détail est dans `docs/design-system/kit-motifs.md` : identifiants,
+construction de chaque motif, mesures, contrôle. Outils :
+`outils/tuiles-courbes.mjs`, `outils/tuile-lacets.mjs`,
+`outils/apercu-tuiles.mjs`.
+
+Huit choix sont à valider (§6 de `kit-motifs.md`) :
+
+1. courbes : cases de 12 px, tuiles de 480 ;
+2. courbes : raccord par fondu sur 14 cases, pente moyenne retirée ;
+3. courbes : le fond décide de la recette, et le bleu sur papier reprend le
+   tracé du hero en bleu .4 ;
+4. trace en lacets : forme construite, .95 dans toutes les couleurs ;
+5. neige : encre et bleu seulement, `neige-pixels.png` laissé hors du kit ;
+6. crête : variante mobile et son reflet, frise de 780 × 200 ;
+7. logo en répétition : grille carrée, 34 px, écart de 13 ;
+8. filigrane : jamais sur papier ni sur bleu.
