@@ -105,6 +105,27 @@
 //     (inverse=1 : éteinte au foyer, allumée vers les bords) ;
 //   noms=1 : chaque chemin du SVG porte un id, qui devient le nom du calque
 //     à l'import dans Figma.
+//
+// Livraison B, le logo dans les deux DA (mêmes garanties : sans ces clés,
+// rien ne change ; la distance au contour est désormais cherchée par cases,
+// même résultat au bit près) :
+//   logos=x,y,d;x,y,d… : plusieurs logos dans le même champ, le minimum de
+//     leurs distances signées ; leurs courbes du dehors se rejoignent, les
+//     logos se collent par leur relief ;
+//   soleil=x,y (direction de la lumière dans le cadre), relief, contraste :
+//     le logo pris comme un relief, sa distance au bord pour altitude ;
+//     courbes éclairées (méthode de Tanaka), et neige pixel dont la densité
+//     suit l'éclairage, comme celle des montagnes ;
+//   pixels=c, densite, opacites, fondu=y0,y1 : le logo en neige pixel ;
+//     halo=d,γ[,écart[,a]] une neige qui s'éclaircit autour du logo,
+//     couronne=d0,d1,γ l'inverse, une clairière autour du logo ;
+//   revelation=t, particules, echantillon, toile, net=1 : l'animation de
+//     révélation de components/LogoReveal.js figée à l'instant t ;
+//   grille=p, origine=x,y, grilleCouleur, grilleOpacite, points=1, cases=1,
+//     cote : le logo sur une grille fine, filets ou points, ses cases
+//     allumées en neige ;
+//   evider=1 (avec logos=…, sur un relief) : ni courbe ni neige dans la
+//     forme des logos, qui apparaissent en creux, au pochoir.
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -672,8 +693,10 @@ function drapeaux(scene, op) {
   return out;
 }
 
-/* ---- Logo : distance signée au contour, vu de dessus -------------------- */
-function logo(base, baseM) {
+/* ---- Logo : la forme, le masque appliqué --------------------------------- */
+// Commune au logo en courbes et, depuis la livraison B, au logo en neige
+// pixel, sur grille et en révélation.
+function formeLogo() {
   const src = readFileSync(ROOT + "/app/icon.svg", "utf8");
   const polys = [...src.matchAll(/<path d="([^"]+)"/g)].map(([, d]) => {
     const tok = d.match(/[MLCZ]|-?\d*\.?\d+(?:e-?\d+)?/g), pts = [];
@@ -732,30 +755,98 @@ function logo(base, baseM) {
     if (union(CX + R * Math.cos(tm), CY + R * Math.sin(tm)))
       bords.push([[CX + R * Math.cos(t0), CY + R * Math.sin(t0)], [CX + R * Math.cos(t1), CY + R * Math.sin(t1)]]);
   }
-  const B = Float64Array.from(bords.flat(2));
-  const dist = (x, y) => { let m = Infinity;
-    for (let k = 0; k < B.length; k += 4) {
-      const ax = B[k], ay = B[k + 1], ex = B[k + 2] - ax, ey = B[k + 3] - ay;
-      const t = Math.max(0, Math.min(1, ((x - ax) * ex + (y - ay) * ey) / (ex * ex + ey * ey)));
-      const dx = x - ax - t * ex, dy = y - ay - t * ey, d = dx * dx + dy * dy;
-      if (d < m) m = d;
-    } return Math.sqrt(m); };
+  return { union, R, CX, CY, bords };
+}
+
+// Distance au plus proche des segments de B (x0, y0, x1, y1 à la suite), en
+// unités du logo. Les segments sont rangés par cases de 24 unités, visitées en
+// anneaux autour du point ; on s'arrête dès que l'anneau suivant ne peut plus
+// rien rapprocher. Même formule et même minimum que la boucle sur tous les
+// segments : le résultat est identique, au bit près (livraison B : les grands
+// logos et les logos multiples coûtaient trop cher en boucle simple).
+function plusProche(B) {
+  const T = 24, n = B.length / 4;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (let k = 0; k < B.length; k += 2) {
+    x0 = Math.min(x0, B[k]); x1 = Math.max(x1, B[k]); y0 = Math.min(y0, B[k + 1]); y1 = Math.max(y1, B[k + 1]);
+  }
+  const cw = Math.floor((x1 - x0) / T) + 1, ch = Math.floor((y1 - y0) / T) + 1;
+  const cases = Array.from({ length: cw * ch }, () => []);
+  for (let s = 0; s < n; s++) {
+    const ax = B[4 * s], ay = B[4 * s + 1], bx = B[4 * s + 2], by = B[4 * s + 3];
+    const i0 = Math.floor((Math.min(ax, bx) - x0) / T), i1 = Math.floor((Math.max(ax, bx) - x0) / T);
+    const j0 = Math.floor((Math.min(ay, by) - y0) / T), j1 = Math.floor((Math.max(ay, by) - y0) / T);
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) cases[j * cw + i].push(4 * s);
+  }
+  return (x, y) => {
+    const ci = Math.floor((x - x0) / T), cj = Math.floor((y - y0) / T);
+    const r0 = Math.max(0, -ci, ci - (cw - 1), -cj, cj - (ch - 1));
+    const rMax = Math.max(ci, cw - 1 - ci, cj, ch - 1 - cj);
+    let m = Infinity;
+    const visite = (i, j) => {
+      for (const k of cases[j * cw + i]) {
+        const ax = B[k], ay = B[k + 1], ex = B[k + 2] - ax, ey = B[k + 3] - ay;
+        const t = Math.max(0, Math.min(1, ((x - ax) * ex + (y - ay) * ey) / (ex * ex + ey * ey)));
+        const dx = x - ax - t * ex, dy = y - ay - t * ey, d = dx * dx + dy * dy;
+        if (d < m) m = d;
+      }
+    };
+    for (let r = r0; r <= rMax; r++) {
+      for (let j = Math.max(0, cj - r); j <= Math.min(ch - 1, cj + r); j++) {
+        if (Math.abs(j - cj) === r) { for (let i = Math.max(0, ci - r); i <= Math.min(cw - 1, ci + r); i++) visite(i, j); }
+        else { if (ci - r >= 0) visite(ci - r, j); if (ci + r < cw) visite(ci + r, j); }
+      }
+      if (m <= (r * T) ** 2) break;                     // plus rien de plus proche au-delà
+    }
+    return Math.sqrt(m);
+  };
+}
+
+// Où poser le logo : un seul (centre=x,y et diametre, en px du cadre) ou,
+// depuis la livraison B, plusieurs (logos=x,y,d;x,y,d…), tous dans la même
+// orientation (rotation, par pas de 72°).
+function placements() {
+  if (opt.logos) return opt.logos.split(";").map((t) => { const [x, y, d] = t.split(",").map(Number); return { cx: x, cy: y, s: d / 1140 }; });
+  const [cx, cy] = vec("centre", [W / 2, H / 2]), Dm = num("diametre", 1140);
+  return [{ cx, cy, s: Dm / 1140 }];
+}
+
+/* ---- Logo : distance signée au contour, vu de dessus -------------------- */
+function logo(base, baseM) {
+  const { union, R, CX, CY, bords } = formeLogo();
+  const B = Float64Array.from(bords.flat(2)), dist = plusProche(B);
   // Placement : centre et diamètre en px du cadre, rotation par pas de 72°.
-  const [cx, cy] = vec("centre", [W / 2, H / 2]), Dm = num("diametre", 1140), s = Dm / 1140;
+  const places = placements();
   const rot = (num("rotation", 0) * Math.PI) / 180, co = Math.cos(rot), si = Math.sin(rot);
-  const g = num("maille", 2), pas = num("pas", 12);
+  const g = num("maille", 2), pas = num("pas", 12), dehors = num("dehors", 0);
+  // Plusieurs logos : le champ est le minimum des distances signées, et leurs
+  // courbes du dehors se rejoignent. Loin d'un logo (au-delà de la dernière
+  // courbe, plus deux mailles), sa distance au cercle suffit : le champ y
+  // reste au-dessus de toutes les courbes, qui ne bougent pas.
+  const loin = places.length > 1 ? (dehors + 1) * pas + 2 * g : Infinity;
   const nx = Math.ceil(W / g) + 1, ny = Math.ceil(H / g) + 1, F = new Float64Array(nx * ny);
   for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
-    const px = (i * g - cx) / s, py = (j * g - cy) / s;
-    const x = co * px + si * py + CX, y = -si * px + co * py + CY;
-    const inside = Math.hypot(x - CX, y - CY) <= R && union(x, y);
-    F[j * nx + i] = (inside ? -1 : 1) * dist(x, y) * s;     // en px du cadre
+    let v = Infinity;
+    for (const P of places) {
+      const px = (i * g - P.cx) / P.s, py = (j * g - P.cy) / P.s;
+      const x = co * px + si * py + CX, y = -si * px + co * py + CY;
+      const r = Math.hypot(x - CX, y - CY);
+      if ((r - R) * P.s > loin) { v = Math.min(v, (r - R) * P.s); continue; }
+      const inside = r <= R && union(x, y);
+      const f = (inside ? -1 : 1) * dist(x, y) * P.s;          // en px du cadre
+      if (f < v) v = f;
+    }
+    F[j * nx + i] = v;
   }
   let lo = Infinity, hi = -Infinity;
   for (const v of F) { if (v < lo) lo = v; if (v > hi) hi = v; }
   // Dedans, toutes les courbes ; dehors, `dehors` courbes qui s'effacent
   // (la k-ième à 1 − k / (dehors + 1)), comme un fondu de profondeur.
-  const dehors = num("dehors", 0), out = [];
+  // Livraison B, soleil=x,y : courbes éclairées, comme les courbes de Tanaka
+  // des cartes en relief ; l'opacité de chaque segment suit l'éclairage du
+  // versant où il passe (lumiereLogo), au dixième.
+  const lum = opt.soleil ? lumiereLogo({ F, nx, ny, g }) : null;
+  const out = [];
   for (let k = Math.ceil(lo / pas); k * pas < hi && k <= dehors; k++) {
     const L = k * pas + 1e-6, mait = k % 5 === 0;                           // + 1e-6 : jamais pile sur un nœud
     const a = (mait ? baseM : base) * (k > 0 ? 1 - k / (dehors + 1) : 1);
@@ -766,7 +857,9 @@ function logo(base, baseM) {
       const tt = (p1, q1) => (L - p1) / (q1 - p1);
       const top = [(i + tt(A, Bv)) * g, j * g], right = [(i + 1) * g, (j + tt(Bv, C)) * g],
         bot = [(i + tt(D, C)) * g, (j + 1) * g], left = [i * g, (j + tt(A, D)) * g];
-      const push = (e1, e2) => out.push([e1, e2, a]);
+      const push = lum
+        ? (e1, e2) => out.push([e1, e2, a * Math.round(lum((e1[0] + e2[0]) / 2, (e1[1] + e2[1]) / 2) * 10) / 10])
+        : (e1, e2) => out.push([e1, e2, a]);
       if (m === 1 || m === 14) push(left, bot);
       else if (m === 2 || m === 13) push(bot, right);
       else if (m === 3 || m === 12) push(left, right);
@@ -777,7 +870,153 @@ function logo(base, baseM) {
       else if (m === 10) { push(top, right); push(bot, left); }
     }
   }
-  return { out, bords: bords.length, niveaux: [Math.ceil(lo / pas), Math.floor(hi / pas)] };
+  return { out, bords: bords.length, niveaux: [Math.ceil(lo / pas), Math.floor(hi / pas)], champ: { F, nx, ny, g } };
+}
+
+/* ---- Logo en pixels (livraison B, DA pixels) ----------------------------- */
+// Le point (X, Y) du cadre tombe-t-il dans l'un des logos posés ? Le masque
+// d'abord, comme pour les courbes.
+function dansLogos() {
+  const { union, R, CX, CY } = formeLogo(), places = placements();
+  const rot = (num("rotation", 0) * Math.PI) / 180, co = Math.cos(rot), si = Math.sin(rot);
+  return (X, Y) => places.some((P) => {
+    const px = (X - P.cx) / P.s, py = (Y - P.cy) / P.s;
+    const x = co * px + si * py + CX, y = -si * px + co * py + CY;
+    return Math.hypot(x - CX, y - CY) <= R && union(x, y);
+  });
+}
+const tirage = () => {                       // xorshift à graine fixe, comme la neige pixel
+  let g = (num("graine", 7) >>> 0) || 7;
+  return () => { g ^= g << 13; g >>>= 0; g ^= g >>> 17; g ^= g << 5; g >>>= 0; return g / 4294967296; };
+};
+
+// Probabilité d'allumer le point (X, Y) du cadre, pour la neige du logo.
+// Dans le logo : densite × éclairage × fondu. Éclairage, comme la neige des
+// montagnes : le logo pris comme un relief, sa distance au bord pour altitude
+// (le relief du logo en courbes) ; chaque branche devient une arête, son
+// versant tourné vers soleil=x,y (direction de la lumière dans le cadre, y
+// vers le bas) s'allume, l'autre s'éteint ; la part `relief` de la densité
+// suit l'éclairage, à l'exposant `contraste`. Sans soleil, densité égale.
+// fondu=y0,y1 : la densité monte de 0 en y0 à 1 en y1 (smoothstep, px du
+// cadre ; y0 > y1, elle descend), pour un logo qui se défait en neige.
+// Dehors, avec halo=d,γ[,écart[,a]] : a × densite × (1 − distance au logo /
+// d)^γ × fondu, une neige qui s'éclaircit en s'éloignant du logo, rien avant
+// l'écart ; avec couronne=d0,d1,γ, l'inverse : densite × smoothstep(d0, d1,
+// distance)^γ, une clairière autour du logo. Sans l'une ni l'autre, rien dehors.
+function densiteLogo(dans, champ) {
+  const dens = num("densite", 1), [f0, f1] = vec("fondu", [0, 0]), [hd, hg, he = 0, ha = 1] = vec("halo", [0, 1]);
+  const [c0, c1, cg] = vec("couronne", [0, 0, 1]);
+  const lum = opt.soleil ? lumiereLogo(champ) : null, { F, nx, ny, g } = champ;
+  return (X, Y) => {
+    const fo = f0 === f1 ? 1 : smoothstep(f0, f1, Y);
+    if (dans(X, Y)) return dens * fo * (lum ? lum(X, Y) : 1);
+    const d = bilin(F, nx, ny, X / g, Y / g);
+    if (c1 > c0) return dens * fo * Math.pow(smoothstep(c0, c1, d), cg);
+    return hd > 0 && d > he && d < hd ? ha * dens * fo * Math.pow(1 - (d - he) / (hd - he), hg) : 0;
+  };
+}
+
+// L'éclairage du logo pris comme un relief (sa distance au bord pour
+// altitude) : 1 sur le versant tourné vers soleil=x,y, 0 sur l'autre ; rendu
+// en 1 − relief + relief × éclairage^contraste, pour la neige comme pour les
+// courbes éclairées.
+function lumiereLogo({ F, nx, ny, g }) {
+  const [sx, sy] = vec("soleil"), l0 = Math.hypot(sx, sy), wS = num("relief", 0.75), gam = num("contraste", 1);
+  return (X, Y) => {
+    const fi = X / g, fj = Y / g, e = 0.75;
+    const gx = bilin(F, nx, ny, fi + e, fj) - bilin(F, nx, ny, fi - e, fj), gy = bilin(F, nx, ny, fi, fj + e) - bilin(F, nx, ny, fi, fj - e);
+    const l = Math.hypot(gx, gy), ec = l > 1e-9 ? (1 + (gx * sx + gy * sy) / (l * l0)) / 2 : 0.5;
+    return 1 - wS + wS * Math.pow(ec, gam);
+  };
+}
+
+// La neige pixel du logo : chaque case de `pixels` px s'allume avec la
+// probabilité de densiteLogo en son centre, opacité tirée entre .4 et 1
+// (opacites=min,max), comme pixels.png.
+function neigeLogo(dans, champ) {
+  const c = num("pixels", 3), cw = Math.ceil(W / c), ch = Math.ceil(H / c), rnd = tirage();
+  const proba = densiteLogo(dans, champ), [a0, a1] = vec("opacites", [0.4, 1]), cases = [];
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) {
+    const r1 = rnd(), r2 = rnd();                              // deux tirages par case, allumée ou non
+    if (r1 < proba((x + 0.5) * c, (y + 0.5) * c)) cases.push([x, y, a0 + (a1 - a0) * r2]);
+  }
+  return { cases, c };
+}
+
+// Le logo sur une grille fine, tous les `grille` px depuis origine=x,y. La
+// grille : un filet d'un pixel, posé sur le demi-pixel pour rester net ; ou,
+// avec points=1, un point d'un pixel à chaque nœud, tracé en filets
+// horizontaux pointillés (un trait d'un pixel, puis p − 1 de vide : un chemin
+// par rangée plutôt qu'un carré par point). Avec cases=1, chaque case (avec
+// points, chaque nœud) s'allume avec la probabilité de densiteLogo en son
+// centre, en carré de `cote` px (p − 1 par défaut : le filet passe dans le
+// joint ; avec points, centré sur le nœud, `cote` impair pour rester sur le
+// pixel), opacité tirée entre .4 et 1.
+function grilleLogo(dans, champ) {
+  const p = num("grille", 15), [ox, oy] = vec("origine", [0, 0]), rnd = tirage(), pts = num("points", 0) > 0;
+  const i0 = Math.ceil(-ox / p), i1 = Math.floor((W - ox) / p), j0 = Math.ceil(-oy / p), j1 = Math.floor((H - oy) / p);
+  let d = "", n = 0;
+  if (pts) for (let j = j0; j <= j1; j++) { d += `M${ox + i0 * p} ${oy + j * p + 0.5}h${(i1 - i0) * p + 1}`; n++; }
+  else {
+    for (let i = i0; i <= i1; i++) d += `M${ox + i * p + 0.5} 0v${H}`;
+    for (let j = j0; j <= j1; j++) d += `M0 ${oy + j * p + 0.5}h${W}`;
+    n = i1 - i0 + j1 - j0 + 2;
+  }
+  const cases = [], cote = num("cote", p - 1), [a0, a1] = vec("opacites", [0.4, 1]);
+  if (num("cases", 0) > 0) {
+    const proba = densiteLogo(dans, champ);
+    for (let j = j0 - 1; j <= j1; j++) for (let i = i0 - 1; i <= i1; i++) {
+      const r1 = rnd(), r2 = rnd();
+      const cx = pts ? ox + i * p + 0.5 : ox + i * p + 1 + (p - 1) / 2, cy = pts ? oy + j * p + 0.5 : oy + j * p + 1 + (p - 1) / 2;
+      if (r1 < proba(cx, cy)) cases.push([cx - cote / 2, cy - cote / 2, cote, a0 + (a1 - a0) * r2]);
+    }
+  }
+  return { d, cases, p, lignes: n, points: pts };
+}
+
+// La révélation du logo, comme components/LogoReveal.js : le logo
+// échantillonné sur une toile de `toile` px (600 sur le site), tous les
+// `echantillon` px (3), dans le cercle de découpe ; les points mélangés et
+// `particules` gardés (1700). Chaque particule naît au centre, s'en écarte en
+// orbite (8 à 54 px), puis converge vers son point dans l'ordre de son angle
+// autour du centre ; taille de 1,1 à 2 px, opacité de .6 à 1, mêmes tirages
+// et mêmes courbes d'accélération que le code, à graine fixe. Rendue à
+// l'instant t = revelation (s) : vers 1, le logo se forme à droite et en bas,
+// le reste tourne encore au centre ; à 1,6, tout est posé, et le remplissage
+// du site (dès 1,7) n'est pas rendu. La toile est ramenée au diamètre voulu,
+// autour de centre=x,y.
+function revelation(t) {
+  const { union, R, CX, CY } = formeLogo(), rnd = tirage();
+  const S = num("toile", 600), step = num("echantillon", 3), MAXP = num("particules", 1700), sc = S / 1140;
+  const pts = [];
+  for (let y = 0; y < S; y += step) for (let x = 0; x < S; x += step) {
+    const u = (x + 0.5) / sc, v = (y + 0.5) / sc;                // centre du pixel de la toile
+    if (Math.hypot(u - CX, v - CY) <= R && union(u, v)) pts.push([x, y]);
+  }
+  for (let i = pts.length - 1; i > 0; i--) { const j = (rnd() * (i + 1)) | 0, q = pts[i]; pts[i] = pts[j]; pts[j] = q; }
+  const lerp = (a, b, k) => a + (b - a) * k, cl = (v, a, b) => (v < a ? a : v > b ? b : v);
+  const eOut = (x) => 1 - Math.pow(1 - x, 3), eQuint = (x) => (x < 0.5 ? 16 * x ** 5 : 1 - Math.pow(-2 * x + 2, 5) / 2);
+  const c0 = S / 2, [ox, oy] = vec("centre", [W / 2, H / 2]), k = num("diametre", S) / S;
+  const fade = smoothstep(2.75, 2.98, t), net = num("net", 0) > 0, out = [];
+  for (let i = 0; i < Math.min(pts.length, MAXP); i++) {
+    const [tx, ty] = pts[i];
+    let ang = Math.atan2(ty - c0, tx - c0); if (ang < 0) ang += Math.PI * 2;
+    const frac = ang / (Math.PI * 2), oA = rnd() * Math.PI * 2, oR = 8 + rnd() * 46;
+    const p = { px: c0 + Math.cos(oA) * oR, py: c0 + Math.sin(oA) * oR, spawn: frac * 0.22 + rnd() * 0.05,
+      convStart: 0.55 + frac * 0.3 + rnd() * 0.05, convDur: 0.5 + rnd() * 0.18, wPh: rnd() * Math.PI * 2,
+      wSp: 0.7 + rnd() * 1.1, wAmp: 1.5 + rnd() * 3, a: 0.6 + rnd() * 0.4, sz: 1.1 + rnd() * 0.9 };
+    if (t < p.spawn) continue;
+    let bx, by, op, wob;
+    if (t < p.spawn + 0.4) { const e = eOut((t - p.spawn) / 0.4); bx = lerp(c0, p.px, e); by = lerp(c0, p.py, e); op = 0.85 * e; wob = e; }
+    else { const c = cl((t - p.convStart) / p.convDur, 0, 1), ce = eQuint(c); bx = lerp(p.px, tx, ce); by = lerp(p.py, ty, ce); op = 0.85 + 0.15 * ce; wob = 1 - c; }
+    if (wob > 0.001) { bx += Math.sin(t * p.wSp * 6.28 + p.wPh) * p.wAmp * wob; by += Math.cos(t * p.wSp * 5.1 + p.wPh) * p.wAmp * wob; }
+    op *= p.a * (1 - fade);
+    if (op <= 0.004) continue;
+    let s = p.sz * k, x = ox + (bx - c0) * k - s / 2, y = oy + (by - c0) * k - s / 2;
+    if (net) { s = Math.max(1, Math.round(s)); x = Math.round(x); y = Math.round(y); }   // calé sur le pixel
+    out.push([x, y, s, op]);
+  }
+  return { cases: out, echantillon: pts.length };
 }
 
 /* ---- Segments → chemins SVG, un par niveau d'opacité -------------------- */
@@ -846,10 +1085,10 @@ let ecartees = 0;
 
 /* ---- Rendu ---------------------------------------------------------------- */
 const mesures = { recette: RECETTE, cadre: [W, H], echelle: ECH, trait: TRAIT };
-let segs2, trace2 = [], eau2 = [], drap2 = [], scene = null;
+let segs2, trace2 = [], eau2 = [], drap2 = [], scene = null, champLogo = null;
 if (RECETTE === "logo") {
   const r = logo(num("opacite", 0.28), num("maitresse", 0.75));
-  segs2 = r.out; mesures.bords = r.bords; mesures.niveaux = r.niveaux;
+  segs2 = r.out; mesures.bords = r.bords; mesures.niveaux = r.niveaux; champLogo = r.champ;
   mesures.couleur = couleur("couleur", "papier");
 } else {
   scene = { everest, montblanc, lac }[RECETTE]?.();
@@ -884,9 +1123,30 @@ const parOpacite = (liste) => {
 // Livraison 3 : sans les courbes (courbes=0), teinte, lac plein, neige pixel,
 // silhouette. Rien de tout cela sans sa clé.
 if (num("courbes", 1) <= 0) segs2 = [];
+// Livraison B : le logo en pixels (neige, grille, révélation). Rien sans sa clé.
+let logoPix = null, grilleL = null, part = null;
+if (RECETTE === "logo") {
+  const dans = opt.pixels || num("cases", 0) > 0 ? dansLogos() : null;
+  if (opt.pixels) logoPix = neigeLogo(dans, champLogo);
+  if (opt.grille) grilleL = grilleLogo(dans, champLogo);
+  if (opt.revelation) part = revelation(num("revelation", 1.6));
+}
+// Livraison B, evider=1 : la scène évidée par les logos posés (logos=…) : ni
+// courbe ni neige dans leur forme, les logos apparaissent en creux, au
+// pochoir. Un segment qui passe le bord est coupé dessus (bissection).
+const evide = scene && num("evider", 0) > 0 ? dansLogos() : null;
+if (evide) segs2 = segs2.flatMap((s) => {
+  const [a, b] = s, ia = evide(a[0], a[1]), ib = evide(b[0], b[1]);
+  if (ia && ib) return [];
+  if (!ia && !ib) return [s];
+  let p = ia ? b : a, q = ia ? a : b;                          // p dehors, q dedans
+  for (let k = 0; k < 12; k++) { const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2]; if (evide(m[0], m[1])) q = m; else p = m; }
+  return [ia ? [p, b, ...s.slice(2)] : [a, p, ...s.slice(2)]];
+});
 const sur = couleur("sur", null) || couleur("fond", null) || PALETTE.encre;  // fond d'accueil, pour la teinte
 const teintes = scene && opt.teinte ? teinter(segs2, scene, sur) : null;
-const pix = scene && opt.pixels ? neigePixels(scene, num("opacite", 1)) : null;
+const pix0 = scene && opt.pixels ? neigePixels(scene, num("opacite", 1)) : logoPix;
+const pix = evide && pix0 ? { ...pix0, cases: pix0.cases.filter(([x, y]) => !evide((x + 0.5) * pix0.c, (y + 0.5) * pix0.c)) } : pix0;
 const sil = scene && opt.silhouette ? silhouette(scene) : null;
 let plein2 = [];
 if (scene && scene.plein && scene.plein.length) {      // sans élagage : le rivage reste fermé
@@ -908,6 +1168,11 @@ const groupes = parOpacite(teintes ? [] : segs2);
 const fond = couleur("fond", null);
 const svg = [`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`];
 if (fond) svg.push(`<rect width="${W}" height="${H}" fill="${fond}"/>`);
+if (grilleL) {                             // livraison B : la grille fine, sous tout le reste
+  const a = au100(num("grilleOpacite", 0.1)), c = couleur("grilleCouleur", null) || mesures.couleur;
+  svg.push(`<path${nomme(`grille ${a}`)} fill="none" stroke="${c}" stroke-opacity="${a}" stroke-width="1"${grilleL.points ? ` stroke-dasharray="1 ${grilleL.p - 1}"` : ""} d="${grilleL.d}"/>`);
+  mesures.grille = { pas: grilleL.p, [grilleL.points ? "points" : "filets"]: grilleL.lignes, cases: grilleL.cases.length };
+}
 if (sil) {                                 // sous les courbes : la crête en aplat
   const r = (v) => Math.round(v * 10) / 10;
   svg.push(`<path${nomme("silhouette")} fill="${couleur("silhouette", "encre")}" d="M0 ${H}L${sil.map((p) => r(p[0]) + " " + r(p[1])).join("L")}L${W} ${H}Z"/>`);
@@ -995,6 +1260,24 @@ if (pix) {                                 // une case allumée = un carré ; ra
   svg.push("</g>");
   mesures.pixels = { taille: c, allumes: pix.cases.length, niveaux: parA.size };
 }
+// Livraison B : carrés de taille libre ([x, y, côté, opacité]), un chemin par
+// niveau d'opacité au dixième ; les cases de la grille, puis les particules
+// de la révélation.
+const carres = (liste, nom, fill) => {
+  const parA = new Map(), r = (v) => Math.round(v * 100) / 100;
+  for (const [x, y, s, a] of liste) {
+    const q = Math.round(a * 10) / 10;
+    if (q <= 0) continue;
+    parA.set(q, (parA.get(q) || "") + `M${r(x)} ${r(y)}h${r(s)}v${r(s)}h${r(-s)}z`);
+  }
+  svg.push(`<g${nomme(nom)} fill="${fill}" stroke="none">`);
+  for (const q of [...parA.keys()].sort((a, b) => a - b)) svg.push(`<path${nomme(`${nom} ${q}`)} fill-opacity="${q}" d="${parA.get(q)}"/>`);
+  svg.push("</g>");
+  return parA.size;
+};
+if (grilleL && grilleL.cases.length) carres(grilleL.cases, "cases", couleur("casesCouleur", null) || mesures.couleur);
+if (part) mesures.revelation = { instant: num("revelation", 1.6), echantillon: part.echantillon,
+  particules: part.cases.length, niveaux: carres(part.cases, "revelation", mesures.couleur) };
 if (trace2.length) {                       // par-dessus les courbes, comme dans Benefits
   const { d } = chemins(trace2.map(([a, b]) => [a, b]));
   svg.push(`<path fill="none" stroke="${PALETTE.bleu}" stroke-opacity="${trace2[0][2]}" stroke-width="${TRAIT}" stroke-linejoin="round" d="${d}"/>`);

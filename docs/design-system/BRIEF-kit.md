@@ -736,3 +736,209 @@ marche en trait et en points.
    livraison A.
 6. **Section 4** : le cadre « rendu » qui coupait la montagne reste, étendu à
    toute la planche ; il ne coupe plus rien.
+
+## Réponses et retours sur la livraison A2 (10 octobre 2026)
+
+Jimmy a relu la page Kit Direction et retiré lui-même ce qu'il n'aimait pas :
+ce qui reste sur la page est validé.
+
+### Décision : deux DA, à égalité
+
+- **La DA trait** : les courbes de niveau en trait, comme sur le site.
+- **La DA pixels** : la montagne dessinée en pixels de neige.
+
+Toute la suite se décline dans les deux.
+
+### Les six choix
+
+1. **Bleu clair sur encre** (1g7, 1h7) : pas retenu pour l'instant.
+2. **Variantes à garder** : celles qui restent sur la page. Les déclinaisons en
+   4:5, carré et 9:16 se feront plus tard, dans les deux DA, sur les planches
+   restantes.
+3. **Archives** : validées.
+4. **Profondeur du lac** : validée.
+5. **Textures d'abysse** : validées.
+6. **Section 4** : le cadre étendu à toute la planche, validé.
+
+### Ce qui a été retiré de la page
+
+Relevé à l'ouverture de la session suivante :
+
+- **sections 1 et 1 bis** : retirées en entier (1a à 1d en archive ; 1e, 1f,
+  1g, 1h, 1i et 1k). `planche/1j-macro` (`395:189`) est déplacée dans la rangée
+  macro de 1 ter, à la place de 1j5 ;
+- **1 ter** : 1g5-masse-bleue, 1h2-ceinture, 1h4-vallees-bleues,
+  1i6-masse-bleue, 1j5-masse-bleue, 1e2-abysse, 1e4-berges et 1f2-abysse ;
+- **4 bis** : 4e3-vue-du-ciel, 4g-altitude-bleue et 4h-calotte ;
+- **sections 2 à 7** : inchangées.
+
+### Pour la livraison B
+
+1. **Logo** : les planches restent. Des essais dans l'esprit de Lumora : logo
+   en pixels de neige comme l'animation de révélation du site, logo en courbes
+   de niveau, logo géant et translucide coupé par le bord, logo sur une grille
+   fine, dégradés grainés dans la palette.
+2. **Affiche bleue** : elle reste, avec des variantes plus abstraites, en trait
+   et en pixels, avec du grain.
+3. **Typo** : elle reste, avec deux variantes. Dans l'une, « du concept au
+   sommet » passe en bleu au lieu du gris ; dans l'autre, le gris reste et le
+   filet de séparation passe en bleu.
+4. **Logo collé** : les essais restent. D'autres, plus abstraits et originaux,
+   avec le trait, les pixels de neige, le grain et des montagnes bleues en fond.
+5. **« Jimmy Ocks »** sort des sections 2, 3, 5, 6 et 7 ; jimmyferon.com reste
+   seulement là où une mention de contact sert.
+
+Chaque essai se propose dans les deux DA quand ça a du sens.
+
+### Pour plus tard, à ne pas faire maintenant
+
+- **Le traileur** : des variantes des deux DA avec un traileur qui grimpe une
+  montagne, en abstrait. Le hero Everest du site en a déjà la silhouette, à
+  réutiliser : `poseFigure` dans `components/Everest.js`, quinze segments bleus
+  (buste, tête en losange, jambes, bras et deux bâtons), animés par la distance
+  parcourue.
+
+### Ce que ces retours changent
+
+- **Le logo en pixels de neige** lève à son tour l'interdit « pas de trame »
+  de `reference-drapz.md` (§3.2), comme le logo en courbes avait levé celui du
+  contour : le dessin du logo ne change pas, ses pixels sont tirés de son SVG,
+  comme le fait l'animation de révélation du site (`components/LogoReveal.js`).
+- **Le bleu clair** : `color/accent/on-dark` garde sa portée (le texte seul).
+
+## Livraison B (10 octobre 2026)
+
+Page Kit Direction (`346:2`). Quatre sections neuves s'insèrent après celles
+qu'elles prolongent ; les suivantes descendent (3 de 3 320 px ; 4, 4 bis et 5
+de 6 640 ; 6 et 7 de 8 560). 22 planches neuves de 1920 × 1080, chacune
+exportée en PNG 1x et 2x. Aucune planche retirée ; seuls les textes du nom
+sortent des planches existantes.
+
+### Le nom retiré
+
+32 textes retirés des sections 2, 3, 5, 6 et 7 : les 25 qui portaient
+« Jimmy Ocks », les 5 qui portaient le pseudo @jimmy.ocks, et jimmyferon.com
+là où il ne servait pas de contact (7b, 7c ; avec le nom en 2-logo-1x1, avec le
+pseudo en 2-logo-16x9). Sur les quatre versos des cartes, la ligne du pseudo
+sort des coordonnées.
+
+- **Gardé** : jimmyferon.com en haut à droite des quatre affiches ; sur les
+  cartes, jimmyferon.com et l'e-mail, et « Jimmy Feron, Brand Designer &
+  UI/UX », qui nomment la personne et non la marque.
+- **Signature** : sur le verso des cartes, le logo reste seul en haut à gauche.
+  Les affiches n'en reçoivent pas : le coin du nom reste vide.
+
+### Section 2 bis · Logo — essais Lumora (`422:177`)
+
+Une rangée par DA, une colonne par idée ; chaque paire partage son fond. Aucun
+texte.
+
+| Idée | DA trait | DA pixels | Fond |
+|---|---|---|---|
+| Au centre, comme le visuel clé de Lumora | `2e-centre` (`423:177`) : le logo de 600 px gravé en courbes bleues tous les 6 px, cinq échos qui s'éteignent dehors | `2f-revelation` (`423:179`) : l'animation de révélation figée à 1,25 s, 4 000 particules bleues ; les dernières arrivent encore en haut à gauche | papier |
+| Relief éclairé | `2g-tanaka` (`423:181`) : courbes éclairées, comme une carte en relief (méthode de Tanaka) : vives sur le versant tourné vers la lumière, éteintes sur l'autre | `2h-neige` (`423:183`) : le logo pris comme un relief, chaque branche une arête ; versant éclairé dense, 30 % de neige à l'ombre | encre |
+| Géant, translucide, coupé par le bord | `2i-geant` (`423:185`) : deux branches de 2 600 px traversent le cadre ; le logo en filigrane papier .12 (A1), gravé de ses courbes | `2j-geant` (`423:193`) : les mêmes branches en neige éclairée, densité .75 : l'encre se voit au travers | encre |
+| Grille fine | `2k-grille` (`424:182`) : grille de 30 px en encre .08, calée sur le cercle du logo (20 cases de diamètre), le logo en courbes bleues | `2l-grille` (`424:184`) : une grille de points tous les 6 px, encre .22 ; les nœuds du logo s'allument en carrés bleus de 5 px, selon l'éclairage | papier |
+| Dégradé grainé | `2m-degrade` (`424:186`) : 70 courbes du dehors remplissent le cadre et s'éteignent dans le bleu, un dégradé en trait | `2n-clairiere` (`424:188`) : le logo en neige éclairée au centre d'une clairière bleue ; la neige s'épaissit en grain vers les bords | bleu |
+
+### Section 3 bis · Affiche bleue — variantes (`422:180`)
+
+Chaque variante est une copie de `3-affiche-16x9` après le retrait du nom :
+titre, jimmyferon.com, altimètre, grain et exports identiques ; seule la crête
+change.
+
+| DA | Planche | Nœud | L'idée |
+|---|---|---|---|
+| trait | `3e-lumiere` | `425:3793` | la lumière portée par les traits : papier au sommet, éteints vers les bords (la piste 1g) |
+| | `3f-sommet` | `425:3875` | seuls les traits au-dessus de 66 % de l'altitude : le sommet flotte |
+| | `3g-macro` | `425:3957` | un flanc du Mont Blanc à très grande échelle ; les courbes montent du bas et s'éteignent sous le titre |
+| pixels | `3h-neige` | `425:4039` | la crête en neige pixel, éclairée par l'ouest |
+| | `3i-contre-jour` | `425:4121` | le soleil de l'autre côté : seules les arêtes s'allument |
+| | `3j-congere` | `425:4203` | la neige s'épaissit vers le bas et se défait vers le haut ; il ne reste de la crête qu'un grain |
+
+### Section 5 bis · Typo — variantes (`422:183`)
+
+- `5a-concept-bleu` (`426:182`) : « du concept au sommet » en
+  `color/accent/default` ; le point final reste en encre.
+- `5b-filet-bleu` (`426:191`) : le gris reste ; le filet passe de
+  `color/border/default` à `color/accent/default`, un pixel plein.
+
+### Section 7 bis · Logo collé — nouveaux essais (`422:185`)
+
+| DA | Planche | Nœud | Fond | L'idée |
+|---|---|---|---|---|
+| trait | `7e-chaine` | `426:200` | encre | six logos de 400 px, tangents, en bas, coupés par les bords ; leurs courbes du dehors se rejoignent et montent en vagues : les logos se collent par leur relief |
+| | `7g-pochoir` | `426:204` | papier | l'Everest en courbes bleues ; une rangée de sept logos de 340 px laissée vide, au pochoir |
+| pixels | `7f-congere` | `426:202` | bleu | la rangée de 7e en neige éclairée, qui se défait vers le haut |
+| | `7h-pochoir` | `426:206` | papier | l'Everest en neige bleue (celle de 4e, jusqu'au pied), la rangée de logos en creux |
+
+### Le « ça bugue » des essais 7a à 7d : trouvé, pas corrigé
+
+Le composant `logo` (`171:144`, page Composants) découpe ses branches en cercle
+par un rayon d'angle de 17 px, la moitié de ses 34 px. Une instance agrandie
+garde ce rayon : à 180 px (7a), 240 px (7b), 78 px (7c) et 119 px (7d), la
+découpe devient un carré aux coins arrondis, et les branches sont tranchées à
+plat au lieu de suivre le cercle. Le filigrane de 2i a reçu un rayon de
+1 300 px, la moitié de ses 2 600 : il épouse alors exactement les courbes. Les
+essais 7a à 7d restent tels quels, gardés en l'état ; le composant est à
+corriger à part.
+
+### Les rendus et les outils
+
+- `rendu-courbes.mjs` reçoit des clés pour le logo : `logos`, `soleil`,
+  `relief` et `contraste` sur le logo, `pixels`, `fondu`, `halo`, `couronne`,
+  `revelation`, `grille`, `points`, `cases`, `cote`, et `evider` sur un relief.
+  La distance au contour du logo est cherchée par cases au lieu de la boucle
+  sur ses 2 252 segments : même résultat au bit près, et les grands logos se
+  calculent en quelques secondes.
+- **Non-régression** : six recettes des livraisons précédentes refaites à
+  l'octet près (SVG) : la carte de la livraison 1, `f-recto`, `n1-coupee`,
+  `g1-papier`, `k1-profondeur` et la crête de l'affiche.
+- Les 20 commandes sont dans `outils/README.md` (livraison B) : relancées, elles
+  refont à l'octet près les 20 SVG importés.
+
+### Valeurs
+
+- **Peintures** : 570 peintures pleines sur les 22 planches, toutes liées à une
+  variable ; opacités portées par les calques.
+- **Textes** : 37, tous liés à un style `kit/…` (libellés, affiches, typo).
+- **Rendus** : 511 vecteurs, aucune image ajoutée. La grille de points de 2l
+  est un filet pointillé (un pixel tracé, cinq vides), importé comme tel.
+- **Logo** : une instance, le filigrane de 2i, papier à .12.
+- **Grain** : `effect/grain` sur chaque planche.
+
+### Ce qui a été refait avant de montrer
+
+- **Révélation** : à l'échelle de sa toile (1 700 particules), trop pâle ; à
+  280 px, illisible. Gardé 600 px, 4 000 particules calées sur le pixel.
+- **Neige du logo** : en densité égale, une neige de télévision, déjà refusée
+  sur les montagnes ; remplacée par l'éclairage du relief du logo. Sans neige à
+  l'ombre, la silhouette se perdait : 30 % gardés.
+- **Logo au centre** : 24 puis 40 échos noyaient la silhouette dans une fleur ;
+  cinq gardés.
+- **Grille en pixels** : des cases à opacité tirée faisaient un patchwork ;
+  remplacées par la grille de points dont les nœuds du logo s'allument.
+- **Dégradé en pixels** : un halo de neige collé au logo le faisait lire en
+  creux ; écarté du logo, il dessinait un contour bleu qui l'épaississait.
+  Remplacé par la clairière.
+- **Affiche** : une strate d'altitude seule amputait le sommet, écartée ; la
+  macro, coupée net en haut de sa bande, est rendue sur toute la planche et
+  s'éteint vers le haut.
+- **Logo collé** : un halo de neige qui liait les logos brouillait la rangée,
+  remplacé par la congère ; dans le pochoir en neige, la vallée nue ne
+  dessinait pas les logos, la neige descend jusqu'au pied.
+- **Filigrane de 2i** : il débordait des courbes, à cause du rayon du
+  composant ; corrigé sur l'instance.
+
+### Choix à valider
+
+1. **Logo** : lesquels des dix essais garder, dans quelle DA.
+2. **Révélation** : figée à 1,25 s, le logo presque posé. Plus tôt, il se forme
+   encore et un nuage tourne au centre.
+3. **Affiches** : le coin du nom reste vide. Y mettre le logo seul ?
+4. **Cartes** : « Jimmy Feron » et le métier gardés ; jimmyferon.com et
+   l'e-mail aussi, comme contact.
+5. **7b et 7c** : jimmyferon.com retiré, faute de contact à servir.
+6. **Rayon du logo** : corriger les instances de 7a à 7d (rayon égal à la
+   moitié de la taille), et le composant, dans un chantier à part ?
+7. **5b** : le filet bleu fait un pixel ; plus présent ?
