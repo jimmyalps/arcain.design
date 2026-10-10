@@ -132,6 +132,24 @@
 //   neige=t0,t1,t2,t3 : une tranche d'altitude, allumée de t0 à t1 et éteinte
 //     de t2 à t3, comme la strate des courbes (teinte=altitude et une rampe
 //     papier entre deux encres) ; les camps du carrousel.
+//
+// Livraison C3, templates refaits (mêmes garanties : sans ces clés, rien ne
+// change ; onze recettes des livraisons précédentes refaites à l'octet près) :
+//   fenetre=x,y,l,h : seule une partie du cadre est rendue (coordonnées du
+//     cadre entier, caméra du cadre entier) ; les cinq slides d'un carrousel
+//     sont cinq fenêtres d'un même panorama de 5400 × 1350, qui se raccordent.
+//     Foyers, centres, origines et fondus restent donnés dans le cadre entier ;
+//   voie=gpx (montblanc) : la voie royale sans le raccord en ligne droite de
+//     Chamonix, du Nid d'Aigle au sommet ;
+//   traceTrait=px, traceCouleur : la trace épaissie (bouts arrondis), papier
+//     sur bleu ; reperes=a1,a2… (m) : dans les mesures, le premier point de la
+//     trace à chaque altitude et son dernier point, en px de la fenêtre ;
+//   teinte=trace, portee=r : la couleur des courbes suit leur distance à la
+//     trace projetée, la lumière suit le chemin ;
+//   forme=rect, rect=x,y,l,h[,rayon] (logo) : le champ est la distance signée
+//     à un rectangle, ses courbes les contours décalés du rectangle (le visuel
+//     d'un projet pris comme un sommet) ; dedans=0 n'en trace aucune à
+//     l'intérieur ; avec pixels, le rectangle tient lieu de logo (couronne).
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -150,8 +168,14 @@ const couleur = (k, d) => {
   return c && PALETTE[c];
 };
 const nomme = (n) => (opt.noms ? ` id="${n}"` : "");          // nom du calque dans Figma
-const [W, H] = (opt.cadre || "1920x1080").split("x").map(Number);
+const [WF, HF] = (opt.cadre || "1920x1080").split("x").map(Number);
+// Livraison C3, fenetre=x,y,l,h : seule une partie du cadre est rendue, en
+// coordonnées du cadre entier ; la caméra reste celle du cadre entier. Les cinq
+// slides d'un carrousel sont les cinq fenêtres d'un même panorama. Sans la clé,
+// la fenêtre est le cadre.
+const [X0, Y0, W, H] = opt.fenetre ? opt.fenetre.split(",").map(Number) : [0, 0, WF, HF];
 const ECH = num("echelle", 2), TRAIT = num("trait", 1);
+const enFenetre = ([x, y]) => [x - X0, y - Y0];               // cadre entier → fenêtre
 const D36 = "0123456789abcdefghijklmnopqrstuvwxyz";
 
 /* ---- Everest : Everest.js, décodage et marching squares ----------------- */
@@ -230,16 +254,19 @@ function montblanc() {
   };
   const trace = [];
   const cham = { u: 0.526, v: 0.048 }, g0 = { u: MB.gpx[0][0], v: MB.gpx[0][1] };
-  for (let s2 = 0; s2 < 60; s2++) {
+  // Livraison C3, voie=gpx : la trace part du Nid d'Aigle, premier point du
+  // GPX, sans le raccord en ligne droite depuis Chamonix.
+  for (let s2 = 0; s2 < (opt.voie === "gpx" ? 0 : 60); s2++) {
     const t2 = s2 / 60, u = cham.u + (g0.u - cham.u) * t2, v = cham.v + (g0.v - cham.v) * t2;
     const sh = sampleH(u, v);
     if (sh < 0.118) continue;
     trace.push([(u - 0.5) * Wt + XOFF, sh * Ht + 0.05, (v - 0.5) * Dt + ZOFF]);
   }
   MB.gpx.forEach(([u, v]) => trace.push([(u - 0.5) * Wt + XOFF, sampleH(u, v) * Ht + 0.05, (v - 0.5) * Dt + ZOFF]));
+  const traceAlt = trace.map((p) => MB.emin + Math.pow(Math.max(0, (p[1] - 0.05) / Ht), 1 / 1.05) * (MB.emax - MB.emin));
   // Fin de l'ascension (défilement à 100 %) : e = 1 dans draw().
   const ang = 3.75 - 0.6, rad = 6.8 - 0.5;
-  return { segs, trace, far: 100, hauteur: Ht,
+  return { segs, trace, traceAlt, far: 100, hauteur: Ht,
     grille: { Nx, Ny, pos: (i, j) => [XG(i), G[j * Nx + i] * Ht, ZG(j)], frac: (i, j) => G[j * Nx + i],
       monde: (fi, fj) => [XG(fi), bilin(G, Nx, Ny, fi, fj) * Ht, ZG(fj)] }, defauts: {
     camera: [Math.sin(ang) * rad, 2.6 + 3.6, Math.cos(ang) * rad], cible: [0.1, 0.55 + 0.35, 0], fov: 40,
@@ -437,12 +464,13 @@ function camera(scene) {
   const fov = num("fov", scene.defauts.fov), dy = num("decalage", scene.defauts.decalage);
   const fog = opt.brouillard === "non" ? null : vec("brouillard", scene.defauts.brouillard);
   const zc = norm(sub(cam, cible)), xc = norm(cross([0, 1, 0], zc)), yc = cross(zc, xc);
-  const f = 1 / Math.tan((fov * Math.PI) / 360), aspect = W / H;
+  const f = 1 / Math.tan((fov * Math.PI) / 360), aspect = WF / HF;
   const vue = (p) => { const d = sub([p[0], p[1] + dy, p[2]], cam); return [dot(d, xc), dot(d, yc), dot(d, zc)]; };
-  const ecran = (v) => [((f / aspect) * (v[0] / -v[2]) + 1) / 2 * W, (1 - f * (v[1] / -v[2])) / 2 * H];
+  // Coordonnées de la fenêtre (le cadre entier sans `fenetre`).
+  const ecran = (v) => [((f / aspect) * (v[0] / -v[2]) + 1) / 2 * WF - X0, (1 - f * (v[1] / -v[2])) / 2 * HF - Y0];
   // L'inverse : le point de la scène vu en (sx, sy) sur le plan horizontal y.
   const surPlan = (sx, sy, y) => {
-    const a = ((2 * sx) / W - 1) * (aspect / f), b = (1 - (2 * sy) / H) / f;
+    const a = ((2 * (sx + X0)) / WF - 1) * (aspect / f), b = (1 - (2 * (sy + Y0)) / HF) / f;
     const dir = [0, 1, 2].map((k) => xc[k] * a + yc[k] * b - zc[k]), t = (y + dy - cam[1]) / dir[1];
     return t > 0 ? [cam[0] + t * dir[0], y, cam[2] + t * dir[2]] : null;
   };
@@ -482,11 +510,27 @@ function teinter(segs, scene, fond) {
     if (!PALETTE[c]) throw new Error(`rampe : ${c} hors palette (papier, encre, bleu)`);
     return { c, p: +p };
   });
-  const [b0, b1] = vec("bande", [0, 1]), [fx, fy] = vec("foyer", [W / 2, H / 2]), [rx, ry] = vec("portee", [W / 2, H / 2]);
+  const [b0, b1] = vec("bande", [0, 1]), [fx, fy] = enFenetre(vec("foyer", [WF / 2, HF / 2])), [rx, ry] = vec("portee", [WF / 2, HF / 2]);
   const out = [];
+  // Livraison C3, teinte=trace : la distance à la trace projetée (voie royale),
+  // rapportée à portee=r (px) ; la lumière suit le chemin.
+  let pres = null;
+  if (opt.teinte === "trace") {
+    const { vue, ecran } = camera(scene), T = scene.trace.map((p) => ecran(vue(p))), r = num("portee", 300);
+    pres = (x, y) => {
+      let m = Infinity;
+      for (let k = 1; k < T.length; k++) {
+        const [ax, ay] = T[k - 1], ex = T[k][0] - ax, ey = T[k][1] - ay, l = ex * ex + ey * ey;
+        const u = l > 0 ? Math.max(0, Math.min(1, ((x - ax) * ex + (y - ay) * ey) / l)) : 0;
+        m = Math.min(m, Math.hypot(x - ax - u * ex, y - ay - u * ey));
+      }
+      return Math.min(1, m / r);
+    };
+  }
   for (const [s1, s2, a, y] of segs) {
     const t = opt.teinte === "altitude"
       ? Math.max(0, Math.min(1, (y / scene.hauteur - b0) / (b1 - b0)))
+      : pres ? pres((s1[0] + s2[0]) / 2, (s1[1] + s2[1]) / 2)
       : Math.min(1, Math.hypot(((s1[0] + s2[0]) / 2 - fx) / rx, ((s1[1] + s2[1]) / 2 - fy) / ry));
     let k = 0;
     while (k < rampe.length - 2 && t > rampe[k + 1].p) k++;
@@ -567,7 +611,7 @@ function neigePixels(scene, base) {
   // t1, éteinte de t2 à t3). Avec deux valeurs, rien ne change.
   const [n0, n1] = nv, tranche = nv.length >= 4 ? [nv[2], nv[3]] : null;
   // Livraison A2 : la neige s'éteint (ou s'allume, inverse=1) loin du foyer.
-  const [fx, fy] = vec("foyer", [W / 2, H / 2]), [rx, ry] = vec("portee", [W / 2, H / 2]), inv = num("inverse", 0) > 0;
+  const [fx, fy] = enFenetre(vec("foyer", [WF / 2, HF / 2])), [rx, ry] = vec("portee", [WF / 2, HF / 2]), inv = num("inverse", 0) > 0;
   const halo = (k) => {
     const t = smoothstep(0, 1, Math.hypot((((k % cw) + 0.5) * c - fx) / rx, ((Math.floor(k / cw) + 0.5) * c - fy) / ry));
     return inv ? t : 1 - t;
@@ -816,15 +860,20 @@ function plusProche(B) {
 // depuis la livraison B, plusieurs (logos=x,y,d;x,y,d…), tous dans la même
 // orientation (rotation, par pas de 72°).
 function placements() {
-  if (opt.logos) return opt.logos.split(";").map((t) => { const [x, y, d] = t.split(",").map(Number); return { cx: x, cy: y, s: d / 1140 }; });
-  const [cx, cy] = vec("centre", [W / 2, H / 2]), Dm = num("diametre", 1140);
+  if (opt.logos) return opt.logos.split(";").map((t) => { const [x, y, d] = t.split(",").map(Number); return { cx: x - X0, cy: y - Y0, s: d / 1140 }; });
+  const [cx, cy] = enFenetre(vec("centre", [WF / 2, HF / 2])), Dm = num("diametre", 1140);
   return [{ cx, cy, s: Dm / 1140 }];
 }
 
 /* ---- Logo : distance signée au contour, vu de dessus -------------------- */
 function logo(base, baseM) {
-  const { union, R, CX, CY, bords } = formeLogo();
-  const B = Float64Array.from(bords.flat(2)), dist = plusProche(B);
+  // Livraison C3, forme=rect et rect=x,y,l,h[,rayon] (px du cadre entier) : le
+  // champ est la distance signée à ce rectangle, et ses courbes les contours
+  // décalés du rectangle, comme ceux du logo ; dedans=0 n'en trace aucune à
+  // l'intérieur (le visuel les couvre).
+  const rect = opt.forme === "rect" ? vec("rect") : null;
+  const { union, R, CX, CY, bords } = rect ? { bords: [] } : formeLogo();
+  const B = Float64Array.from(bords.flat(2)), dist = rect ? null : plusProche(B);
   // Placement : centre et diamètre en px du cadre, rotation par pas de 72°.
   const places = placements();
   const rot = (num("rotation", 0) * Math.PI) / 180, co = Math.cos(rot), si = Math.sin(rot);
@@ -835,8 +884,14 @@ function logo(base, baseM) {
   // reste au-dessus de toutes les courbes, qui ne bougent pas.
   const loin = places.length > 1 ? (dehors + 1) * pas + 2 * g : Infinity;
   const nx = Math.ceil(W / g) + 1, ny = Math.ceil(H / g) + 1, F = new Float64Array(nx * ny);
+  const [rx0, ry0, rl, rh, rr = 0] = rect || [], rcx = rect && rx0 - X0 + rl / 2, rcy = rect && ry0 - Y0 + rh / 2;
   for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
     let v = Infinity;
+    if (rect) {
+      const qx = Math.abs(i * g - rcx) - (rl / 2 - rr), qy = Math.abs(j * g - rcy) - (rh / 2 - rr);
+      F[j * nx + i] = Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - rr;
+      continue;
+    }
     for (const P of places) {
       const px = (i * g - P.cx) / P.s, py = (j * g - P.cy) / P.s;
       const x = co * px + si * py + CX, y = -si * px + co * py + CY;
@@ -857,7 +912,7 @@ function logo(base, baseM) {
   // versant où il passe (lumiereLogo), au dixième.
   const lum = opt.soleil ? lumiereLogo({ F, nx, ny, g }) : null;
   const out = [];
-  for (let k = Math.ceil(lo / pas); k * pas < hi && k <= dehors; k++) {
+  for (let k = opt.dedans === "0" ? Math.max(0, Math.ceil(lo / pas)) : Math.ceil(lo / pas); k * pas < hi && k <= dehors; k++) {
     const L = k * pas + 1e-6, mait = k % 5 === 0;                           // + 1e-6 : jamais pile sur un nœud
     const a = (mait ? baseM : base) * (k > 0 ? 1 - k / (dehors + 1) : 1);
     for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
@@ -914,7 +969,7 @@ const tirage = () => {                       // xorshift à graine fixe, comme l
 // l'écart ; avec couronne=d0,d1,γ, l'inverse : densite × smoothstep(d0, d1,
 // distance)^γ, une clairière autour du logo. Sans l'une ni l'autre, rien dehors.
 function densiteLogo(dans, champ) {
-  const dens = num("densite", 1), [f0, f1] = vec("fondu", [0, 0]), [hd, hg, he = 0, ha = 1] = vec("halo", [0, 1]);
+  const dens = num("densite", 1), [f0, f1] = vec("fondu", [0, 0]).map((v) => v - Y0), [hd, hg, he = 0, ha = 1] = vec("halo", [0, 1]);
   const [c0, c1, cg] = vec("couronne", [0, 0, 1]);
   const lum = opt.soleil ? lumiereLogo(champ) : null, { F, nx, ny, g } = champ;
   return (X, Y) => {
@@ -963,7 +1018,7 @@ function neigeLogo(dans, champ) {
 // joint ; avec points, centré sur le nœud, `cote` impair pour rester sur le
 // pixel), opacité tirée entre .4 et 1.
 function grilleLogo(dans, champ) {
-  const p = num("grille", 15), [ox, oy] = vec("origine", [0, 0]), rnd = tirage(), pts = num("points", 0) > 0;
+  const p = num("grille", 15), [ox, oy] = enFenetre(vec("origine", [0, 0])), rnd = tirage(), pts = num("points", 0) > 0;
   const i0 = Math.ceil(-ox / p), i1 = Math.floor((W - ox) / p), j0 = Math.ceil(-oy / p), j1 = Math.floor((H - oy) / p);
   let d = "", n = 0;
   if (pts) for (let j = j0; j <= j1; j++) { d += `M${ox + i0 * p} ${oy + j * p + 0.5}h${(i1 - i0) * p + 1}`; n++; }
@@ -1006,7 +1061,7 @@ function revelation(t) {
   for (let i = pts.length - 1; i > 0; i--) { const j = (rnd() * (i + 1)) | 0, q = pts[i]; pts[i] = pts[j]; pts[j] = q; }
   const lerp = (a, b, k) => a + (b - a) * k, cl = (v, a, b) => (v < a ? a : v > b ? b : v);
   const eOut = (x) => 1 - Math.pow(1 - x, 3), eQuint = (x) => (x < 0.5 ? 16 * x ** 5 : 1 - Math.pow(-2 * x + 2, 5) / 2);
-  const c0 = S / 2, [ox, oy] = vec("centre", [W / 2, H / 2]), k = num("diametre", S) / S;
+  const c0 = S / 2, [ox, oy] = enFenetre(vec("centre", [WF / 2, HF / 2])), k = num("diametre", S) / S;
   const fade = smoothstep(2.75, 2.98, t), net = num("net", 0) > 0, out = [];
   for (let i = 0; i < Math.min(pts.length, MAXP); i++) {
     const [tx, ty] = pts[i];
@@ -1094,7 +1149,8 @@ function chemins(segs, min = 0, minBoucle = 0) {
 let ecartees = 0;
 
 /* ---- Rendu ---------------------------------------------------------------- */
-const mesures = { recette: RECETTE, cadre: [W, H], echelle: ECH, trait: TRAIT };
+const mesures = { recette: RECETTE, cadre: [WF, HF], echelle: ECH, trait: TRAIT };
+if (opt.fenetre) mesures.fenetre = [X0, Y0, W, H];
 let segs2, trace2 = [], eau2 = [], drap2 = [], scene = null, champLogo = null;
 if (RECETTE === "logo") {
   const r = logo(num("opacite", 0.28), num("maitresse", 0.75));
@@ -1115,6 +1171,17 @@ if (RECETTE === "logo") {
   const opD = num("drapeaux", 0);
   if (opD > 0 && scene.marques) drap2 = drapeaux(scene, opD);
   mesures.segmentsScene = scene.segs.length;
+  // Livraison C3, reperes=a1,a2… (m) : le premier point de la trace à chaque
+  // altitude, en px de la fenêtre, pour poser les camps du carrousel ; et son
+  // dernier point, le sommet.
+  if (opt.reperes && scene.traceAlt) {
+    const { vue, ecran } = camera(scene), px = (p) => ecran(vue(p)).map((v) => Math.round(v * 10) / 10);
+    mesures.reperes = opt.reperes.split(",").map(Number).map((a) => {
+      const k = scene.traceAlt.findIndex((m) => m >= a);
+      return k < 0 ? { alt: a, absent: true } : { alt: a, reel: Math.round(scene.traceAlt[k]), px: px(scene.trace[k]) };
+    });
+    mesures.sommetTrace = { reel: Math.round(scene.traceAlt[scene.traceAlt.length - 1]), px: px(scene.trace[scene.trace.length - 1]) };
+  }
   if (drap2.length) mesures.drapeaux = drap2.map(({ k, alt, etiquette, a }) =>
     ({ k, alt, etiquette: etiquette.map((v) => Math.round(v)), opacite: Math.round(a * 100) / 100 }));
 }
@@ -1136,7 +1203,10 @@ if (num("courbes", 1) <= 0) segs2 = [];
 // Livraison B : le logo en pixels (neige, grille, révélation). Rien sans sa clé.
 let logoPix = null, grilleL = null, part = null;
 if (RECETTE === "logo") {
-  const dans = opt.pixels || num("cases", 0) > 0 ? dansLogos() : null;
+  // Avec forme=rect, « dedans » est le rectangle (livraison C3).
+  const rc = opt.forme === "rect" ? vec("rect") : null;
+  const dans = rc ? (X, Y) => X + X0 >= rc[0] && X + X0 <= rc[0] + rc[2] && Y + Y0 >= rc[1] && Y + Y0 <= rc[1] + rc[3]
+    : opt.pixels || num("cases", 0) > 0 ? dansLogos() : null;
   if (opt.pixels) logoPix = neigeLogo(dans, champLogo);
   if (opt.grille) grilleL = grilleLogo(dans, champLogo);
   if (opt.revelation) part = revelation(num("revelation", 1.6));
@@ -1290,7 +1360,10 @@ if (part) mesures.revelation = { instant: num("revelation", 1.6), echantillon: p
   particules: part.cases.length, niveaux: carres(part.cases, "revelation", mesures.couleur) };
 if (trace2.length) {                       // par-dessus les courbes, comme dans Benefits
   const { d } = chemins(trace2.map(([a, b]) => [a, b]));
-  svg.push(`<path fill="none" stroke="${PALETTE.bleu}" stroke-opacity="${trace2[0][2]}" stroke-width="${TRAIT}" stroke-linejoin="round" d="${d}"/>`);
+  // Livraison C3 : traceTrait=px (la trace épaissie, bouts arrondis) et
+  // traceCouleur (papier sur bleu). Sans elles, le trait et le bleu du code.
+  const tt = opt.traceTrait === undefined ? TRAIT : num("traceTrait", TRAIT), bout = opt.traceTrait === undefined ? "" : ' stroke-linecap="round"';
+  svg.push(`<path${nomme("trace")} fill="none" stroke="${couleur("traceCouleur", "bleu")}" stroke-opacity="${trace2[0][2]}" stroke-width="${tt}"${bout} stroke-linejoin="round" d="${d}"/>`);
 }
 if (eau2.length) {                         // par-dessus aussi : depthTest coupé dans Lake3D.js
   svg.push(`<g fill="none" stroke="${PALETTE.bleu}" stroke-width="${TRAIT}">`);

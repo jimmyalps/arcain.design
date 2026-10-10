@@ -1253,3 +1253,226 @@ la vallée de Chamonix dans le bas du cadre.
    lieu de 56.
 6. **Bannières** : la règle de 1g2-decentree appliquée à 1h3 et 1i1.
 7. **Projet** : Anya en exemple, avec son filet ; jimmyferon.com en contact.
+
+## Réponses et retours sur la livraison C2 (10 octobre 2026)
+
+Trois des sept choix sont validés : **1** (l'A3 à la typo de l'affiche 4:5,
+l'A4 un cran plus bas), **2** (les fonds recomposés) et **5** (le bandeau de la
+story et du Reel à 250 px). Les autres sont couverts par les retours qui
+suivent.
+
+### Règles pour les templates
+
+Elles s'ajoutent aux précédentes et font foi à partir de la livraison C3.
+
+- **Ne rien supprimer** : on crée à côté.
+- **Plus de pic au milieu du cadre.** C2 refaisait toujours la même image, un
+  sommet centré. C'est interdit désormais. Aller vers l'abstrait : fragments,
+  cadrages macro, coupes par le bord, champs de pixels, courbes qui débordent,
+  compositions décentrées.
+- **En anglais, et beaucoup moins de texte.** Les textes en français font
+  kitsch : on prend les textes anglais du site (`lib/i18n.js`, clés `en`).
+- **Des fonds avec le logo**, qui manquaient : centré, géant et coupé, tourné
+  par pas de 72°, en pixels, en courbes de niveau.
+- **Trois couleurs** : chaque proposition existe sur encre, sur papier et sur
+  bleu.
+- **Méthode** : avant de composer, une planche de 12 vignettes de compositions
+  toutes différentes. On choisit les plus fortes, et seulement ensuite on les
+  construit.
+
+### Les trois templates à refaire
+
+1. **Post projet** : la formule de C2 (visuel du projet dans un cadre, bande de
+   montagne en dessous, texte empilé) est écartée. Ne pas la reproduire :
+   d'autres mises en page, plus libres.
+2. **Carrousel** : l'idée est bonne mais mal faite. On le garde et on le refait
+   mieux, en plusieurs propositions. La montagne est un seul panorama continu
+   sur les cinq slides, avec la trace bleue comme fil conducteur, qui grimpe
+   d'une slide à l'autre. Ce qui a été monté reste visible : on ne coupe pas le
+   bas à chaque palier. Sur encre, la trace est épaissie pour qu'elle se voie.
+   Le relief s'arrête après le massif : cadrer la caméra le long de la crête,
+   pour que le massif traverse les cinq slides, ou commencer la bande dans la
+   vallée, avec ses courbes basses. Aucune slide vide.
+3. **Bannières LinkedIn et X** : écartées en entier. De l'art abstrait, bien
+   composé, en plusieurs propositions.
+
+Tout se pose sur la page Kit Templates ; chaque capture est jugée avant d'être
+montrée, un commit, puis STOP.
+
+## Livraison C3 : les templates refaits (10 octobre 2026)
+
+Page Kit Templates (`444:2`). Rien n'est retiré : quatre sections neuves
+s'ajoutent sous la section 5, de 6 à 9. Chacune s'ouvre sur sa planche de
+douze vignettes, puis montre les propositions construites, chacune sur encre,
+sur papier et sur bleu. 96 cadres, chacun exporté en PNG 1x et 2x.
+
+### La méthode : douze vignettes, puis la construction
+
+Chaque planche pose douze compositions toutes différentes, faites avec les
+vrais rendus, les vrais visuels, le logo et la typo du kit, en réduction
+(images, sans export : ce sont des esquisses). La légende de chaque vignette
+nomme son idée ; celles qui sont construites portent la lettre de leur
+proposition.
+
+| Planche | Construites | Écartées, et pourquoi |
+|---|---|---|
+| Post projet | 05 → A, 06 → B, 11 → C, 12 → D | 10 refait un sommet au centre ; 09 donne une neige de télévision ; 04 : le grain ne défait pas le visuel, il pose un dégradé dessous ; 03 : les rectangles décalés font cadre d'écran plus que relief ; 07 : le logo géant ne se lit plus sous le visuel ; 01, 02, 08 tiennent, mais restent plus sages que les quatre retenues |
+| Carrousel | 03 → A, 02 → B, 05 avec les grandes altitudes de 09 → C | 07 : sous la masse bleue, la trace passe au-dessus de la crête ; 08, la carte vue du ciel, ne grimpe pas ; les autres sont des variantes de mise en texte des trois retenues |
+| Bannières | 01 → A, 08 → B, 06 → C, 02 → D | 03, 05, 07 posent un sommet au centre ; 10 : la trace seule dessine encore un pic ; le survol (04) et les cinq rotations (11) vont aux fonds avec le logo ; 09 et 12, plus faibles |
+| Fonds avec le logo | 03 → A, 04 → B, 07 → C, 10 → D, 12 → E | les cinq retenues couvrent les cinq demandes (centré, géant et coupé, tourné par pas de 72°, en pixels, en courbes de niveau) ; 01, 02, 05, 06, 08, 09, 11 en sont des variantes |
+
+### Section 6 · Post projet (`464:142`)
+
+| Proposition | Encre | Papier | Bleu | L'idée |
+|---|---|---|---|---|
+| A · Titre géant | `466:143` | `466:155` | `466:167` | « Anya » en `kit/display-600`, coupé par le bas et par la droite ; le visuel de l'enseigne en haut à droite, la mention en haut à gauche |
+| B · Quinconce | `466:180` | `466:192` | `466:204` | les deux visuels du projet en quinconce, l'un coupé à gauche, l'autre à droite ; le titre en pied |
+| C · Macro et vignette | `466:217` | `466:320` | `466:423` | le titre en `kit/display-180` en haut, une macro du Mont Blanc en courbes, le visuel en petit dans le coin bas droit |
+| D · Le visuel déborde | `466:527` | `466:538` | `466:549` | le visuel agrandi jusqu'à son logo, coupé en haut et sur les côtés ; une bande de la couleur du fond porte le titre à droite et le logo à gauche |
+
+Le titre géant de A est aligné sur l'encre visible : le pied du « A », hors
+cadre, portait l'alignement à 56 px, et le jambage coupé tombait à 84 px ;
+décalé de 28 px.
+
+### Section 7 · Carrousel (`464:156`)
+
+**La trace.** La voie royale de Benefits part du Nid d'Aigle, à l'ouest du
+sommet, et monte vers l'est. Vue du nord, comme sur le site, elle grimpe de
+droite à gauche ; avec son raccord en ligne droite depuis Chamonix, elle
+dessine un V en plan. Un balayage de 1 080 caméras le confirme : aucune ne la
+fait avancer de gauche à droite sur 5 400 px. Et sa pente, même vue de profil,
+ne descend pas sous 27° à l'écran, quand la diagonale d'un panorama 4:1 en
+fait 14°.
+
+**Le cadrage retenu.** Le massif vu du sud, en plongée de 32° (azimut 8°).
+La voie royale, dessinée par-dessus le relief comme dans Benefits (sans test
+de profondeur), suit alors la ligne de crête et monte en pente douce, du Nid
+d'Aigle, en bas de la slide 1, au sommet, en haut de la slide 5. Le relief
+remplit les cinq slides ; le haut des slides 1 et 2 reste du ciel, où se pose
+le texte. Le raccord de Chamonix est retiré (`voie=gpx`) : vu du sud, il
+revient en arrière.
+
+**Un seul panorama.** Chaque slide est une fenêtre de 1080 × 1350 du même
+rendu de 5400 × 1350 (`fenetre=…`) : les cinq se raccordent au pixel, et tout
+le relief reste visible, du bas au sommet. Trace de 6 px sur encre et sur bleu
+(papier sur bleu), de 4 px sur papier.
+
+**Les camps.** Les altitudes de Benefits (+1 250 à +4 810 m) sont les
+étiquettes du récit, une par slide, comme sur le site où les camps ne sont pas
+posés sur le relief. La trace réelle va de 2 376 m, le Nid d’Aigle, à 4 761 m
+(mesuré par `reperes`) : 2 400 m tombe sous le bord bas de la slide 1, 3 400 m
+sur la slide 2, 4 200 m au bord droit de la slide 3 ; 1 250 m n’est pas sur
+elle.
+
+| Proposition | Slides 1 à 5, encre | Papier | Bleu | L'idée |
+|---|---|---|---|---|
+| A · Neige | `471:204`, `471:224`, `471:238`, `471:252`, `471:266` | `471:282` à `471:344` | `471:360` à `471:422` | le panorama en neige pixel (bleue sur papier) ; la mention et le titre du camp en haut à gauche, à 56 px |
+| B · Trait et repères | `473:219`, `473:249`, `473:270`, `473:289`, `473:306` | `473:325` à `473:412` | `473:431` à `473:518` | le panorama en courbes ; un repère carré de 16 px sur la trace, au milieu de chaque slide, et le camp écrit à côté, dans le vide que laisse la trace : au-dessus à gauche sur les slides 1 et 2, au-dessous à droite sur les 3 à 5 |
+| C · Couloir de lumière | `473:4355`, `473:4466`, `473:4572`, `473:4677`, `473:4783` | `473:4869` à `473:5297` | `473:5383` à `473:5811` | les courbes ne s'allument que le long de la trace (`teinte=trace`, sur 420 px) ; l'altitude en `kit/display-180` et le titre en haut tant que la trace est basse (1 à 3), en bas une fois qu'elle a grimpé (4 et 5) |
+
+Le logo ouvre la slide 1, en haut à droite ; jimmyferon.com ferme la slide 5,
+au même endroit.
+
+### Section 8 · Bannières (`464:170`)
+
+De l'art abstrait : ni texte ni logo. Le coin bas gauche, où LinkedIn et X
+posent la photo de profil, ne porte pas le sujet.
+
+| Proposition | LinkedIn encre, papier, bleu | X encre, papier, bleu | L'idée |
+|---|---|---|---|
+| A · Macro, une bande | `469:203`, `469:217`, `469:231` | `469:210`, `469:224`, `469:238` | quelques courbes du Mont Blanc à très grande échelle, une seule bande en aplat entre deux courbes (bleue, papier sur bleu) |
+| B · Logo géant en neige | `469:246`, `469:268`, `469:290` | `469:257`, `469:279`, `469:301` | deux branches du logo de 1 500 px en neige éclairée, coupées par le cadre |
+| C · Échos du rivage | `469:313`, `469:349`, `469:385` | `469:331`, `469:367`, `469:403` | le rivage du lac d'Allos et ses échos, de part et d'autre d'un vide |
+| D · Logo géant en courbes | `469:422`, `469:458`, `469:494` | `469:440`, `469:476`, `469:512` | le logo de 1 300 px gravé de ses courbes, coupé en haut et en bas |
+
+### Section 9 · Fonds avec le logo (`464:184`)
+
+Des fonds sans texte, en 1080 × 1350.
+
+| Proposition | Encre | Papier | Bleu | La demande |
+|---|---|---|---|---|
+| A · Centré, en neige | `465:143` | `465:154` | `465:165` | centré, en pixels |
+| B · Géant et coupé, en courbes | `465:177` | `465:189` | `465:201` | géant et coupé, en courbes de niveau |
+| C · Le survol en pose longue | `465:214` | `465:230` | `465:246` | tourné par pas de 72° |
+| D · Courbes qui débordent | `465:263` | `465:318` | `465:373` | en courbes de niveau |
+| E · Géant, se défait en neige | `465:429` | `465:440` | `465:451` | géant et coupé, en pixels |
+
+**Le pas de 72°.** Tourné de 72°, le logo retombe presque sur lui-même
+(5 % d'écart au plus) : cinq rotations superposées donnent un logo qui vibre,
+pas un mouvement (vignette 08). C montre le pas lui-même : le survol du site
+(`.logo:hover`, 72° en 0,6 s, `cubic-bezier(.65,0,.2,1)`), douze poses du
+contour tous les 50 ms, superposées à .3, la pose finale pleine. Le cercle
+apparaît là où les branches touchent leur découpe.
+
+### Les textes
+
+En anglais, ceux du site, et beaucoup moins : deux textes par slide, deux ou
+trois par post, aucun sur les bannières et les fonds.
+
+| Texte | Source |
+|---|---|
+| Anya · Branding & UI/UX · 2026 | `cw.p1n`, `cw.p1t`, `cw.p1y` (`lib/i18n.js`) |
+| Solid Foundations, One Consistent Image, Interfaces That Convert, A Roped-Team Pace, Your Brand at the Summit | `bn3.c1t` à `bn3.c5t` |
+| +1 250 m … +4 810 m | `Benefits.js`, espaces insécables |
+| jimmyferon.com | contact |
+
+### Valeurs
+
+- **Peintures** : 2 727 peintures pleines sur les 96 cadres, toutes liées à une
+  variable (`color/bg/primary`, `color/text/primary`, `/label`, `/on-accent`,
+  `/on-accent-muted`, `color/accent/default`) ; opacités des rendus portées
+  par les calques.
+- **Textes** : 126 dans les cadres et 77 libellés de section, tous liés à un
+  style `kit/…`.
+- **Logo** : 21 instances, toutes au rayon de leur demi-taille.
+- **Images** : les deux visuels d'Anya du site (`anya-1600`, déjà dans le
+  fichier depuis C2, et `anya-enseigne-identite-1200`, converti en JPEG par
+  `webp-jpeg.mjs`), 15 fois ; 48 vignettes.
+- **Rendus** : 2 490 vecteurs, tirés de 29 SVG.
+- **Grain** : `effect/grain` sur chaque cadre.
+
+### Les rendus et les outils
+
+- `rendu-courbes.mjs` reçoit `fenetre`, `voie=gpx`, `traceTrait`,
+  `traceCouleur`, `reperes`, `teinte=trace` et, sur le logo, `forme=rect`,
+  `rect` et `dedans`. Sans elles, rien ne change : onze recettes des
+  livraisons précédentes refaites à l'octet près (SVG), et deux PNG.
+- `fusion-svg.mjs`, nouveau : réunit les douze poses du survol en un SVG.
+- Les 29 SVG importés se refont à l'octet près depuis les commandes de
+  `outils/README.md` (livraison C3) : SHA-1 égal à l'imageHash de Figma.
+- Les vignettes sont des esquisses : 71 rendus en réduction (70 de
+  `rendu-courbes.mjs`, un grain de `grain-degrade.mjs`), composés en HTML et
+  capturés ; ni ces rendus ni la mise en page ne sont versionnés.
+
+### Ce qui a été refait avant de montrer
+
+- **Carrousel, cadrage** : vu du nord, la trace grimpait à rebours ; vu de
+  l'ouest, le massif ne couvrait qu'un tiers du panorama ; vu du sud au ras du
+  sol, le relief devenait illisible. Gardée la plongée de 32°.
+- **Carrousel, matière** : des points épars de neige salissaient le ciel des
+  slides 1 et 2, brume resserrée ; le trait manquait de présence, brume
+  desserrée.
+- **Carrousel, texte** : sur la slide 5 de A, le titre croisait la trace ;
+  mention et titre remontés à 56 et 100 px sur toutes les slides, logo de la
+  slide 1 passé à droite. Sur B, posées à droite des repères, les étiquettes
+  des slides 1 à 3 croisaient la trace qui remonte : déplacées dans le vide.
+- **Bannière A, LinkedIn** : un éclat de la bande bleue mordait le coin haut
+  droit ; caméra décalée.
+- **Survol** : le script écartait les boucles des branches, plus courtes que
+  douze fois le pas ; refait avec un pas de 2.
+
+### Choix à valider
+
+1. **Carrousel, la vue du sud** et la voie royale sans le raccord de Chamonix :
+   la slide 1 commence au Nid d'Aigle, pas dans la vallée.
+2. **Les camps** : des étiquettes du récit, une par slide. Dans B, le repère
+   marque le milieu de la slide sur la trace, pas l'altitude réelle du point.
+3. **Le texte suit le vide de la trace** : C passe du haut au bas à la
+   slide 4, B change de côté à la slide 3.
+4. **Bannières** sans texte ni logo.
+5. **Le pas de 72°** : le mouvement du survol (C) plutôt que les cinq
+   rotations superposées.
+6. **Post D** : le visuel du projet recadré jusqu'à son logo.
+7. **Les autres templates de C2** (affiches, annonce, citation, story, Reel)
+   gardent leurs textes français et leurs sommets centrés : les refaire selon
+   les nouvelles règles, dans une prochaine livraison ?
