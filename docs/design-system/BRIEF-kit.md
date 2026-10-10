@@ -942,3 +942,169 @@ corriger à part.
 6. **Rayon du logo** : corriger les instances de 7a à 7d (rayon égal à la
    moitié de la taille), et le composant, dans un chantier à part ?
 7. **5b** : le filet bleu fait un pixel ; plus présent ?
+
+## Réponses sur la livraison B (10 octobre 2026)
+
+Jimmy a relu la page Kit Direction et l'a corrigée lui-même ; ses corrections
+priment. Relevé à l'ouverture de la session suivante : `2e-centre`,
+`2g-tanaka`, `2n-clairiere`, `3j-congere` et le libellé « DA trait » de la
+section 2 bis ne sont plus dans le fichier. Le reste est inchangé.
+
+1. **Logo** : tous les essais restants sont gardés pour l'instant ; on y
+   reviendra.
+2. **Affiches** : le logo seul en haut à gauche.
+3. **Cartes** : Jimmy les fait lui-même ; laissées en l'état.
+4. **7b et 7c** : jimmyferon.com retiré, validé.
+5. **Rayon du logo** : à corriger sur les instances de 7a à 7d ; le composant,
+   dans un chantier à part (ci-dessous).
+6. **5b** : le filet bleu reste à 1 px pour l'instant.
+
+### Chantier à part : le rayon du composant `logo`
+
+Le composant `logo` (`171:144`, page Composants) coupe ses cinq branches par
+son propre cadre, 34 × 34 arrondi à 17 px. Une instance agrandie garde ce
+rayon de 17 px : la découpe devient un carré aux coins arrondis, et les
+branches, qui débordent du cercle dans le tracé d'`app/icon.svg`, sont
+tranchées à plat au lieu de suivre le cercle. En attendant, sur la page Kit
+Direction, chaque instance porte un rayon égal à la moitié de sa taille.
+
+À faire dans une branche à part : une découpe qui reste un cercle à toutes les
+tailles, puis le contrôle des instances existantes du fichier (pages Marque,
+Composants, Kit Direction), dont le rayon posé à la main deviendrait inutile.
+
+### Livraisons C1 et C2, le brief
+
+Livraison C1 : le logo collé, en simple. Les essais 7 bis sont ratés, trop
+compliqués. Les garder et ajouter une nouvelle série :
+
+- le logo plein, sans courbes, sans neige, sans découpe ;
+- répété bord à bord en bande, comme sur les affiches de Radiant : chaque logo
+  touche ses voisins sans les chevaucher, à la même taille, avec un écart
+  calculé sur la géométrie réelle du logo ;
+- la bande n'occupe qu'une partie du cadre, le reste est un aplat bleu, encre
+  ou papier ;
+- et le logo accolé à un titre, simplement.
+
+STOP.
+
+Livraison C2 : la partie 3, les templates, sur une page « Kit Templates ». Elle
+remplace la partie 3 du brief, plus haut. Pas de cartes de visite. Chaque
+template existe dans les deux DA, avec comme fond une planche validée de Kit
+Direction :
+
+- affiches A4 et A3 portrait ;
+- posts en 1080 × 1350 : annonce, citation, projet (avec un visuel de projet du
+  site en exemple) et un carrousel de 5 slides ;
+- story et couverture de Reel en 1080 × 1920 ;
+- bannières LinkedIn (1584 × 396) et X (1500 × 500).
+
+Les textes viennent du site, sont modifiables et liés aux styles du kit. Pas de
+nom de marque : le logo seul sert de signature, et jimmyferon.com n'apparaît
+qu'en mention de contact. STOP.
+
+Chaque capture est jugée avant d'être montrée, un commit à chaque STOP.
+
+## Livraison C1 : le logo collé, en simple (10 octobre 2026)
+
+Page Kit Direction (`346:2`). Rien n'est retiré ni déplacé : une section
+neuve, « 7 ter · Logo collé — en simple » (`435:227`), s'ajoute sous la
+section 7 bis. Huit planches, chacune exportée en PNG 1x et 2x.
+
+### Les réponses appliquées
+
+- **Affiches** : le logo seul, papier, de 44 px, en haut à gauche des quatre
+  affiches (section 3) et des cinq variantes de la section 3 bis, qui en sont
+  des copies. L'encre du logo est à 56 px du haut et du bord gauche, comme
+  celle de jimmyferon.com en face : le haut du logo s'aligne sur le haut des
+  capitales de la mention. 44 px est la taille du logo du footer ; sa zone de
+  protection (17 px) s'arrête vers 116 px, à 44 px des capitales du titre.
+- **Rayon** : les 31 instances de 7a à 7d portent un rayon égal à la moitié de
+  leur taille ; la découpe suit le cercle. 7a garde son pas d'origine, le
+  diamètre : ses rangées ne se touchent pas, avec 5,8 px de jour entre elles ;
+  l'essai reste tel quel.
+
+### L'écart au contact, mesuré
+
+`outils/logo-colle.mjs` (nouveau) lit le logo d'`app/icon.svg` comme
+`formeLogo()` : les cinq branches réunies et coupées par le cercle de
+1 140 unités. Deux logos identiques poussés l'un vers l'autre se touchent quand
+l'écart de leurs centres vaut la plus grande étendue de l'encre sur une ligne
+parallèle à la poussée.
+
+| Sens | Pas | Contact |
+|---|---|---|
+| Rangée (voisins à gauche et à droite) | 1 139,61 unités, 99,966 % du diamètre | ligne y = 584,9 : les extrémités gauche et droite du cercle, juste sous l'axe |
+| Colonne (voisins au-dessus et au-dessous) | 1 103,50 unités, 96,798 % du diamètre | ligne x = 713,1 : la pointe de la branche du haut contre le pied droit du logo du dessus |
+
+Contrôle, surface commune de deux logos intégrée ligne à ligne : nulle au pas,
+en rangée comme en colonne, et entre voisins en diagonale d'une grille droite ;
+9,6 et 1,9 unités² à un millième sous le pas. En rangée, le pas est donc celui
+du cercle à 0,03 % près : la frise de 7b était juste, c'est le rayon du
+composant qui la faisait « buguer ». En colonne, les logos se rapprochent de
+3,2 % de plus que leurs cercles.
+
+### Section 7 ter · Logo collé — en simple (`435:227`)
+
+Le logo plein, instance du composant. Dans une bande, tous à la même taille,
+en grille droite, au pas de contact. Les tailles sont choisies pour que les
+coupes tombent sur des moitiés exactes (7i, 7l) ou que l'encre aille
+exactement d'un bord à l'autre (7j, 7m). Aucun texte sur les bandes : le reste
+du cadre est un aplat.
+
+| Planche | Nœud | Format | L'idée |
+|---|---|---|---|
+| `planche/7i-trame-bleu-4x5` | `435:228` | 1080 × 1350 | la trame de Radiant : logos papier de 180 px (pas de 180 sur 174,3) sur le tiers bas, coupés en deux à gauche, à droite et en bas ; le reste en aplat bleu |
+| `planche/7j-frise-papier-16x9` | `435:230` | 1920 × 1080 | huit logos bleus de 240 px, l'encre d'un bord à l'autre, debout sur le bord bas ; le reste en aplat papier |
+| `planche/7k-colonne-encre-16x9` | `435:232` | 1920 × 1080 | la bande en colonne sur le tiers droit : logos papier de 256 px, deux colonnes et demie, coupées en haut et en bas d'un tiers de logo |
+| `planche/7l-trame-papier-9x16` | `435:234` | 1080 × 1920 | logos encre de 270 px sur le tiers haut, coupés en deux à gauche, à droite et en haut ; deux tiers de papier dessous |
+| `planche/7m-ruban-bleu-1x1` | `435:236` | 1080 × 1080 | le signe petit et centré : un ruban de vingt logos papier de 54 px, d'un bord à l'autre, au milieu du bleu |
+| `planche/7n-titre-papier-16x9` | `435:238` | 1920 × 1080 | « Ta marque / au sommet » en `kit/display-180`, le logo encre après « sommet » |
+| `planche/7o-titre-bleu-4x5` | `435:240` | 1080 × 1350 | le logo papier en tête de « L'ascension de / ta marque. » en `kit/display-120` |
+| `planche/7p-titre-encre-9x16` | `435:242` | 1080 × 1920 | « Pour que ta / marque / tienne en / altitude » en `kit/display-180`, le logo papier après « altitude » |
+
+Textes du site : `bn3.c5t`, `bn3.title` et `hero.mtA` à `hero.mtD`
+(`lib/i18n.js`).
+
+### Le logo accolé, mesuré
+
+La capitale de Bricolage Grotesque SemiBold, mesurée sur l'encre d'un « H »
+vectorisé dans Figma, fait 0,66 em (118,8 px en 180, 79,2 en 120), et non
+0,65 comme l'écrivait A7. L'encre du logo couvre 98,38 % de sa taille (de
+18,25 à 1 139,78 unités) : un logo de 0,671 em (120,76 px en 180, 80,50 en
+120) a exactement la hauteur des capitales. Il se pose par le bas de son encre
+sur la ligne de base, à 0,1 em de l'encre du mot. En tête, il se suspend dans
+la marge : la ligne suivante s'aligne sur le texte. Les titres sont ancrés en
+bas à gauche, l'encre la plus basse à 56 px du bord, comme les mentions.
+
+### Valeurs
+
+- **Peintures** : 680 peintures pleines sur les 21 planches touchées (les huit
+  neuves, les neuf affiches, 7a à 7d), toutes liées à une variable.
+- **Textes** : 35, tous liés à un style `kit/…` ; deux libellés de rangée sur
+  la section, en `kit/label-24` et `color/text/label`.
+- **Logo** : 122 instances du composant `logo` sur ces planches, toutes au
+  rayon de leur demi-taille ; papier ou encre par le mode de la planche, bleu
+  par `color/accent/default` posé sur les branches (7j).
+- **Grain** : `effect/grain` sur chaque planche.
+
+### Ce qui a été refait avant de montrer
+
+- **7o** : le titre posé en haut, sur 72 % de bleu vide, se lisait comme une
+  diapositive inachevée ; ancré en bas.
+- **7p** : d'abord en `display-120`, alors que le kit met les titres du 9:16
+  en 180 ; en 180, le logo en tête de « L'ascension » débordait la marge
+  droite de 1,3 px. Le logo en tête passe sur le 4:5, en 120 ; le 9:16 prend
+  le titre de l'affiche 9:16, logo à la fin.
+
+### Choix à valider
+
+1. **Logo des affiches** : 44 px, haut aligné sur les capitales de la mention ;
+   posé aussi sur les cinq variantes de 3 bis.
+2. **Pas en colonne** : 96,8 % du diamètre, les rangées s'emboîtent de 3,2 % ;
+   en rangée, le pas reste celui du cercle.
+3. **7m** : le ruban au milieu (signe petit et centré), ou plus bas.
+4. **A7 précisé** : capitale à 0,66 em, logo de 0,671 em ; en tête, le logo
+   se suspend dans la marge.
+5. **Logo sur bleu** : version papier (#F5F5F5) à côté d'un titre en
+   `color/text/on-accent` (#FFFFFF). L'écart ne se voit pas, et le logo garde
+   une de ses trois versions.
