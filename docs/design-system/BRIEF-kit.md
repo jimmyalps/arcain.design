@@ -368,3 +368,173 @@ Il se documente avec le filigrane dans les guidelines (partie 4).
 8. **Construction** : les cadres sont à leur taille finale (1080 de large pour
    les réseaux), exportés en 1x et 2x ; la construction à la moitié (A3) reste
    abandonnée.
+
+## Nouvelles règles (10 octobre 2026)
+
+Elles s'ajoutent aux règles du brief et font foi à partir de la livraison 3.
+
+- Ne supprime rien de ce qui existe : tu ajoutes des variantes à côté.
+- Plus aucun nom : je n'ai pas encore choisi le nom de la marque de mon
+  portfolio. Retire « Jimmy Ocks » partout sur la page. Là où une signature est
+  indispensable, mets le logo seul.
+- Les fonds n'ont aucun texte : ni mentions, ni lieux, ni altitudes, ni
+  drapeaux. Le texte viendra plus tard, dans les compositions.
+- Le grain, la neige pixel et la lueur font partie de ma marque. Utilise-les
+  quand ils servent l'image, et va vers l'abstrait.
+- Pas de cartes de visite : je les ferai moi-même.
+
+Ce qu'elles changent :
+
+- **A2 tombe** : plus de mention « JIMMY OCKS » à côté du logo ; le pseudo
+  @jimmy.ocks, qui porte le nom, sort avec lui. Les textes réels de la partie 3
+  (« Jimmy Ocks », @jimmy.ocks) attendent le nom de la marque.
+- **Les cartes de visite** sortent du kit (partie 3 et section 6) ; la section
+  existante reste sur la page.
+- **Les dégradés** : `reference-drapz.md` (§4) les écartait. Les retours
+  ci-dessous en demandent, dans la palette : ils sont admis, comme mélanges des
+  seules couleurs de la palette (papier, encre, bleu), grainés.
+
+## Retours sur la livraison 2 (10 octobre 2026)
+
+1. **Logo en courbes** : gardé. Ajouter des essais dans l'esprit de Lumora
+   (drapz.design/projects/lumora) : dégradés grainés dans la palette, logo en
+   points ou en pixels comme l'animation de révélation du site, logo géant et
+   translucide coupé par le bord, logo posé sur une grille fine.
+2. **Affiche bleue** : gardée comme poster simple. Ajouter des variantes avec du
+   grain, ou plus abstraites.
+3. **Montagne sur papier** : remplacer le Mont Blanc par l'Everest et retirer le
+   tracé bleu, garder la composition. Ajouter à côté des variantes avec du
+   grain, ou plus abstraites.
+4. **Typo** : gardée. Deux variantes pour rappeler le bleu : dans l'une, « du
+   concept au sommet » passe en bleu au lieu du gris ; dans l'autre, le gris
+   reste et le filet de séparation passe en bleu.
+5. **Logo collé** : il y a de l'idée, mais les logos sont mal collés et ça
+   bugue. Garder ces essais et en créer d'autres, plus abstraits et originaux :
+   avec du grain, de la neige, des montagnes en bleu en fond.
+6. **Visuels clés sur encre** : tout est à revoir, sauf le lac en fond complet.
+   Mais le lac doit être rempli de bleu, et la lueur ronde floue ne marche pas :
+   la retirer. Tester plutôt ces pistes, en fonds abstraits sans texte :
+   - le lac plein de bleu, avec ses courbes en trait papier autour ;
+   - une lumière portée par les traits eux-mêmes : les courbes s'éclairent vers
+     le bleu au centre et s'éteignent vers les bords, sans tache floue ;
+   - les courbes colorées par l'altitude, de l'encre au bleu, puis au papier au
+     sommet comme de la neige ;
+   - la montagne dessinée en pixels de neige, dont la densité suit le relief ;
+   - un cadrage macro : quelques courbes à très grande échelle qui traversent le
+     cadre ;
+   - un dégradé bleu grainé qui monte du bas, avec une crête en pure encre
+     devant.
+
+Découpage : **A**, visuels clés sur encre et montagne sur papier, STOP ;
+**B**, logo, affiche, typo et logo collé, STOP. Chaque capture est jugée avant
+d'être montrée, un commit à chaque STOP.
+
+## Livraison A (10 octobre 2026)
+
+Page Kit Direction (`346:2`). Rien n'est retiré : une section neuve s'insère
+sous la section 1, les sections 2 à 7 descendent de 3000 px. Douze planches
+neuves ou refaites, sans aucun texte, chacune exportée en PNG 1x et 2x.
+
+### Section 1 bis · Visuel clé — fonds abstraits (`395:183`)
+
+Sept fonds sur encre, 1920 × 1080, un par piste (deux pour le lac).
+
+| Planche | Nœud | Piste | L'idée |
+|---|---|---|---|
+| `planche/1e-lac-bleu` | `395:184` | lac plein | le cadrage de la 1b, vu du ciel et plein cadre ; le lac en aplat bleu, grainé comme les cartes Services au survol ; ses courbes en papier .26 et .6 autour ; ni lueur ni texte |
+| `planche/1f-lac-couche` | `395:185` | lac plein, variante | le lac entier, couché dans la longueur : son rivage se lit comme un sommet, le lac et la montagne dans une seule forme |
+| `planche/1g-lumiere` | `395:186` | lumière dans le trait | le Mont Blanc plongé, face nord, ses courbes remplissent le cadre ; la couleur de chaque trait suit sa distance au sommet : cœur papier, halo bleu, extinction vers les bords |
+| `planche/1h-altitude` | `395:187` | altitude | l'Everest et ses voisins : courbes en encre sous 56 % de la hauteur du relief, bleues à 78 %, papier dès 93 % ; la base s'éteint dans l'encre, les sommets sont enneigés |
+| `planche/1i-neige-pixel` | `395:188` | neige pixel | le même cadrage, en neige pixel de 3 px : densité selon l'éclairage (exposant 2) et l'altitude (de 60 à 93 %), opacité tirée entre .4 et 1 comme `pixels.png` |
+| `planche/1j-macro` | `395:189` | macro | un flanc du Mont Blanc vu du ciel, une fenêtre d'un dix-huitième de la largeur des données : treize courbes, deux maîtresses |
+| `planche/1k-aube` | `395:190` | dégradé et crête | la crête de l'affiche en encre pure, au quart bas ; derrière, un bleu qui monte du bas et se défait en grain vers le haut |
+
+### Section 4 · Montagne sur papier (`372:17`)
+
+Renommée (« Mont Blanc sur papier »). Le Mont Blanc est remplacé dans ses trois
+planches, comme demandé ; l'historique des versions de Figma garde l'ancien
+rendu.
+
+| Planche | Nœud | L'idée |
+|---|---|---|
+| `planche/4-everest-4x5` | `377:7` | la pyramide de l'Everest au trait du hero (encre .4, une courbe tous les 90 m, brouillard papier), sommet à 37 % de la hauteur comme le Mont Blanc ; sans tracé bleu |
+| `planche/4-everest-1x1` | `377:15` | même échelle, sommet à 33 % |
+| `planche/4-everest-9x16` | `377:23` | même échelle, sommet à 32 % ; la vallée du Khumbu en bas |
+| `planche/4d-brume-4x5` | `399:182` | variante avec du grain : une brume bleue grainée monte des vallées sous le trait |
+| `planche/4e-neige-bleue-4x5` | `399:232` | variante abstraite : l'Everest en neige pixel bleue, celle de `neige-pixels.png` |
+
+La composition est gardée telle quelle : rendu coupé à 120 px du bas sur le
+filet, bande du bas sous le filet. Les quatre textes de chaque planche (nom,
+adresse, lieu, altitude) sont retirés : ce sont des fonds.
+
+### Les rendus et les outils
+
+- `rendu-courbes.mjs` reçoit des clés pour ces fonds (`affiner`, `zone`,
+  `teinte`, `rampe`, `plein`, `pixels`, `silhouette`, `courbes=0`) ; sans elles,
+  les rendus des livraisons 1 et 2 se refont à l'octet près (vérifié en SVG et
+  en PNG sur l'Everest de la livraison 1, `d-45`, `a2-carte` et `b-45`).
+- `grain-degrade.mjs`, nouveau : le grain des dégradés de 1k et 4d, en points
+  d'un pixel dans le bleu de la palette, comme la neige pixel du site.
+- Commandes : `outils/README.md`, livraison 3 A.
+
+### Valeurs
+
+- **Peintures** : 444 peintures pleines sur les douze planches, toutes liées à
+  une variable (`color/bg/primary`, `color/text/primary`,
+  `color/accent/default`), opacités portées par les calques. Les deux seuls
+  dégradés sont des masques (aube, brume) : leur peinture ne se voit jamais, le
+  bleu visible est un aplat lié.
+- **Teinte** : chaque trait coloré est un mélange exact de deux couleurs de la
+  palette, obtenu par deux tracés superposés (bleu dessous, papier dessus) :
+  aucune couleur hors palette.
+- **Grain** : le grain du site sur chaque planche (`effect/grain`). Nouveau
+  style `effect/grain-carte` : le grain des cartes Services au survol
+  (`.sv2-card:hover::after`), même motif en tuile de 300 px, opacité .6, fondu
+  normal ; il donne sa matière au bleu (lac, aube).
+- **Images** : en plus du grain, deux textures en PNG, le grain de l'aube
+  (3840 × 2160) et celui de la brume (2160 × 2700), bleu de la palette fixé
+  dans l'image (une image ne se lie pas à une variable).
+- **Nom** : « Jimmy Ocks » retiré des quatre planches de la section 1. Les
+  sections de la livraison B (2, 3, 5, 7) et les cartes (6) le portent
+  encore : il en sort en B.
+
+### Ce qui a été refait avant de montrer
+
+- **Lac** : le masque d'eau avait deux trous, lus comme des bulles dans
+  l'aplat, bouchés ; le cadrage large montrait le bord des données, écarté ;
+  l'aplat plat faisait découpage, grainé.
+- **Lumière** : sur la pyramide de l'Everest et sur le Mont Blanc au
+  téléobjectif, la montagne n'occupait que le bas du cadre et la lumière
+  restait grise ; sur le lac, le foyer tombait sur l'eau, sans courbes ;
+  l'Everest vu du ciel donnait une carte dense, de fond d'écran. Gardé : le
+  Mont Blanc plongé, dont les courbes remplissent le cadre, traits pleins au
+  foyer.
+- **Altitude** : sur le cadrage de la lumière, les deux pistes se
+  ressemblaient ; depuis la caméra du hero, la ligne d'horizon était droite et
+  l'avant-plan confus. Gardé : l'Everest dont seuls les hauts sommets émergent ;
+  un peu plus de neige après la première capture.
+- **Neige pixel** : densité d'abord uniforme, une neige de télévision ;
+  exposant sur l'éclairage et limite de neige relevée.
+- **Macro** : trente courbes, générique ; six, trop vide et sans forme ;
+  gardé treize.
+- **Aube** : un dégradé lisse sous une silhouette faisait fond d'écran de
+  stock ; le bleu se défait maintenant en grain, la crête descend au quart bas.
+- **Everest sur papier** : les premiers cadrages mettaient en avant-plan la
+  vallée et ses méandres plats ; resserré sur la pyramide.
+- **Variantes papier** : la montagne en grain d'encre seul était illisible (le
+  sommet enneigé se fondait dans le ciel) ; le grain posé sur le trait salissait
+  l'image ; la silhouette pure, vue de ce côté, aplatissait la pyramide en ligne
+  de crêtes ; la brume, d'abord un bloc bleu coupé net par le filet, allégée.
+
+### Choix à valider
+
+1. **Montagne sur papier** : la bande sous le filet est gardée, vide. La garder,
+   ou laisser la montagne descendre jusqu'au bord ?
+2. **Planches 1a à 1d** : gardées en archive, sans le nom mais avec leurs
+   mentions, lieux, altitudes et drapeaux. Les en vider aussi ?
+3. **1f, le lac couché** : variante à garder ou à écarter.
+4. **`effect/grain-carte`** : nouveau style Figma, tiré de la valeur du site.
+5. **Textures en PNG** : les deux seules images du kit avec le grain.
+6. **Pour la livraison B** : l'adresse jimmyferon.com porte un nom, sans être
+   celui de la marque. La garder là où une mention sert, ou n'y laisser que le
+   logo ?

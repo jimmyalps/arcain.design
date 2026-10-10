@@ -40,7 +40,8 @@ Toutes les commandes se lancent depuis la racine du dépôt.
 | `verifier-design-md.mjs` | Étape 4, partie 2 : contrôle de structure du `DESIGN.md`, sans dépendance ni réseau. Clés en double, couleurs et dimensions au format CSS, propriétés connues du format, références `{groupe.jeton}` résolues, ordre des huit sections canoniques. Les jetons qu'aucun composant ne cite sont comptés à part : le lint du format ne les signale qu'en avertissement. Sort en erreur s'il trouve un problème. |
 | `capture-pages.mjs` | Kit de marque, partie 0 : capture pleine page d'une liste d'URL de référence, en 1440 × 900. Défile lentement jusqu'en bas (images paresseuses, apparitions), masque les calques fixes du bas de l'écran, puis écrit une image entière, des tranches de 1800 px et un JSON par page (titre, texte, polices, images et leur taille d'origine). Les captures restent hors du dépôt. |
 | `mesure-planches.mjs` | Kit de marque, partie 0 : pour les planches d'une page capturée (images affichées sur toute la largeur), couleur du fond, marges, part du cadre occupée et écarts entre objets, en %, lus pixel par pixel en 2048 px. Ne vaut que pour une planche à fond uni. |
-| `rendu-courbes.mjs` | Kit de marque, nouvelle méthode : les courbes de niveau du site rendues hors du site, sans le toucher. Everest, Mont Blanc et lac d'Allos avec les données, le décodage, le marching squares et les opacités d'`Everest.js`, de `Benefits.js` et de `Lake3D.js` ; caméra de Three.js (champ vertical, `lookAt`) et fondu de `THREE.Fog` r128 (smoothstep), rendu en opacité pour se poser sur n'importe quel fond ; voie royale du Mont Blanc et hachures d'eau du lac par-dessus ; en option, les six drapeaux de l'Everest, avec le point d'ancrage de leur étiquette dans les mesures. Logo : le masque circulaire d'`app/icon.svg` appliqué d'abord (bords coupés au cercle, intersection exacte), puis la distance signée au contour de la forme coupée, dont les courbes de niveau sont les contours décalés. Écrit un SVG (un chemin par niveau d'opacité) et un PNG transparent rendu par le navigateur sans fenêtre ; le trait suit l'échelle d'export (1 px à 1, 2 px à 2). `simplifier=0.1 decimales=1` allège le SVG pour l'import dans Figma (0,012 % de pixels différents sur la crête). Palette fermée : papier, encre, bleu. |
+| `rendu-courbes.mjs` | Kit de marque, nouvelle méthode : les courbes de niveau du site rendues hors du site, sans le toucher. Everest, Mont Blanc et lac d'Allos avec les données, le décodage, le marching squares et les opacités d'`Everest.js`, de `Benefits.js` et de `Lake3D.js` ; caméra de Three.js (champ vertical, `lookAt`) et fondu de `THREE.Fog` r128 (smoothstep), rendu en opacité pour se poser sur n'importe quel fond ; voie royale du Mont Blanc et hachures d'eau du lac par-dessus ; en option, les six drapeaux de l'Everest, avec le point d'ancrage de leur étiquette dans les mesures. Logo : le masque circulaire d'`app/icon.svg` appliqué d'abord (bords coupés au cercle, intersection exacte), puis la distance signée au contour de la forme coupée, dont les courbes de niveau sont les contours décalés. Écrit un SVG (un chemin par niveau d'opacité) et un PNG transparent rendu par le navigateur sans fenêtre ; le trait suit l'échelle d'export (1 px à 1, 2 px à 2). `simplifier=0.1 decimales=1` allège le SVG pour l'import dans Figma (0,012 % de pixels différents sur la crête). Palette fermée : papier, encre, bleu. Depuis la livraison 3, des clés pour les fonds abstraits, sans effet sur les rendus précédents (refaits à l'octet près) : `affiner` et `zone` (grille ré-échantillonnée par Catmull-Rom, pour les cadrages serrés), `teinte` et `rampe` (couleur du trait par altitude ou par distance à un foyer, mélange exact de deux couleurs de la palette par deux tracés superposés), `plein` (le lac rempli de bleu, masque d'eau lissé et sans trous), `pixels` (la montagne en neige pixel, densité réglée par l'éclairage et l'altitude, tampon de profondeur), `silhouette` (l'enveloppe haute du relief, en aplat), `courbes=0`. |
+| `grain-degrade.mjs` | Kit de marque, livraison 3 : le grain d'un dégradé, à la manière de `pixels.png` (points d'un pixel, opacité tirée entre .4 et 1). Chaque point s'allume dans une couleur de la palette avec une probabilité qui suit la hauteur, de `de` à `a` : le dégradé se défait en grain au lieu de fondre. PNG transparent à l'échelle 2 (un point = un carré de 2 px, net à l'export 1x comme 2x), encodé avec zlib, sans navigateur ni dépendance. |
 
 Commandes :
 
@@ -143,6 +144,24 @@ node docs/design-system/outils/rendu-courbes.mjs . <chemin du navigateur> <dossi
 #   d-916       montblanc cadre=1080x1920 couleur=encre camera=-0.2,4.25,-6.6 cible=0.0,1.35,-0.5 fov=40 brouillard=5.4,10.4
 #   f-recto     logo cadre=748x484 couleur=papier centre=500,290 diametre=700 pas=5 dehors=10 maille=1
 #   f-verso     lac cadre=748x484 cible=-2.6,0.95,-2.15 fov=54
+
+# Kit de marque, livraison 3 A : les rendus des fonds abstraits (section
+# « 1 bis ») et de la montagne sur papier (section 4), même préfixe et même
+# fin de ligne que la livraison 2.
+#   a3-lac-bleu        lac cadre=1920x1080 camera=0.35,5.2,0.01 cible=0.35,0,0 fov=40 plein=1 eau=0
+#   a3-lac-couche      lac cadre=1920x1080 camera=-0.02,5.4,0.03 cible=-0.03,0,0.03 fov=40 plein=1 eau=0
+#   a3-lumiere         montblanc cadre=1920x1080 couleur=papier camera=-0.2,5.6,-5.4 cible=0.1,1.3,0.1 fov=38 brouillard=non trace=0 opacite=0.5 maitresse=1 teinte=lumiere foyer=950,500 portee=1050,640 rampe=papier:0,bleu:0.3,encre:1
+#   a3-altitude-b      everest cadre=1920x1080 couleur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 affiner=2 opacite=1 maitresse=1 teinte=altitude rampe=encre:0.56,bleu:0.78,papier:0.93
+#   a3-neige           everest cadre=1920x1080 couleur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 affiner=2 courbes=0 pixels=3 densite=1 relief=1 contraste=2 neige=0.6,0.93 soleil=-1,1.2,-0.2 opacite=1
+#   a3-macro           montblanc cadre=1920x1080 couleur=papier camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=2 brouillard=non trace=0 decalage=0 affiner=16 zone=0.25,0.55,0.35,0.64
+#   a3-crete-basse     montblanc cadre=1920x1080 camera=-6.0,3.75,-5.1 cible=0.25,4.0,0.1 fov=29.8 decalage=0 affiner=2 courbes=0 trace=0 silhouette=encre
+#   a3-everest-45      everest cadre=1080x1350 couleur=encre camera=-30,52,80 cible=29.6,32.6,-24.6 fov=21 brouillard=120,220 affiner=2
+#   a3-everest-11      everest cadre=1080x1080 couleur=encre camera=-30,52,80 cible=29.6,32.3,-24.6 fov=16.9 brouillard=120,220 affiner=2
+#   a3-everest-916     everest cadre=1080x1920 couleur=encre camera=-30,52,80 cible=29.6,26.8,-24.6 fov=29.5 brouillard=120,220 affiner=2
+#   a3-neige-bleue-45  everest cadre=1080x1350 couleur=bleu camera=-30,52,80 cible=29.6,32.6,-24.6 fov=21 brouillard=120,220 affiner=2 courbes=0 pixels=3 densite=1 relief=1 contraste=2 neige=0.45,0.93 soleil=-1,1.2,-0.2 opacite=1
+# Le grain des dégradés : l'aube (1k) et la brume (4d)
+node docs/design-system/outils/grain-degrade.mjs a3-aube-grain.png cadre=1920x1080 echelle=2 couleur=bleu de=140 a=1040 densite=0.9 gamma=1.7
+node docs/design-system/outils/grain-degrade.mjs a3-brume-grain-45.png cadre=1080x1350 echelle=2 couleur=bleu de=600 a=1300 densite=0.32 gamma=2.2
 ```
 
 `grain-rendu.mjs` utilise le port 9336, `grain-mesure.mjs` le 9337,
@@ -150,7 +169,8 @@ node docs/design-system/outils/rendu-courbes.mjs . <chemin du navigateur> <dossi
 `mesure-grands-composants.mjs` le 9340, `capture-scene.mjs` le 9342,
 `mesure-logo.mjs` le 9343, `webp-jpeg.mjs` le 9344,
 `capture-pages.mjs` le 9345, `mesure-planches.mjs` le 9346,
-`rendu-courbes.mjs` le 9348.
+`rendu-courbes.mjs` le 9348. `grain-degrade.mjs` n'en utilise aucun : il
+écrit son PNG sans navigateur.
 
 ## Mesurer une preview plutôt que la prod
 

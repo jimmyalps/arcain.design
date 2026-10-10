@@ -53,6 +53,30 @@
 // Logo : centre=x,y (px), diametre (px), pas (px entre deux courbes),
 //   dehors (courbes hors du logo, en fondu ; défaut 0), rotation (degrés,
 //   par pas de 72), maille (px du champ, défaut 2)
+//
+// Livraison 3, fonds abstraits (sans ces clés, les rendus des livraisons 1 et
+// 2 restent identiques à l'octet près) :
+//   affiner=k, zone=u0,v0,u1,v1 : la grille du relief ré-échantillonnée par
+//     Catmull-Rom, k points par case, réduite à une zone (fractions de la
+//     grille). Pour les cadrages macro, où une case couvre des dizaines de px ;
+//   courbes=0 : sans les courbes de niveau (neige pixel ou silhouette seule) ;
+//   teinte=altitude|lumiere, rampe=couleur:position,... : la couleur de chaque
+//     trait suit l'altitude du niveau (bande=bas,haut, en fraction de la
+//     hauteur du relief) ou la distance au foyer=x,y (px), en ellipse de
+//     portee=rx,ry (px). Deux couleurs voisines de la rampe se mêlent par deux
+//     tracés superposés, A puis B, d'opacités choisies pour que le mélange sur
+//     le fond soit exact : aucune couleur hors palette. Une couleur de la rampe
+//     égale au fond donne un trait éteint ;
+//   plein=a (lac seulement) : le lac rempli de bleu à l'opacité a, le masque
+//     d'eau lissé puis tracé à mi-hauteur, au niveau du lac ;
+//   pixels=c : la neige pixel de pixels.png (pixels d'opacité tirée au hasard,
+//     de .4 à 1), en cases de c px, dans la couleur du trait, dont la densité
+//     suit le relief : maillage du relief rastérisé avec un tampon de
+//     profondeur, densite × éclairage (soleil=x,y,z, part du relief `relief`,
+//     exposant `contraste`) × neige=t0,t1 (smoothstep sur l'altitude ; t0 > t1
+//     l'inverse), effacée par le brouillard ; tirage à graine fixe (graine) ;
+//   silhouette=couleur : l'enveloppe haute du relief projeté, fermée par le bas
+//     du cadre, en aplat.
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -93,14 +117,17 @@ function everest() {
   }
   const hOf = (m) => ((m - EMIN) / RANGE) * HS;
   const xOf = (g) => (g / (N - 1) - 0.5) * SIZE, zOf = xOf;
+  // Sans `affiner` ni `zone`, la grille d'origine et les mêmes calculs.
+  const A = affiner(E, N), G = A ? A.G : E, Nx = A ? A.Nx : N, Ny = A ? A.Ny : N;
+  const xG = A ? (g) => xOf(A.gx(g)) : xOf, zG = A ? (g) => zOf(A.gy(g)) : zOf;
   const segs = [];
   for (let L = Math.ceil(EMIN / INTERVAL) * INTERVAL; L < EV.max; L += INTERVAL) {
     const cut = (x0, y0, v0, x1, y1, v1, e) => {
       const f = (L - v0) / (v1 - v0);
-      e.push([xOf(x0 + (x1 - x0) * f), hOf(L), zOf(y0 + (y1 - y0) * f)]);
+      e.push([xG(x0 + (x1 - x0) * f), hOf(L), zG(y0 + (y1 - y0) * f)]);
     };
-    for (let y = 0; y < N - 1; y++) for (let x = 0; x < N - 1; x++) {
-      const a = E[y * N + x], b = E[y * N + x + 1], c = E[(y + 1) * N + x + 1], d = E[(y + 1) * N + x];
+    for (let y = 0; y < Ny - 1; y++) for (let x = 0; x < Nx - 1; x++) {
+      const a = G[y * Nx + x], b = G[y * Nx + x + 1], c = G[(y + 1) * Nx + x + 1], d = G[(y + 1) * Nx + x];
       const cs = (a > L ? 8 : 0) | (b > L ? 4 : 0) | (c > L ? 2 : 0) | (d > L ? 1 : 0);
       if (cs === 0 || cs === 15) continue;
       const e = [];
@@ -115,7 +142,8 @@ function everest() {
   const marques = JSON.parse(readFileSync(ROOT + "/data/evmarks.json", "utf8"))
     .map((m) => ({ k: m.k, alt: m.alt, p: [xOf(m.x), hOf(m.e), zOf(m.y)] }));
   // Vue d'ensemble du code (avant la descente vers le camp de base).
-  return { segs, trace: [], marques, far: 900, defauts: {
+  return { segs, trace: [], marques, far: 900, hauteur: HS,
+    grille: { Nx, Ny, pos: (i, j) => [xG(i), hOf(G[j * Nx + i]), zG(j)] }, defauts: {
     camera: [0, HS * 1.05 + 22, SIZE * 0.6], cible: [0, HS * 0.35, 0], fov: 46,
     brouillard: [110, 340], couleur: "encre", opacite: 0.4, maitresse: 0.4, decalage: 0 } };
 }
@@ -130,8 +158,10 @@ function montblanc() {
     for (let k = 0; k < N * N; k++) { const v = (hm[k] - hmin) / (hmax - hmin + 1e-6); hm[k] = Math.pow(v, 1.05); } }
   const NLEV = 72, Wt = 9.4, Dt = 5.6, Ht = 3.05, ZOFF = -1.39, XOFF = 0.0;
   const X = (i) => (i / (N - 1) - 0.5) * Wt + XOFF, Z = (j) => (j / (N - 1) - 0.5) * Dt + ZOFF;
-  const segs = courbesGrille(hm, N, X, Z, Array.from({ length: NLEV }, (_, li) =>
-    ({ lv: 0.12 + (li / (NLEV - 1)) * 0.86, h: Ht, mait: li % 5 === 0 })));
+  const A = affiner(hm, N), G = A ? A.G : hm, Nx = A ? A.Nx : N, Ny = A ? A.Ny : N;
+  const XG = A ? (i) => X(A.gx(i)) : X, ZG = A ? (j) => Z(A.gy(j)) : Z;
+  const segs = courbesGrille(G, Nx, XG, ZG, Array.from({ length: NLEV }, (_, li) =>
+    ({ lv: 0.12 + (li / (NLEV - 1)) * 0.86, h: Ht, mait: li % 5 === 0 })), Ny);
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const sampleH = (u, v) => {
     const fx = clamp(u, 0, 1) * (N - 1), fy = clamp(v, 0, 1) * (N - 1);
@@ -150,17 +180,18 @@ function montblanc() {
   MB.gpx.forEach(([u, v]) => trace.push([(u - 0.5) * Wt + XOFF, sampleH(u, v) * Ht + 0.05, (v - 0.5) * Dt + ZOFF]));
   // Fin de l'ascension (défilement à 100 %) : e = 1 dans draw().
   const ang = 3.75 - 0.6, rad = 6.8 - 0.5;
-  return { segs, trace, far: 100, defauts: {
+  return { segs, trace, far: 100, hauteur: Ht,
+    grille: { Nx, Ny, pos: (i, j) => [XG(i), G[j * Nx + i] * Ht, ZG(j)] }, defauts: {
     camera: [Math.sin(ang) * rad, 2.6 + 3.6, Math.cos(ang) * rad], cible: [0.1, 0.55 + 0.35, 0], fov: 40,
     brouillard: null, couleur: "papier", opacite: 0.28, maitresse: 0.75, decalage: -0.52 - 0.43 } };
 }
 
 /* ---- Marching squares de Benefits.js et de Lake3D.js (même table) -------- */
-function courbesGrille(hm, N, X, Z, niveaux) {
+function courbesGrille(hm, N, X, Z, niveaux, Ny = N) {
   const segs = [];
   for (const { lv, h, mait } of niveaux) {
     const y = lv * h;
-    for (let j = 0; j < N - 1; j++) for (let i = 0; i < N - 1; i++) {
+    for (let j = 0; j < Ny - 1; j++) for (let i = 0; i < N - 1; i++) {
       const a = hm[j * N + i], b = hm[j * N + i + 1], c = hm[(j + 1) * N + i + 1], d = hm[(j + 1) * N + i];
       const m = (a > lv ? 8 : 0) | (b > lv ? 4 : 0) | (c > lv ? 2 : 0) | (d > lv ? 1 : 0);
       if (m === 0 || m === 15) continue;
@@ -181,6 +212,46 @@ function courbesGrille(hm, N, X, Z, niveaux) {
   return segs;
 }
 
+/* ---- Grilles : ré-échantillonnage et flou (livraison 3) ----------------- */
+// Catmull-Rom sur une grille N × N, k points par case, sur la zone
+// [u0, v0, u1, v1] (fractions de la grille). gx et gy rendent l'indice de la
+// grille d'origine, pour garder les fonctions de position du relief.
+function reechantillonner(G, N, k, [u0, v0, u1, v1] = [0, 0, 1, 1]) {
+  const i0 = Math.floor(u0 * (N - 1)), i1 = Math.ceil(u1 * (N - 1));
+  const j0 = Math.floor(v0 * (N - 1)), j1 = Math.ceil(v1 * (N - 1));
+  const Nx = (i1 - i0) * k + 1, Ny = (j1 - j0) * k + 1, out = new Float32Array(Nx * Ny);
+  const at = (i, j) => G[Math.max(0, Math.min(N - 1, j)) * N + Math.max(0, Math.min(N - 1, i))];
+  const cr = (p0, p1, p2, p3, t) =>
+    0.5 * (2 * p1 + (p2 - p0) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (3 * p1 - p0 - 3 * p2 + p3) * t * t * t);
+  for (let jj = 0; jj < Ny; jj++) for (let ii = 0; ii < Nx; ii++) {
+    const gx = i0 + ii / k, gy = j0 + jj / k, ix = Math.floor(gx), iy = Math.floor(gy), tx = gx - ix, ty = gy - iy;
+    const ligne = (y) => cr(at(ix - 1, y), at(ix, y), at(ix + 1, y), at(ix + 2, y), tx);
+    out[jj * Nx + ii] = cr(ligne(iy - 1), ligne(iy), ligne(iy + 1), ligne(iy + 2), ty);
+  }
+  return { G: out, Nx, Ny, gx: (ii) => i0 + ii / k, gy: (jj) => j0 + jj / k };
+}
+// Les clés `affiner` et `zone` ; null sans elles, pour garder la grille et les
+// calculs d'origine.
+function affiner(G, N) {
+  const k = Math.max(1, Math.round(num("affiner", 1))), z = vec("zone", [0, 0, 1, 1]);
+  if (k === 1 && opt.zone === undefined) return null;
+  return reechantillonner(G, N, k, z);
+}
+// Flou gaussien séparable, σ en cases.
+function flou(G, N, s) {
+  const r = Math.ceil(3 * s), w = Array.from({ length: 2 * r + 1 }, (_, k) => Math.exp(-((k - r) ** 2) / (2 * s * s)));
+  const sw = w.reduce((a, b) => a + b, 0), tmp = new Float32Array(N * N), out = new Float32Array(N * N);
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    let v = 0; for (let k = -r; k <= r; k++) v += w[k + r] * G[j * N + Math.max(0, Math.min(N - 1, i + k))];
+    tmp[j * N + i] = v / sw;
+  }
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    let v = 0; for (let k = -r; k <= r; k++) v += w[k + r] * tmp[Math.max(0, Math.min(N - 1, j + k)) * N + i];
+    out[j * N + i] = v / sw;
+  }
+  return out;
+}
+
 /* ---- Lac d'Allos : Lake3D.js, décodage, niveaux, hachures d'eau ---------- */
 function lac() {
   const LAC = JSON.parse(readFileSync(ROOT + "/public/lacdata.json", "utf8"));
@@ -190,8 +261,10 @@ function lac() {
   for (let k = 0; k < N * N; k++) hm[k] = (hm[k] - hmin) / (hmax - hmin + 1e-6);
   const NLEV = 34, Wt = 7.6, Dt = 7.6, Ht = 1.7, wlev = (LAC.wlev - hmin) / (hmax - hmin + 1e-6);
   const X = (i) => (i / (N - 1) - 0.5) * Wt, Z = (j) => (j / (N - 1) - 0.5) * Dt;
-  const segs = courbesGrille(hm, N, X, Z, Array.from({ length: NLEV }, (_, li) =>
-    ({ lv: 0.012 + (li / (NLEV - 1)) * 0.948, h: Ht, mait: li % 5 === 0 })));
+  const A = affiner(hm, N), G = A ? A.G : hm, Nx = A ? A.Nx : N, Ny = A ? A.Ny : N;
+  const XG = A ? (i) => X(A.gx(i)) : X, ZG = A ? (j) => Z(A.gy(j)) : Z;
+  const segs = courbesGrille(G, Nx, XG, ZG, Array.from({ length: NLEV }, (_, li) =>
+    ({ lv: 0.012 + (li / (NLEV - 1)) * 0.948, h: Ht, mait: li % 5 === 0 })), Ny);
   // Hachures d'eau : sur une ligne de grille sur deux, chaque passage mouillé
   // du masque, posé au niveau du lac (wseg dans Lake3D.js).
   const eau = [], wy = wlev * Ht + 0.012;
@@ -207,9 +280,32 @@ function lac() {
       }
     }
   }
+  // Le lac plein (plein=a) : le masque d'eau, ses trous bouchés (les cases
+  // sèches qu'on ne rejoint pas depuis le bord de la grille, des bulles dans
+  // l'aplat), flouté d'une case (gaussienne de σ 0,8) puis affiné par 4 en
+  // Catmull-Rom, tracé à mi-hauteur : le bord en escalier du masque devient un
+  // rivage, posé au niveau des hachures.
+  const plein = [];
+  if (num("plein", 0) > 0) {
+    const sec = new Uint8Array(N * N), pile = [];
+    for (let k = 0; k < N * N; k++) {
+      const i = k % N, j = Math.floor(k / N);
+      if (LAC.mask[k] !== "1" && (i === 0 || j === 0 || i === N - 1 || j === N - 1)) { sec[k] = 1; pile.push(k); }
+    }
+    while (pile.length) {
+      const k = pile.pop(), i = k % N, j = Math.floor(k / N);
+      for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const ii = i + di, jj = j + dj, q = jj * N + ii;
+        if (ii >= 0 && jj >= 0 && ii < N && jj < N && !sec[q] && LAC.mask[q] !== "1") { sec[q] = 1; pile.push(q); }
+      }
+    }
+    const M = reechantillonner(flou(Float32Array.from(sec, (s) => 1 - s), N, 0.8), N, 4);
+    plein.push(...courbesGrille(M.G, M.Nx, (i) => X(M.gx(i)), (j) => Z(M.gy(j)), [{ lv: 0.5, h: 2 * wy, mait: false }], M.Ny));
+  }
   // Caméra de draw() au repos, sans la houle lente de sin(t) ni le glisser.
   const ang = -0.7, rad = 8.2;
-  return { segs, trace: [], eau, far: 100, defauts: {
+  return { segs, trace: [], eau, plein, far: 100, hauteur: Ht,
+    grille: { Nx, Ny, pos: (i, j) => [XG(i), G[j * Nx + i] * Ht, ZG(j)] }, defauts: {
     camera: [Math.sin(ang) * rad, 3.15, Math.cos(ang) * rad], cible: [0, 0.32, 0], fov: 42,
     brouillard: null, couleur: "papier", opacite: 0.26, maitresse: 0.6, decalage: -0.52 } };
 }
@@ -247,9 +343,132 @@ function projeter(scene, segs3, base, baseM, brume = true) {
     if ((s1[0] < -M && s2[0] < -M) || (s1[0] > W + M && s2[0] > W + M) ||
         (s1[1] < -M && s2[1] < -M) || (s1[1] > H + M && s2[1] > H + M)) continue;
     const brume = fog ? smoothstep(fog[0], fog[1], (-v1[2] - v2[2]) / 2) : 0;
-    out.push([s1, s2, (mait ? baseM : base) * (1 - brume)]);
+    out.push([s1, s2, (mait ? baseM : base) * (1 - brume), p1[1]]);  // altitude du niveau, pour `teinte`
   }
   return out;
+}
+
+/* ---- Teinte : couleur par altitude ou par foyer (livraison 3) ------------ */
+// La rampe : des couleurs de la palette posées sur [0, 1]. Entre deux couleurs
+// voisines A et B, à la fraction f, un trait d'opacité a vaut sur le fond
+// fond·(1 − a) + (A·(1 − f) + B·f)·a. On le dessine en deux tracés, A à
+// a·(1 − f)/(1 − a·f) puis B à a·f par-dessus : le mélange est exact. Une
+// couleur égale au fond n'a pas besoin d'être tracée : B égal au fond, A seul
+// à a·(1 − f) ; A égal au fond, B seul à a·f.
+function teinter(segs, scene, fond) {
+  const rampe = (opt.rampe || "encre:0,bleu:0.6,papier:1").split(",").map((s) => {
+    const [c, p] = s.split(":");
+    if (!PALETTE[c]) throw new Error(`rampe : ${c} hors palette (papier, encre, bleu)`);
+    return { c, p: +p };
+  });
+  const [b0, b1] = vec("bande", [0, 1]), [fx, fy] = vec("foyer", [W / 2, H / 2]), [rx, ry] = vec("portee", [W / 2, H / 2]);
+  const out = [];
+  for (const [s1, s2, a, y] of segs) {
+    const t = opt.teinte === "altitude"
+      ? Math.max(0, Math.min(1, (y / scene.hauteur - b0) / (b1 - b0)))
+      : Math.min(1, Math.hypot(((s1[0] + s2[0]) / 2 - fx) / rx, ((s1[1] + s2[1]) / 2 - fy) / ry));
+    let k = 0;
+    while (k < rampe.length - 2 && t > rampe[k + 1].p) k++;
+    const A = rampe[k], B = rampe[k + 1], f = Math.max(0, Math.min(1, (t - A.p) / (B.p - A.p)));
+    const finA = PALETTE[A.c] === fond, finB = PALETTE[B.c] === fond;
+    const aB = finB ? 0 : a * f;
+    const aA = finA ? 0 : finB ? a * (1 - f) : 1 - a * f > 1e-6 ? (a * (1 - f)) / (1 - a * f) : 0;
+    if (aA > 0) out.push([s1, s2, aA, A.c]);
+    if (aB > 0) out.push([s1, s2, aB, B.c]);
+  }
+  return { out, ordre: [...new Set(rampe.map((r) => r.c))] };
+}
+
+/* ---- Maillage projeté : neige pixel et silhouette (livraison 3) ---------- */
+// Chaque sommet de la grille : position à l'écran, profondeur, altitude
+// (fraction de la hauteur du relief) et éclairage de Lambert, la normale prise
+// par différences centrées.
+function maillage(scene) {
+  const { fog, vue, ecran } = camera(scene), { Nx, Ny, pos } = scene.grille;
+  const P = new Float64Array(Nx * Ny * 3), T = new Float32Array(Nx * Ny), S = new Float32Array(Nx * Ny);
+  const L = norm(vec("soleil", [-0.55, 0.75, 0.35]));
+  for (let j = 0; j < Ny; j++) for (let i = 0; i < Nx; i++) {
+    const k = j * Nx + i, p = pos(i, j), v = vue(p), s = ecran(v);
+    P[3 * k] = s[0]; P[3 * k + 1] = s[1]; P[3 * k + 2] = -v[2];
+    T[k] = p[1] / scene.hauteur;
+    const tx = sub(pos(Math.min(Nx - 1, i + 1), j), pos(Math.max(0, i - 1), j));
+    const tz = sub(pos(i, Math.min(Ny - 1, j + 1)), pos(i, Math.max(0, j - 1)));
+    let n = norm(cross(tz, tx));
+    if (n[1] < 0) n = n.map((c) => -c);
+    S[k] = Math.max(0, dot(n, L));
+  }
+  return { P, T, S, Nx, Ny, fog };
+}
+
+// Neige pixel : la face vue de chaque case (tampon de profondeur), puis un
+// tirage pseudo-aléatoire à graine fixe, comme la mosaïque de pixels.png :
+// pixels blancs, opacité tirée entre .4 et 1.
+function neigePixels(scene, base) {
+  const c = num("pixels", 3), cw = Math.ceil(W / c), ch = Math.ceil(H / c);
+  const { P, T, S, Nx, Ny, fog } = maillage(scene);
+  const Zb = new Float64Array(cw * ch).fill(Infinity), AT = new Float32Array(cw * ch), AS = new Float32Array(cw * ch);
+  const tri = (a, b, d) => {
+    const ax = P[3 * a] / c, ay = P[3 * a + 1] / c, az = P[3 * a + 2], bx = P[3 * b] / c, by = P[3 * b + 1] / c, bz = P[3 * b + 2];
+    const dx = P[3 * d] / c, dy = P[3 * d + 1] / c, dz = P[3 * d + 2];
+    if (az < 0.1 || bz < 0.1 || dz < 0.1) return;
+    const x0 = Math.max(0, Math.floor(Math.min(ax, bx, dx))), x1 = Math.min(cw - 1, Math.ceil(Math.max(ax, bx, dx)));
+    const y0 = Math.max(0, Math.floor(Math.min(ay, by, dy))), y1 = Math.min(ch - 1, Math.ceil(Math.max(ay, by, dy)));
+    const den = (by - dy) * (ax - dx) + (dx - bx) * (ay - dy);
+    if (x0 > x1 || y0 > y1 || Math.abs(den) < 1e-12) return;
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+      const px = x + 0.5, py = y + 0.5;
+      const w1 = ((by - dy) * (px - dx) + (dx - bx) * (py - dy)) / den, w2 = ((dy - ay) * (px - dx) + (ax - dx) * (py - dy)) / den, w3 = 1 - w1 - w2;
+      if (w1 < 0 || w2 < 0 || w3 < 0) continue;
+      const z = w1 * az + w2 * bz + w3 * dz, k = y * cw + x;
+      if (z >= Zb[k]) continue;
+      Zb[k] = z; AT[k] = w1 * T[a] + w2 * T[b] + w3 * T[d]; AS[k] = w1 * S[a] + w2 * S[b] + w3 * S[d];
+    }
+  };
+  for (let j = 0; j < Ny - 1; j++) for (let i = 0; i < Nx - 1; i++) {
+    const k = j * Nx + i; tri(k, k + 1, k + Nx + 1); tri(k, k + Nx + 1, k + Nx);
+  }
+  let g = (num("graine", 7) >>> 0) || 7;
+  const rnd = () => { g ^= g << 13; g >>>= 0; g ^= g >>> 17; g ^= g << 5; g >>>= 0; return g / 4294967296; };
+  const [n0, n1] = vec("neige", [0.25, 0.9]), dens = num("densite", 0.6), wS = num("relief", 0.75), gam = num("contraste", 1);
+  const cases = [];
+  for (let k = 0; k < cw * ch; k++) {
+    const r1 = rnd(), r2 = rnd();                              // deux tirages par case, couverte ou non
+    if (Zb[k] === Infinity) continue;
+    const f = fog ? 1 - smoothstep(fog[0], fog[1], Zb[k]) : 1;
+    const rho = dens * f * (1 - wS + wS * Math.pow(AS[k], gam)) * smoothstep(n0, n1, AT[k]);
+    if (r1 < rho) cases.push([k % cw, Math.floor(k / cw), base * (0.4 + 0.6 * r2)]);
+  }
+  return { cases, c };
+}
+
+// Silhouette : l'enveloppe haute des arêtes du maillage projeté, colonne par
+// colonne au demi-pixel ; sous elle, le relief, au-dessus, le ciel.
+function silhouette(scene) {
+  const { vue, ecran } = camera(scene), { Nx, Ny, pos } = scene.grille;
+  const r = 0.5, nc = Math.ceil(W / r) + 1, env = new Float64Array(nc).fill(Infinity);
+  const Sx = new Float64Array(Nx * Ny), Sy = new Float64Array(Nx * Ny), ok = new Uint8Array(Nx * Ny);
+  for (let j = 0; j < Ny; j++) for (let i = 0; i < Nx; i++) {
+    const k = j * Nx + i, v = vue(pos(i, j));
+    if (-v[2] > 0.1) { const s = ecran(v); ok[k] = 1; Sx[k] = s[0]; Sy[k] = s[1]; }
+  }
+  const arete = (a, b) => {
+    if (!ok[a] || !ok[b]) return;
+    let [x0, y0, x1, y1] = [Sx[a], Sy[a], Sx[b], Sy[b]];
+    if (x0 > x1) [x0, y0, x1, y1] = [x1, y1, x0, y0];
+    const k0 = Math.max(0, Math.ceil(x0 / r)), k1 = Math.min(nc - 1, Math.floor(x1 / r));
+    for (let k = k0; k <= k1; k++) {
+      const y = x1 > x0 ? y0 + ((y1 - y0) * (k * r - x0)) / (x1 - x0) : Math.min(y0, y1);
+      if (y < env[k]) env[k] = y;
+    }
+  };
+  for (let j = 0; j < Ny; j++) for (let i = 0; i < Nx; i++) {
+    const k = j * Nx + i;
+    if (i < Nx - 1) arete(k, k + 1);
+    if (j < Ny - 1) arete(k, k + Nx);
+    if (i < Nx - 1 && j < Ny - 1) arete(k, k + Nx + 1);
+  }
+  const pts = Array.from(env, (y, k) => [Math.min(W, k * r), Math.min(H, y)]);
+  return simplifier(pts, num("simplifier", 0) || 0.1);
 }
 
 // Drapeaux d'Everest.js : mât de 4,4, fanion de (0,06 ; 4,4) à (2,7 ; 3,85) et
@@ -444,13 +663,13 @@ let ecartees = 0;
 
 /* ---- Rendu ---------------------------------------------------------------- */
 const mesures = { recette: RECETTE, cadre: [W, H], echelle: ECH, trait: TRAIT };
-let segs2, trace2 = [], eau2 = [], drap2 = [];
+let segs2, trace2 = [], eau2 = [], drap2 = [], scene = null;
 if (RECETTE === "logo") {
   const r = logo(num("opacite", 0.28), num("maitresse", 0.75));
   segs2 = r.out; mesures.bords = r.bords; mesures.niveaux = r.niveaux;
   mesures.couleur = couleur("couleur", "papier");
 } else {
-  const scene = { everest, montblanc, lac }[RECETTE]?.();
+  scene = { everest, montblanc, lac }[RECETTE]?.();
   if (!scene) throw new Error("recette inconnue : " + RECETTE);
   mesures.couleur = couleur("couleur", scene.defauts.couleur);
   segs2 = projeter(scene, scene.segs, num("opacite", scene.defauts.opacite), num("maitresse", scene.defauts.maitresse));
@@ -479,19 +698,82 @@ const parOpacite = (liste) => {
   }
   return g;
 };
-const groupes = parOpacite(segs2);
+// Livraison 3 : sans les courbes (courbes=0), teinte, lac plein, neige pixel,
+// silhouette. Rien de tout cela sans sa clé.
+if (num("courbes", 1) <= 0) segs2 = [];
+const sur = couleur("sur", null) || couleur("fond", null) || PALETTE.encre;  // fond d'accueil, pour la teinte
+const teintes = scene && opt.teinte ? teinter(segs2, scene, sur) : null;
+const pix = scene && opt.pixels ? neigePixels(scene, num("opacite", 1)) : null;
+const sil = scene && opt.silhouette ? silhouette(scene) : null;
+let plein2 = [];
+if (scene && scene.plein && scene.plein.length) {      // sans élagage : le rivage reste fermé
+  const { vue, ecran } = camera(scene);
+  plein2 = scene.plein.map(([p1, p2]) => [ecran(vue(p1)), ecran(vue(p2))]);
+}
+const groupes = parOpacite(teintes ? [] : segs2);
 const fond = couleur("fond", null);
 const svg = [`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`];
 if (fond) svg.push(`<rect width="${W}" height="${H}" fill="${fond}"/>`);
-svg.push(`<g fill="none" stroke="${mesures.couleur}" stroke-width="${TRAIT}" stroke-linejoin="round">`);
+if (sil) {                                 // sous les courbes : la crête en aplat
+  const r = (v) => Math.round(v * 10) / 10;
+  svg.push(`<path fill="${couleur("silhouette", "encre")}" d="M0 ${H}L${sil.map((p) => r(p[0]) + " " + r(p[1])).join("L")}L${W} ${H}Z"/>`);
+  mesures.silhouette = sil.length;
+}
 let longueur = 0, segments = 0;
 const pasLogo = RECETTE === "logo" ? num("pas", 12) : 0;
-for (const q of [...groupes.keys()].sort((a, b) => a - b)) {
-  const { d, len } = chemins(groupes.get(q), 1.5 * pasLogo, 12 * pasLogo);
-  svg.push(`<path stroke-opacity="${q}" d="${d}"/>`);
-  longueur += len; segments += groupes.get(q).length;
+if (teintes) {                             // un groupe par couleur, dans l'ordre de la rampe
+  for (const c of teintes.ordre) {
+    const g = parOpacite(teintes.out.filter((s) => s[3] === c));
+    if (!g.size) continue;
+    svg.push(`<g fill="none" stroke="${PALETTE[c]}" stroke-width="${TRAIT}" stroke-linejoin="round">`);
+    for (const q of [...g.keys()].sort((a, b) => a - b)) {
+      const { d, len } = chemins(g.get(q));
+      svg.push(`<path stroke-opacity="${q}" d="${d}"/>`);
+      longueur += len; segments += g.get(q).length;
+    }
+    svg.push("</g>");
+  }
+  mesures.teinte = { mode: opt.teinte, rampe: opt.rampe || "encre:0,bleu:0.6,papier:1", sur, traces: teintes.out.length };
+} else {
+  svg.push(`<g fill="none" stroke="${mesures.couleur}" stroke-width="${TRAIT}" stroke-linejoin="round">`);
+  for (const q of [...groupes.keys()].sort((a, b) => a - b)) {
+    const { d, len } = chemins(groupes.get(q), 1.5 * pasLogo, 12 * pasLogo);
+    svg.push(`<path stroke-opacity="${q}" d="${d}"/>`);
+    longueur += len; segments += groupes.get(q).length;
+  }
+  svg.push("</g>");
 }
-svg.push("</g>");
+if (plein2.length) {                       // le lac plein, par-dessus les courbes qu'il recouvre
+  svg.push(`<path fill="${PALETTE.bleu}" fill-opacity="${num("plein", 1)}" fill-rule="evenodd" stroke="none" d="${chemins(plein2).d}"/>`);
+  mesures.rivage = plein2.length;
+}
+if (pix) {                                 // une case allumée = un carré ; rangées fusionnées
+  const parA = new Map();
+  for (const [x, y, a] of pix.cases) {
+    const q = Math.round(a * 10) / 10;
+    if (!parA.has(q)) parA.set(q, new Map());
+    const rangs = parA.get(q);
+    if (!rangs.has(y)) rangs.set(y, []);
+    rangs.get(y).push(x);
+  }
+  const c = pix.c;
+  svg.push(`<g fill="${mesures.couleur}" stroke="none">`);
+  for (const q of [...parA.keys()].sort((a, b) => a - b)) {
+    let d = "";
+    for (const [y, xs] of parA.get(q)) {
+      xs.sort((a, b) => a - b);
+      for (let i = 0, s = xs[0]; i < xs.length; i++) {
+        if (i + 1 < xs.length && xs[i + 1] === xs[i] + 1) continue;
+        const n = (xs[i] - s + 1) * c;
+        d += `M${s * c} ${y * c}h${n}v${c}h-${n}z`;
+        s = xs[i + 1];
+      }
+    }
+    svg.push(`<path fill-opacity="${q}" d="${d}"/>`);
+  }
+  svg.push("</g>");
+  mesures.pixels = { taille: c, allumes: pix.cases.length, niveaux: parA.size };
+}
 if (trace2.length) {                       // par-dessus les courbes, comme dans Benefits
   const { d } = chemins(trace2.map(([a, b]) => [a, b]));
   svg.push(`<path fill="none" stroke="${PALETTE.bleu}" stroke-opacity="${trace2[0][2]}" stroke-width="${TRAIT}" stroke-linejoin="round" d="${d}"/>`);
