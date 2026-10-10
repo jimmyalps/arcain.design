@@ -126,6 +126,12 @@
 //     allumées en neige ;
 //   evider=1 (avec logos=…, sur un relief) : ni courbe ni neige dans la
 //     forme des logos, qui apparaissent en creux, au pochoir.
+//
+// Livraison C2, les templates (mêmes garanties : sans cette forme, rien ne
+// change) :
+//   neige=t0,t1,t2,t3 : une tranche d'altitude, allumée de t0 à t1 et éteinte
+//     de t2 à t3, comme la strate des courbes (teinte=altitude et une rampe
+//     papier entre deux encres) ; les camps du carrousel.
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -556,7 +562,10 @@ function neigePixels(scene, base) {
   const c = num("pixels", 3), { Zb, AT, AS, AW, cw, ch, fog } = tramer(scene, c);
   let g = (num("graine", 7) >>> 0) || 7;
   const rnd = () => { g ^= g << 13; g >>>= 0; g ^= g >>> 17; g ^= g << 5; g >>>= 0; return g / 4294967296; };
-  const [n0, n1] = vec("neige", [0.25, 0.9]), dens = num("densite", 0.6), wS = num("relief", 0.75), gam = num("contraste", 1);
+  const nv = vec("neige", [0.25, 0.9]), dens = num("densite", 0.6), wS = num("relief", 0.75), gam = num("contraste", 1);
+  // Livraison C2 : neige=t0,t1,t2,t3, une tranche d'altitude (allumée de t0 à
+  // t1, éteinte de t2 à t3). Avec deux valeurs, rien ne change.
+  const [n0, n1] = nv, tranche = nv.length >= 4 ? [nv[2], nv[3]] : null;
   // Livraison A2 : la neige s'éteint (ou s'allume, inverse=1) loin du foyer.
   const [fx, fy] = vec("foyer", [W / 2, H / 2]), [rx, ry] = vec("portee", [W / 2, H / 2]), inv = num("inverse", 0) > 0;
   const halo = (k) => {
@@ -568,7 +577,8 @@ function neigePixels(scene, base) {
     const r1 = rnd(), r2 = rnd();                              // deux tirages par case, couverte ou non
     if (Zb[k] === Infinity || (AW && AW[k] > 0.5)) continue;   // pas de neige sur l'eau
     const f = fog ? 1 - smoothstep(fog[0], fog[1], Zb[k]) : 1;
-    const rho = dens * f * (1 - wS + wS * Math.pow(AS[k], gam)) * smoothstep(n0, n1, AT[k]) * (opt.foyer ? halo(k) : 1);
+    let rho = dens * f * (1 - wS + wS * Math.pow(AS[k], gam)) * smoothstep(n0, n1, AT[k]) * (opt.foyer ? halo(k) : 1);
+    if (tranche) rho *= 1 - smoothstep(tranche[0], tranche[1], AT[k]);
     if (r1 < rho) cases.push([k % cw, Math.floor(k / cw), base * (0.4 + 0.6 * r2)]);
   }
   return { cases, c };

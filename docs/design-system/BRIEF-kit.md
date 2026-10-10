@@ -1108,3 +1108,148 @@ bas à gauche, l'encre la plus basse à 56 px du bord, comme les mentions.
 5. **Logo sur bleu** : version papier (#F5F5F5) à côté d'un titre en
    `color/text/on-accent` (#FFFFFF). L'écart ne se voit pas, et le logo garde
    une de ses trois versions.
+
+## Réponses sur la livraison C1 (10 octobre 2026)
+
+C1 validée, et ses cinq choix avec elle : le logo de 44 px sur toutes les
+affiches (variantes de 3 bis comprises), le pas en colonne de 96,8 % du
+diamètre, le ruban de 7m au milieu, la règle A7 précisée (capitale à 0,66 em,
+logo de 0,671 em, suspendu dans la marge quand il ouvre le titre), le logo
+papier à côté d'un titre blanc sur bleu.
+
+## Livraison C2 : les templates (10 octobre 2026)
+
+Nouvelle page « Kit Templates » (`444:2`), placée après Kit Direction. Elle
+remplace la partie 3 du brief, sans cartes de visite. Cinq sections, une
+rangée par DA, 28 cadres. La page « Templates » du fichier, qui porte les
+maquettes du site, n'est pas touchée.
+
+### Ce que chaque template porte
+
+- **Signature** : le logo seul, 44 px, encre à 56 px des bords (34 px à 40 px
+  sur l'A4). Aucun nom de marque.
+- **jimmyferon.com**, seulement en mention de contact : affiches, annonce,
+  projet, dernière slide du carrousel, story, bannières. Ni sur la citation,
+  ni sur les slides 1 à 4, ni sur le Reel.
+- **Textes** du site, modifiables, chacun lié à un style `kit/…` ; couleurs
+  liées (`color/text/primary`, `/label`, `/muted`, `/on-accent`,
+  `color/accent/default`). Espaces insécables devant « : » et « ? » et dans les
+  altitudes.
+- **Fond** : une planche validée de Kit Direction, copiée quand son format et
+  sa place pour le texte s'y prêtent (5 cadres), recomposée sinon (même
+  recette, autre cadre ou autre caméra, 23 cadres). La même scène dans les
+  deux DA : en trait pour la DA trait, en neige pour la DA pixels.
+- **Grain** `effect/grain` sur chaque cadre. **Exports** : PDF pour les quatre
+  affiches, PNG 1x et 2x pour les 24 cadres d'écran.
+
+### Sections
+
+| Section | Nœud | Templates (trait, pixels) | Fonds | Couleur |
+|---|---|---|---|---|
+| 1 · Affiches A4 et A3 | `444:3` | A4 `444:3835`, `444:3855` ; A3 `444:3837`, `444:3857` | crête de 3-affiche ; crête en neige de 3h-neige (cases de 2 pt), recomposées au format | bleu |
+| 2 · Posts 1080 × 1350 | `444:6` | annonce `444:3839`, `444:3859` ; citation `444:3841`, `444:3861` ; projet `444:3843`, `444:3863` | annonce : 4-everest-4x5 (papier sur bleu par le mode) et 4e5-inversee, copiés ; citation : 4-everest-4x5 et 4e-neige-bleue-4x5, copiés ; projet : 1h1-papier et la neige de 1i, recomposés, sommets en pied | bleu, papier, encre |
+| 3 · Carrousel 5 × 1080 × 1350 | `444:9` | slides 1 à 5 : `444:3845` à `444:3853` ; `444:3865` à `444:3873` | 1h5-mont-blanc en strates (1h6-strate) ; 1i7-mont-blanc, recomposés | encre |
+| 4 · Story et Reel 1080 × 1920 | `444:12` | story `444:3875`, `444:3883` ; Reel `444:3877`, `444:3885` | story : 4-everest-9x16 et 4e-neige-bleue, recomposés, sommet à 55 % ; Reel : crête de 3-affiche-9x16, copiée, et sa version en neige | papier, bleu |
+| 5 · Bannières | `444:15` | LinkedIn `444:3879`, `444:3887` ; X `444:3881`, `444:3889` | 1h3-coupee et 1i1-coupee, pyramide au tiers gauche, lumière et neige éteintes vers la droite comme 1g2-decentree | encre |
+
+### Les textes
+
+| Template | Textes | Source |
+|---|---|---|
+| Affiches | « Pour que ta marque tienne en altitude », « Chamonix → Mont Blanc / ALT. 4 810 M » | `hero.mtA` à `hero.mtD`, `Benefits.js` |
+| Annonce | « Disponible — freelance & opportunités », « Une idée en tête ? » | `home.status`, `foot.hook` |
+| Citation | « Un designer qui avance comme il grimpe… », la fin en bleu (l'accent du site, le bleu de 5a) | `tr2.big` |
+| Projet | « Anya », « Branding & UI/UX — projet phare », « Brand & Product Design — 2026 », le visuel `anya-1600` | `lib/projects.js`, `public/images` |
+| Carrousel | « L'ascension de ta marque. » en titre courant ; par slide, l'altitude du camp, le titre et la description de l'étape | `bn3.title`, `Benefits.js`, `bn3.c1t` à `bn3.c5d` |
+| Story | « Ta marque au sommet », « Une identité visible, mémorable, prête à tenir en altitude. » | `bn3.c5t`, `bn3.c5d` |
+| Reel | « L'ascension de ta marque. » | `bn3.title` |
+| Bannières | « Je construis des marques qui tiennent en altitude. », « Brand Designer & UI/UX » | `home.blurb`, `home.role` |
+
+Le visuel d'Anya, en noir et blanc, est le seul projet du site qui ne heurte
+pas la palette (Preshot est violet, BCC rouge) ; converti en JPEG par
+`webp-jpeg.mjs`, Figma n'affichant pas le WebP. Un filet
+`color/border/default` le borde : ses noirs se fondaient dans l'encre.
+
+### La typo par format
+
+- **1080 de large** : marges 56, logo 44, mentions `label-24`, titres
+  `display-120` (posts) ou `display-180` (story, Reel, altitude du carrousel),
+  `display-54` (citation, titres d'étape, bannières), textes `lead-36`, rôle et
+  année `meta-24`.
+- **A3** (842 × 1191 pt) : la typo exacte de l'affiche 4:5 (marge 56, logo 44,
+  `display-120`, `label-24`, `altimeter-24`).
+- **A4** (595 × 842 pt) : un cran plus bas dans l'échelle du kit, dont le pas
+  de ×1,5 tombe presque sur le rapport √2 de l'A3 à l'A4 : marge 40
+  (`space/40`), logo 34 (la taille minimum), `display-80`, `label-16`, y
+  compris pour l'altimètre (le kit n'a pas d'`altimeter-16`).
+- **Story et Reel** : le bandeau du haut descend à 250 px, sous l'interface
+  d'Instagram (barre de progression, profil) et dans la découpe 3:4 de la
+  grille du profil.
+- **Bannières** : le texte en colonne à droite, la montagne au tiers gauche, à
+  droite de la photo de profil.
+
+### Le carrousel
+
+Le site place les cinq camps de Benefits à +1 250, +2 400, +3 400, +4 200 et
++4 810 m. Ramenés au relief de `mbdata.json` (de 920 à 4 787 m, puissance
+1,05 comme `Benefits.js`), ils tombent aux fractions 0,075, 0,365, 0,627 et
+0,841. Chaque slide allume la tranche entre son camp et le suivant, en trait
+comme en neige ; au sommet, tout le massif s'allume. Le même cadrage sur les
+cinq slides, la caméra reculée et relevée par rapport à 1h5 pour faire entrer
+la vallée de Chamonix dans le bas du cadre.
+
+### Les rendus et les outils
+
+- **23 rendus** neufs ; les commandes sont dans `outils/README.md`
+  (livraison C2). Relancées, elles refont les 23 SVG importés à l'octet près
+  (SHA-1 égal à l'`imageHash` de Figma, 23 sur 23).
+- **`rendu-courbes.mjs`** reçoit une forme de clé : `neige=t0,t1,t2,t3`, une
+  tranche d'altitude. Sans elle, rien ne change : trois rendus en neige refaits
+  avec le script modifié gardent leur SHA-1.
+- **Cinq fonds copiés** de Kit Direction : 4-everest-4x5 (deux fois),
+  4e5-inversee, 4e-neige-bleue-4x5, la crête de 3-affiche-9x16.
+
+### Valeurs
+
+- **Peintures** : 1 294 peintures pleines sur les 28 cadres, toutes liées à une
+  variable, plages colorées des textes comprises ; opacités des rendus portées
+  par les calques.
+- **Textes** : 88, tous liés à un style `kit/…` (`label-24` × 30,
+  `display-54` × 16, `display-180` × 14, `lead-36` × 12, `display-120` × 6,
+  `label-16` × 4, `display-80`, `altimeter-24` et `meta-24` × 2).
+- **Logo** : 28 instances du composant, toutes au rayon de leur demi-taille.
+- **Rendus** : 1 178 vecteurs ; une seule image, le visuel d'Anya (deux fois).
+
+### Ce qui a été refait avant de montrer
+
+- **Carrousel, panorama** : un seul panorama sur les cinq slides, sommet sur la
+  dernière, laissait deux slides vides, des deux côtés du massif : les données
+  s'arrêtent au-delà. Remplacé par le même cadrage sur chaque slide.
+- **Carrousel, lumière** : d'abord, seul ce qui dépasse le camp restait
+  allumé ; les slides 1 et 2 étaient identiques (depuis la caméra de 1h5, tout
+  le relief visible dépasse 2 400 m) et la slide 5 ne gardait qu'un point.
+  Caméra reculée, puis tranches entre deux camps et massif entier au sommet.
+- **Carrousel, descriptions** : en `body-24`, moins de 9 px sur un téléphone ;
+  passées en `lead-36`.
+- **Bannières** : la chaîne passait sous le texte, « BRAND DESIGNER » barré
+  par les traits. Lumière et neige éteintes vers la droite ; deux points de
+  neige tombaient encore sur le « B » : pyramide décalée au tiers gauche,
+  portée réduite.
+- **Citation** : la deuxième ligne commençait par « : » ; espaces insécables.
+- **Projet** : filet autour du visuel, dont les noirs se perdaient dans
+  l'encre.
+
+### Choix à valider
+
+1. **Affiches** : l'A3 à la typo de l'affiche 4:5, l'A4 un cran plus bas ;
+   l'altimètre de l'A4 en `label-16`.
+2. **Fonds recomposés** : 23 cadres sur 28 recomposent une planche validée
+   (même recette, autre cadre ou caméra) ; 5 la copient.
+3. **Carrousel** : une tranche allumée par camp, tout le massif au sommet, le
+   même cadrage sur les cinq slides plutôt qu'un panorama.
+4. **Annonce** : l'Everest 4:5 en trait papier sur bleu (4-everest-4x5 passé
+   en mode sombre), en face de 4e5-inversee.
+5. **Story et Reel** : bandeau à 250 px, pour la zone sûre d'Instagram, au
+   lieu de 56.
+6. **Bannières** : la règle de 1g2-decentree appliquée à 1h3 et 1i1.
+7. **Projet** : Anya en exemple, avec son filet ; jimmyferon.com en contact.
