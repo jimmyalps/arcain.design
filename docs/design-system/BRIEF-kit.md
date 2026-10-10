@@ -538,3 +538,201 @@ adresse, lieu, altitude) sont retirés : ce sont des fonds.
 6. **Pour la livraison B** : l'adresse jimmyferon.com porte un nom, sans être
    celui de la marque. La garder là où une mention sert, ou n'y laisser que le
    logo ?
+
+## Réponses et retours sur la livraison A (10 octobre 2026)
+
+Les six choix :
+
+1. **Everest** : remplacé sur place, validé.
+2. **Planches 1a à 1d** : ni vidées ni retirées ; gardées avec un libellé
+   « Archive ».
+3. **Montagne sur papier** : la montagne descend jusqu'au bord ; plus de bande
+   vide sous le filet.
+4. **1f, le lac couché** : gardé.
+5. **Textures en PNG** : les deux sont validées.
+6. **jimmyferon.com** : seulement là où une mention de contact sert, comme sur
+   l'affiche ; ailleurs, le logo seul (livraison B).
+
+Les fonds :
+
+- **Règle pour la suite** : aucune planche aimée n'est modifiée ni supprimée.
+  Les variantes s'ajoutent à côté.
+- **Le bleu sur l'encre** : en trait fin, il se voit mal. Sur encre, les
+  traits et les points sont en papier, avec des fondus d'opacité qui se
+  perdent dans le fond ; le bleu n'y vient qu'en aplat ou en grande masse. Sur
+  papier, le bleu en trait et en points marche bien. Pour comparer : deux
+  variantes sur encre avec le bleu clair d'interface du site.
+- **Aimées** : la lumière (1g), l'altitude (1h), la neige pixel (1i), la macro
+  (1j) et, sur papier, la neige bleue (4e). Beaucoup de variantes de chacune :
+  décentrées, coupées par le bord, d'autres formes, d'autres styles, des
+  dégradés inversés. Toujours abstrait, toujours sans texte.
+- **Les lacs** (1e, 1f) : stylés, mais l'aplat bleu est sans âme. Gardés tels
+  quels, avec des variantes : des courbes de profondeur dans l'eau, comme une
+  carte du fond du lac ; un bleu qui s'assombrit vers le centre, avec du
+  grain ; un rivage seulement tracé ; de la neige pixel sur les berges.
+- **L'aube** (1k) : piste abandonnée.
+- **La brume sur papier** (4d) : piste remplacée par d'autres idées sur papier,
+  créatives et abstraites.
+
+Ce que ces retours changent :
+
+- **Le bleu sur encre** : `reference-drapz.md` (§3.7) le gardait « à la trace,
+  une ligne d'accent ». Sur les fonds, c'est l'inverse : jamais en trait fin
+  sur l'encre, seulement en aplat ou en grande masse.
+- **Le bleu clair d'interface** : `color/accent/on-dark` (`#7D86FF`, primitive
+  `color/blue-light`), celui de l'étiquette du camp dans la modale projet
+  (`.ev-modal-camp`). Il n'entre que dans les deux variantes de comparaison.
+
+## Livraison A2 : variantes des fonds (10 octobre 2026)
+
+Page Kit Direction (`346:2`). Aucune planche aimée n'est modifiée : deux
+sections neuves s'insèrent, les suivantes descendent (2, 3 et 4 de 7 520 px ;
+5, 6 et 7 de 11 380 px). 43 planches neuves, sans aucun texte, chacune exportée
+en PNG 1x et 2x.
+
+### Les réponses appliquées
+
+- **Archive** : la section 1 devient « 1 · Visuel clé — essais (archive) ». Un
+  libellé « Archive » au-dessus de 1a à 1d, « Archive — piste abandonnée »
+  au-dessus de 1k (aube) et de 4d (brume). Rien n'est vidé ni retiré.
+- **Section 4** : la montagne descend jusqu'au bord. Sur `4-everest-4x5`,
+  `-1x1`, `-9x16` et `4e-neige-bleue-4x5`, le cadre de rendu s'étend à toute la
+  hauteur et le filet est retiré. Les rendus, calculés pour le cadre entier, ne
+  sont pas refaits.
+- **Everest, lac couché, textures PNG** : gardés tels quels.
+
+### Section 1 ter · Fonds sur encre — variantes (`409:182`)
+
+35 planches de 1920 × 1080 sur encre, cinq rangées, une par piste aimée. Sur
+encre, traits et points en papier avec leurs fondus d'opacité ; le bleu n'y
+entre qu'en aplat ou en grande masse, sauf dans les deux variantes au bleu
+clair, faites pour comparer.
+
+| Piste | Planche | Nœud | L'idée |
+|---|---|---|---|
+| Lumière (1g) | `planche/1g1-papier` | `410:182` | 1g sans bleu : le cœur papier s'éteint dans l'encre |
+| | `planche/1g2-decentree` | `410:184` | le sommet au tiers gauche, la lumière s'éteint vers la droite |
+| | `planche/1g3-coupee` | `410:186` | le sommet hors champ, coupé par le haut ; la lumière tombe de l'angle |
+| | `planche/1g4-couronne` | `410:188` | dégradé inversé : le sommet devient un trou noir, la lumière passe sur les flancs |
+| | `planche/1g5-masse-bleue` | `410:190` | la montagne en aplat bleu, les courbes papier s'éteignent dans le bleu |
+| | `planche/1g6-neige` | `410:192` | la lumière en neige pixel : un foyer de points papier sur le sommet |
+| | `planche/1g7-bleu-clair` | `410:194` | 1g, le bleu clair d'interface à la place du bleu (comparaison) |
+| Altitude (1h) | `planche/1h1-papier` | `410:196` | 1h sans bleu : de l'encre au papier |
+| | `planche/1h2-ceinture` | `410:198` | dégradé inversé : une ceinture de lumière à mi-pente, base et sommets éteints |
+| | `planche/1h3-coupee` | `410:200` | au téléobjectif, la pyramide coupée par le haut |
+| | `planche/1h4-vallees-bleues` | `410:202` | vue du ciel : les vallées en aplat bleu, les sommets s'allument en papier |
+| | `planche/1h5-mont-blanc` | `410:204` | la même règle sur le Mont Blanc, vu du nord-ouest comme la crête de l'affiche |
+| | `planche/1h6-strate` | `410:206` | une seule tranche d'altitude allumée, le reste dans l'encre |
+| | `planche/1h7-bleu-clair` | `410:208` | 1h, le bleu clair d'interface à la place du bleu (comparaison) |
+| Neige pixel (1i) | `planche/1i1-coupee` | `410:210` | au téléobjectif, la pyramide coupée par le haut |
+| | `planche/1i2-contre-jour` | `410:212` | le soleil passé de l'autre côté : seules les arêtes s'allument |
+| | `planche/1i3-vue-du-ciel` | `410:214` | la neige vue du ciel, serrée sur l'Everest |
+| | `planche/1i4-gros-pixels` | `410:216` | cases de 5 px au lieu de 3 |
+| | `planche/1i5-poudre` | `410:218` | cases de 2 px, une poudre |
+| | `planche/1i6-masse-bleue` | `410:220` | la montagne en aplat bleu, la neige papier dessus |
+| | `planche/1i7-mont-blanc` | `410:222` | le Mont Blanc en neige, vu du nord-ouest |
+| Macro (1j) | `planche/1j1-sommet` | `410:224` | un sommet secondaire du Mont Blanc : des courbes fermées |
+| | `planche/1j2-col` | `410:226` | un col : deux versants qui se font face |
+| | `planche/1j3-fondu` | `410:228` | les courbes de 1j s'éteignent de gauche à droite |
+| | `planche/1j4-bande-bleue` | `410:230` | une seule bande entre deux courbes, en aplat bleu |
+| | `planche/1j5-masse-bleue` | `410:232` | tout ce qui dépasse une courbe maîtresse, en aplat bleu |
+| Lacs (1e, 1f) | `planche/1e1-profondeur` | `410:234` | des courbes de profondeur dans l'eau, comme une carte du fond |
+| | `planche/1e2-abysse` | `410:236` | le bleu s'assombrit vers le centre, en grain |
+| | `planche/1e3-rivage` | `410:238` | le rivage seulement tracé, les courbes du terrain baissées |
+| | `planche/1e4-berges` | `410:240` | la neige pixel sur les berges, arrêtée au bord de l'eau |
+| | `planche/1f1-profondeur` | `410:242` | 1e1 sur le lac couché |
+| | `planche/1f2-abysse` | `410:244` | 1e2 sur le lac couché |
+| | `planche/1f3-echos` | `410:246` | le rivage et ses échos vers l'extérieur, sans terrain |
+
+Les courbes de profondeur sont dessinées, pas mesurées : `lacdata.json` ne
+porte qu'un masque d'eau, pas le relief du fond. Ce sont les décalages du
+rivage vers l'intérieur, à pas égal, jusqu'au point le plus éloigné des
+berges, comme le logo en courbes ; l'abysse suit la même distance.
+
+### Section 4 bis · Fonds sur papier — variantes (`409:183`)
+
+10 planches de 1080 × 1350, la montagne jusqu'au bord. Sur papier, le bleu
+marche en trait et en points.
+
+| Piste | Planche | Nœud | L'idée |
+|---|---|---|---|
+| Neige bleue (4e) | `planche/4e1-coupee` | `410:3447` | la pyramide coupée par le haut, décentrée à gauche |
+| | `planche/4e2-poudre` | `410:3449` | cases de 2 px |
+| | `planche/4e3-vue-du-ciel` | `410:3451` | la neige vue du ciel |
+| | `planche/4e4-mont-blanc` | `410:3453` | le Mont Blanc en neige bleue |
+| | `planche/4e5-inversee` | `410:3455` | inversée : fond bleu, neige papier |
+| Nouvelles pistes (à la place de la brume) | `planche/4f-lumiere-bleue` | `410:3457` | la lumière sur papier : le sommet bleu, l'encre autour, effacée vers les bords |
+| | `planche/4g-altitude-bleue` | `410:3459` | l'altitude sur papier : base effacée, flancs en encre, sommets bleus |
+| | `planche/4h-calotte` | `410:3461` | tout ce qui dépasse 7 060 m en aplat bleu, courbes papier dessus, encre devant |
+| | `planche/4i-lac-bleu` | `410:3463` | le lac en courbes de profondeur bleues, sans aplat bleu, le terrain en gris autour |
+| | `planche/4j-macro-bande` | `410:3465` | la macro sur papier : courbes encre et une bande bleue |
+
+### Les rendus et les outils
+
+- `rendu-courbes.mjs` reçoit de nouvelles clés : `bleu-clair`, `aplat`,
+  `aplatVu`, `aplatApres`, `rivage`, `isobathes`, `echos`, `lissage`,
+  `abysse`, `pleinCouleur`, `eauCouleur`, `foyer` pour la neige pixel, `noms`.
+  Sans elles, les rendus des livraisons 1 à 3 A se refont à l'octet près (huit
+  recettes vérifiées en SVG, deux en PNG).
+- Les 43 commandes sont dans `outils/README.md` (livraison 3 A2) : relancées
+  depuis le README, elles refont les 43 SVG importés à l'octet près. Les deux
+  textures d'abysse ont pour SHA-1 leur `imageHash` dans Figma.
+- **Aplat vu** : la calotte remplissait d'abord le contour d'altitude projeté,
+  c'est-à-dire la coupe horizontale de la montagne : juste vue du ciel (1h4,
+  1j4, 1j5), fausse en perspective. `aplatVu` calcule l'aplat sur le relief vu,
+  avec tampon de profondeur, en cases de 0,75 px : son bord suit la crête et ce
+  qui passe devant.
+
+### Valeurs
+
+- **Peintures** : 1 751 peintures pleines sur les 43 planches, toutes liées à
+  une variable (`color/bg/primary`, `color/text/primary`,
+  `color/text/on-inverse`, `color/accent/default`, `color/accent/on-dark`),
+  opacités portées par les calques.
+- **Bleu clair** : `color/accent/on-dark` est lié aux traits de 1g7 et 1h7. Sa
+  portée ne déclare que le texte (`TEXT_FILL`) : l'API accepte la liaison sur un
+  trait, mais l'interface de Figma ne la proposera pas.
+- **Grain** : `effect/grain` sur chaque planche. Sur l'eau des lacs pleins, le
+  grain des cartes (`effect/grain-carte`), par le groupe « lac grainé » de 1e
+  et de 1f cloné : les rivages tombent au pixel près (écart nul).
+- **Images** : en plus des grains, deux textures d'abysse en PNG
+  (3840 × 2160), encre de la palette fixée dans l'image.
+- **Libellés** : 13 textes posés sur les sections, hors des planches, en
+  `kit/label-24` et `color/text/label` ; aucun texte dans les planches.
+
+### Ce qui a été refait avant de montrer
+
+- **Lumière** : la couronne laissait au sommet un cœur sombre trop petit et se
+  confondait avec 1g1 ; cœur élargi. Une carte vue du ciel en dégradé inversé,
+  trop dense, écartée.
+- **Altitude** : la rampe inversée (base claire, sommets éteints) donnait un
+  tapis de traits sans sujet, trois strates se lisaient mal, les vallées en
+  lumière vues du ciel restaient vides : écartées. Gardées la ceinture et une
+  strate seule.
+- **Neige pixel** : la neige inversée (vallées enneigées, sommets nus) était
+  illisible, deux fois ; remplacée par le contre-jour. Vue du ciel, la première
+  passe faisait une neige de télévision ; resserrée sur l'Everest.
+- **Macro** : un dôme répétait le col, et la neige pixel en macro n'avait plus
+  de relief lisible : écartés.
+- **Lacs** : les courbes de profondeur cassaient en angles sur l'axe du lac,
+  adoucies (champ de distance lissé) ; la neige des berges tombait loin du
+  lac, ramenée sur la bande d'altitude du rivage ; le rivage seul gardait des
+  courbes de terrain trop présentes, baissées.
+- **Papier** : le lac bleu laissait voir le terrain sous l'eau, effacé par un
+  aplat papier ; la calotte, d'abord calculée en coupe, refaite en aplat vu.
+
+### Choix à valider
+
+1. **Bleu clair sur encre** : 1g7 et 1h7, face à 1g1 et 1h1 (papier seul) et
+   aux originaux en bleu. Si le bleu clair est retenu, élargir la portée de
+   `color/accent/on-dark` aux traits et aux formes.
+2. **Variantes à garder** : par piste, celles qui passent en déclinaisons
+   (4:5, carré, 9:16).
+3. **Archives** : 1k et 4d sont libellées « Archive — piste abandonnée »
+   plutôt que retirées, comme 1a à 1d.
+4. **Profondeur du lac** : dessinée à partir du rivage, faute de relief du fond
+   dans les données.
+5. **Textures d'abysse** : deux PNG de plus, comme les grains de la
+   livraison A.
+6. **Section 4** : le cadre « rendu » qui coupait la montagne reste, étendu à
+   toute la planche ; il ne coupe plus rien.

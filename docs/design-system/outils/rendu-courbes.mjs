@@ -42,7 +42,7 @@
 //   node rendu-courbes.mjs <racine du dépôt> <navigateur.exe> <dossier profil>
 //        <sortie sans extension> <everest|montblanc|lac|logo> [clé=valeur ...]
 // Clés communes : cadre=1920x1080, echelle=2, trait=1,
-//   couleur=papier|encre|bleu, opacite, maitresse, fond=papier|encre|bleu,
+//   couleur=papier|encre|bleu|bleu-clair, opacite, maitresse, fond=papier|encre|bleu,
 //   simplifier (px : écart toléré entre une courbe et sa corde, défaut 0 ;
 //   0,1 allège le SVG pour Figma sans changer le dessin), decimales (défaut 2)
 // Reliefs : camera=x,y,z, cible=x,y,z, fov, brouillard=near,far|non,
@@ -77,22 +77,52 @@
 //     l'inverse), effacée par le brouillard ; tirage à graine fixe (graine) ;
 //   silhouette=couleur : l'enveloppe haute du relief projeté, fermée par le bas
 //     du cadre, en aplat.
+//
+// Livraison A2, variantes des fonds (mêmes garanties : sans ces clés, rien ne
+// change) :
+//   bleu-clair : le bleu clair d'interface du site (color/accent/on-dark,
+//     #7D86FF), admis dans la palette pour les variantes de comparaison ;
+//   aplat=couleur:bas:haut[,...] : le relief compris entre deux altitudes
+//     (fractions de sa hauteur) rempli en aplat, sous les courbes. Le bord de
+//     l'aplat est exactement la courbe de niveau, posée sur le relief (vue du
+//     ciel) ; aplatVu=1, en perspective : l'aplat suit le relief vu, tampon de
+//     profondeur compris, en cases de aplatMaille px (défaut 1,5) ;
+//     aplatApres=couleur (avec teinte) le pose juste après les traits de
+//     cette couleur ; aplatOpacite ;
+//   lac : rivage=a (le rivage lissé tracé au trait), isobathes=n et
+//     profondeur=a0,a1 (n courbes de profondeur : le rivage décalé vers
+//     l'intérieur à pas égal jusqu'au point le plus éloigné des berges, comme
+//     le logo en courbes ; le relief du fond n'est pas dans les données),
+//     echos=n,a0,a1 (le rivage décalé vers l'extérieur, au même pas),
+//     lissage=s (flou du champ de distance, en cases du masque, défaut 1 :
+//     plus haut, les angles de l'axe médian s'arrondissent),
+//     abysse=d0,d1,densite,gamma (<sortie>-abysse.png : des points d'encre
+//     dans le lac, de plus en plus serrés vers le centre, rendus point par
+//     point par le rayon de la caméra jusqu'au plan d'eau), la neige pixel
+//     qui s'arrête au bord de l'eau, et pleinCouleur (couleur du lac plein,
+//     défaut bleu ; papier sur papier efface le terrain sous l'eau) ;
+//   pixels : foyer=x,y et portee=rx,ry règlent aussi la densité de la neige
+//     (inverse=1 : éteinte au foyer, allumée vers les bords) ;
+//   noms=1 : chaque chemin du SVG porte un id, qui devient le nom du calque
+//     à l'import dans Figma.
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { deflateSync } from "node:zlib";
 
 const [, , ROOT, BROWSER, PROFILE, OUT, RECETTE, ...ARGS] = process.argv;
 const PORT = 9348;
 const opt = Object.fromEntries(ARGS.map((a) => [a.slice(0, a.indexOf("=")), a.slice(a.indexOf("=") + 1)]));
-const PALETTE = { papier: "#F5F5F5", encre: "#111111", bleu: "#1E29FF" };
+const PALETTE = { papier: "#F5F5F5", encre: "#111111", bleu: "#1E29FF", "bleu-clair": "#7D86FF" };
 const num = (k, d) => (opt[k] === undefined ? d : +opt[k]);
 const vec = (k, d) => (opt[k] === undefined ? d : opt[k].split(",").map(Number));
 const couleur = (k, d) => {
   const c = opt[k] === undefined ? d : opt[k];
-  if (c && !PALETTE[c]) throw new Error(`${k}=${c} : la palette est fermée (papier, encre, bleu)`);
+  if (c && !PALETTE[c]) throw new Error(`${k}=${c} : la palette est fermée (papier, encre, bleu, bleu-clair)`);
   return c && PALETTE[c];
 };
+const nomme = (n) => (opt.noms ? ` id="${n}"` : "");          // nom du calque dans Figma
 const [W, H] = (opt.cadre || "1920x1080").split("x").map(Number);
 const ECH = num("echelle", 2), TRAIT = num("trait", 1);
 const D36 = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -143,7 +173,9 @@ function everest() {
     .map((m) => ({ k: m.k, alt: m.alt, p: [xOf(m.x), hOf(m.e), zOf(m.y)] }));
   // Vue d'ensemble du code (avant la descente vers le camp de base).
   return { segs, trace: [], marques, far: 900, hauteur: HS,
-    grille: { Nx, Ny, pos: (i, j) => [xG(i), hOf(G[j * Nx + i]), zG(j)] }, defauts: {
+    grille: { Nx, Ny, pos: (i, j) => [xG(i), hOf(G[j * Nx + i]), zG(j)],
+      frac: (i, j) => (G[j * Nx + i] - EMIN) / RANGE,
+      monde: (fi, fj) => [xG(fi), hOf(bilin(G, Nx, Ny, fi, fj)), zG(fj)] }, defauts: {
     camera: [0, HS * 1.05 + 22, SIZE * 0.6], cible: [0, HS * 0.35, 0], fov: 46,
     brouillard: [110, 340], couleur: "encre", opacite: 0.4, maitresse: 0.4, decalage: 0 } };
 }
@@ -181,7 +213,8 @@ function montblanc() {
   // Fin de l'ascension (défilement à 100 %) : e = 1 dans draw().
   const ang = 3.75 - 0.6, rad = 6.8 - 0.5;
   return { segs, trace, far: 100, hauteur: Ht,
-    grille: { Nx, Ny, pos: (i, j) => [XG(i), G[j * Nx + i] * Ht, ZG(j)] }, defauts: {
+    grille: { Nx, Ny, pos: (i, j) => [XG(i), G[j * Nx + i] * Ht, ZG(j)], frac: (i, j) => G[j * Nx + i],
+      monde: (fi, fj) => [XG(fi), bilin(G, Nx, Ny, fi, fj) * Ht, ZG(fj)] }, defauts: {
     camera: [Math.sin(ang) * rad, 2.6 + 3.6, Math.cos(ang) * rad], cible: [0.1, 0.55 + 0.35, 0], fov: 40,
     brouillard: null, couleur: "papier", opacite: 0.28, maitresse: 0.75, decalage: -0.52 - 0.43 } };
 }
@@ -251,6 +284,32 @@ function flou(G, N, s) {
   }
   return out;
 }
+// Valeur d'une grille Nx × Ny en un point d'indices fractionnaires (bilinéaire).
+function bilin(G, Nx, Ny, fi, fj) {
+  const i = Math.max(0, Math.min(Nx - 2, Math.floor(fi))), j = Math.max(0, Math.min(Ny - 2, Math.floor(fj)));
+  const tx = Math.max(0, Math.min(1, fi - i)), ty = Math.max(0, Math.min(1, fj - j));
+  const a = G[j * Nx + i], b = G[j * Nx + i + 1], c = G[(j + 1) * Nx + i + 1], d = G[(j + 1) * Nx + i];
+  return (a * (1 - tx) + b * tx) * (1 - ty) + (d * (1 - tx) + c * tx) * ty;
+}
+// Distance euclidienne exacte, en cases, de chaque case `dedans` à la plus
+// proche case qui ne l'est pas (Felzenszwalb et Huttenlocher, deux passes 1D).
+function distance(dedans, Nx, Ny) {
+  const INF = 1e20, L = Math.max(Nx, Ny), f = new Float64Array(L), d = new Float64Array(L);
+  const v = new Int32Array(L), z = new Float64Array(L + 1), D = new Float64Array(Nx * Ny);
+  for (let k = 0; k < Nx * Ny; k++) D[k] = dedans[k] ? INF : 0;
+  const passe = (n) => {
+    let k = 0; v[0] = 0; z[0] = -INF; z[1] = INF;
+    for (let q = 1; q < n; q++) {
+      let s;
+      while ((s = (f[q] + q * q - f[v[k]] - v[k] * v[k]) / (2 * q - 2 * v[k])) <= z[k]) k--;
+      k++; v[k] = q; z[k] = s; z[k + 1] = INF;
+    }
+    for (let q = 0, k2 = 0; q < n; q++) { while (z[k2 + 1] < q) k2++; d[q] = (q - v[k2]) ** 2 + f[v[k2]]; }
+  };
+  for (let i = 0; i < Nx; i++) { for (let j = 0; j < Ny; j++) f[j] = D[j * Nx + i]; passe(Ny); for (let j = 0; j < Ny; j++) D[j * Nx + i] = d[j]; }
+  for (let j = 0; j < Ny; j++) { for (let i = 0; i < Nx; i++) f[i] = D[j * Nx + i]; passe(Nx); for (let i = 0; i < Nx; i++) D[j * Nx + i] = Math.sqrt(d[i]); }
+  return D;
+}
 
 /* ---- Lac d'Allos : Lake3D.js, décodage, niveaux, hachures d'eau ---------- */
 function lac() {
@@ -284,9 +343,12 @@ function lac() {
   // sèches qu'on ne rejoint pas depuis le bord de la grille, des bulles dans
   // l'aplat), flouté d'une case (gaussienne de σ 0,8) puis affiné par 4 en
   // Catmull-Rom, tracé à mi-hauteur : le bord en escalier du masque devient un
-  // rivage, posé au niveau des hachures.
-  const plein = [];
-  if (num("plein", 0) > 0) {
+  // rivage, posé au niveau des hachures. Le même masque sert au rivage tracé,
+  // aux courbes de profondeur et à leurs échos, à l'abysse et à la neige des
+  // berges (livraison A2).
+  const plein = [], lignesEau = { rivage: [], isobathes: [], echos: [] };
+  let eauEn = null, abysse = null;
+  if (num("plein", 0) > 0 || num("rivage", 0) > 0 || opt.isobathes || opt.echos || opt.abysse || opt.pixels) {
     const sec = new Uint8Array(N * N), pile = [];
     for (let k = 0; k < N * N; k++) {
       const i = k % N, j = Math.floor(k / N);
@@ -300,12 +362,38 @@ function lac() {
       }
     }
     const M = reechantillonner(flou(Float32Array.from(sec, (s) => 1 - s), N, 0.8), N, 4);
-    plein.push(...courbesGrille(M.G, M.Nx, (i) => X(M.gx(i)), (j) => Z(M.gy(j)), [{ lv: 0.5, h: 2 * wy, mait: false }], M.Ny));
+    const XM = (i) => X(M.gx(i)), ZM = (j) => Z(M.gy(j));
+    const bord = courbesGrille(M.G, M.Nx, XM, ZM, [{ lv: 0.5, h: 2 * wy, mait: false }], M.Ny);
+    if (num("plein", 0) > 0) plein.push(...bord);
+    if (num("rivage", 0) > 0) lignesEau.rivage = bord;
+    eauEn = (gi, gj) => bilin(M.G, M.Nx, M.Ny, gi * 4, gj * 4);   // 1 dans l'eau, 0 à sec
+    if (opt.isobathes || opt.echos || opt.abysse) {
+      // Distance au rivage en cases du masque affiné, dedans et dehors, lissée
+      // d'une case (`lissage` : plus, et les angles de l'axe médian
+      // s'arrondissent). Le rivage passe à une demi-case des centres : − 0,5.
+      const dedans = Uint8Array.from(M.G, (v) => (v > 0.5 ? 1 : 0)), sig = num("lissage", 1);
+      const Din = flou(distance(dedans, M.Nx, M.Ny), M.Nx, sig);
+      const Dout = flou(distance(dedans.map((v) => 1 - v), M.Nx, M.Ny), M.Nx, sig);
+      let Dmax = 0;
+      for (let k = 0; k < Din.length; k++) if (dedans[k] && Din[k] > Dmax) Dmax = Din[k];
+      Dmax -= 0.5;
+      const n = num("isobathes", 0), pas = Dmax / ((n || 6) + 1), ligne = (D, d) =>
+        courbesGrille(D, M.Nx, XM, ZM, [{ lv: d + 0.5, h: wy / (d + 0.5), mait: false }], M.Ny);
+      const [p0, p1] = vec("profondeur", [0.6, 0.2]);
+      for (let k = 1; k <= n; k++) lignesEau.isobathes.push({ segs: ligne(Din, k * pas), a: n > 1 ? p0 + ((p1 - p0) * (k - 1)) / (n - 1) : p0 });
+      const [ne, e0, e1] = vec("echos", [0, 0.5, 0.1]);
+      for (let k = 1; k <= ne; k++) lignesEau.echos.push({ segs: ligne(Dout, k * pas), a: ne > 1 ? e0 + ((e1 - e0) * (k - 1)) / (ne - 1) : e0 });
+      abysse = { D: Din, Nx: M.Nx, Ny: M.Ny, Dmax, cases: Dmax * (Wt / (N - 1) / 4) };
+    }
   }
   // Caméra de draw() au repos, sans la houle lente de sin(t) ni le glisser.
   const ang = -0.7, rad = 8.2;
-  return { segs, trace: [], eau, plein, far: 100, hauteur: Ht,
-    grille: { Nx, Ny, pos: (i, j) => [XG(i), G[j * Nx + i] * Ht, ZG(j)] }, defauts: {
+  const vG = (fi, fj) => [A ? A.gx(fi) : fi, A ? A.gy(fj) : fj];       // indices de la grille d'origine
+  return { segs, trace: [], eau, plein, lignesEau, abysse, far: 100, hauteur: Ht,
+    eauPlan: { wy, versGrille: (wx, wz) => [(wx / Wt + 0.5) * (N - 1), (wz / Dt + 0.5) * (N - 1)], eauEn },
+    grille: { Nx, Ny, pos: (i, j) => [XG(i), G[j * Nx + i] * Ht, ZG(j)], frac: (i, j) => G[j * Nx + i],
+      monde: (fi, fj) => [XG(fi), bilin(G, Nx, Ny, fi, fj) * Ht, ZG(fj)],
+      eau: eauEn && ((i, j) => eauEn(...vG(i, j))) }, defauts: {
     camera: [Math.sin(ang) * rad, 3.15, Math.cos(ang) * rad], cible: [0, 0.32, 0], fov: 42,
     brouillard: null, couleur: "papier", opacite: 0.26, maitresse: 0.6, decalage: -0.52 } };
 }
@@ -325,7 +413,13 @@ function camera(scene) {
   const f = 1 / Math.tan((fov * Math.PI) / 360), aspect = W / H;
   const vue = (p) => { const d = sub([p[0], p[1] + dy, p[2]], cam); return [dot(d, xc), dot(d, yc), dot(d, zc)]; };
   const ecran = (v) => [((f / aspect) * (v[0] / -v[2]) + 1) / 2 * W, (1 - f * (v[1] / -v[2])) / 2 * H];
-  return { cam, fog, vue, ecran };
+  // L'inverse : le point de la scène vu en (sx, sy) sur le plan horizontal y.
+  const surPlan = (sx, sy, y) => {
+    const a = ((2 * sx) / W - 1) * (aspect / f), b = (1 - (2 * sy) / H) / f;
+    const dir = [0, 1, 2].map((k) => xc[k] * a + yc[k] * b - zc[k]), t = (y + dy - cam[1]) / dir[1];
+    return t > 0 ? [cam[0] + t * dir[0], y, cam[2] + t * dir[2]] : null;
+  };
+  return { cam, fog, vue, ecran, surPlan };
 }
 
 // `brume` à false : pas de fondu (la voie royale, que Benefits trace par-dessus
@@ -384,29 +478,32 @@ function teinter(segs, scene, fond) {
 // (fraction de la hauteur du relief) et éclairage de Lambert, la normale prise
 // par différences centrées.
 function maillage(scene) {
-  const { fog, vue, ecran } = camera(scene), { Nx, Ny, pos } = scene.grille;
+  const { fog, vue, ecran } = camera(scene), { Nx, Ny, pos, eau } = scene.grille;
   const P = new Float64Array(Nx * Ny * 3), T = new Float32Array(Nx * Ny), S = new Float32Array(Nx * Ny);
+  const Wm = eau ? new Float32Array(Nx * Ny) : null;              // lac : 1 dans l'eau
   const L = norm(vec("soleil", [-0.55, 0.75, 0.35]));
   for (let j = 0; j < Ny; j++) for (let i = 0; i < Nx; i++) {
     const k = j * Nx + i, p = pos(i, j), v = vue(p), s = ecran(v);
     P[3 * k] = s[0]; P[3 * k + 1] = s[1]; P[3 * k + 2] = -v[2];
     T[k] = p[1] / scene.hauteur;
+    if (Wm) Wm[k] = eau(i, j);
     const tx = sub(pos(Math.min(Nx - 1, i + 1), j), pos(Math.max(0, i - 1), j));
     const tz = sub(pos(i, Math.min(Ny - 1, j + 1)), pos(i, Math.max(0, j - 1)));
     let n = norm(cross(tz, tx));
     if (n[1] < 0) n = n.map((c) => -c);
     S[k] = Math.max(0, dot(n, L));
   }
-  return { P, T, S, Nx, Ny, fog };
+  return { P, T, S, Wm, Nx, Ny, fog };
 }
 
-// Neige pixel : la face vue de chaque case (tampon de profondeur), puis un
-// tirage pseudo-aléatoire à graine fixe, comme la mosaïque de pixels.png :
-// pixels blancs, opacité tirée entre .4 et 1.
-function neigePixels(scene, base) {
-  const c = num("pixels", 3), cw = Math.ceil(W / c), ch = Math.ceil(H / c);
-  const { P, T, S, Nx, Ny, fog } = maillage(scene);
+// Le relief vu, case par case de c px : pour chaque case, la face la plus
+// proche (tampon de profondeur), son altitude, son éclairage et, sur le lac,
+// la part d'eau. Sert à la neige pixel et aux aplats vus (livraison A2).
+function tramer(scene, c) {
+  const cw = Math.ceil(W / c), ch = Math.ceil(H / c);
+  const { P, T, S, Wm, Nx, Ny, fog } = maillage(scene);
   const Zb = new Float64Array(cw * ch).fill(Infinity), AT = new Float32Array(cw * ch), AS = new Float32Array(cw * ch);
+  const AW = Wm ? new Float32Array(cw * ch) : null;
   const tri = (a, b, d) => {
     const ax = P[3 * a] / c, ay = P[3 * a + 1] / c, az = P[3 * a + 2], bx = P[3 * b] / c, by = P[3 * b + 1] / c, bz = P[3 * b + 2];
     const dx = P[3 * d] / c, dy = P[3 * d + 1] / c, dz = P[3 * d + 2];
@@ -422,20 +519,35 @@ function neigePixels(scene, base) {
       const z = w1 * az + w2 * bz + w3 * dz, k = y * cw + x;
       if (z >= Zb[k]) continue;
       Zb[k] = z; AT[k] = w1 * T[a] + w2 * T[b] + w3 * T[d]; AS[k] = w1 * S[a] + w2 * S[b] + w3 * S[d];
+      if (AW) AW[k] = w1 * Wm[a] + w2 * Wm[b] + w3 * Wm[d];
     }
   };
   for (let j = 0; j < Ny - 1; j++) for (let i = 0; i < Nx - 1; i++) {
     const k = j * Nx + i; tri(k, k + 1, k + Nx + 1); tri(k, k + Nx + 1, k + Nx);
   }
+  return { Zb, AT, AS, AW, cw, ch, fog };
+}
+
+// Neige pixel : la face vue de chaque case (tampon de profondeur), puis un
+// tirage pseudo-aléatoire à graine fixe, comme la mosaïque de pixels.png :
+// pixels blancs, opacité tirée entre .4 et 1.
+function neigePixels(scene, base) {
+  const c = num("pixels", 3), { Zb, AT, AS, AW, cw, ch, fog } = tramer(scene, c);
   let g = (num("graine", 7) >>> 0) || 7;
   const rnd = () => { g ^= g << 13; g >>>= 0; g ^= g >>> 17; g ^= g << 5; g >>>= 0; return g / 4294967296; };
   const [n0, n1] = vec("neige", [0.25, 0.9]), dens = num("densite", 0.6), wS = num("relief", 0.75), gam = num("contraste", 1);
+  // Livraison A2 : la neige s'éteint (ou s'allume, inverse=1) loin du foyer.
+  const [fx, fy] = vec("foyer", [W / 2, H / 2]), [rx, ry] = vec("portee", [W / 2, H / 2]), inv = num("inverse", 0) > 0;
+  const halo = (k) => {
+    const t = smoothstep(0, 1, Math.hypot((((k % cw) + 0.5) * c - fx) / rx, ((Math.floor(k / cw) + 0.5) * c - fy) / ry));
+    return inv ? t : 1 - t;
+  };
   const cases = [];
   for (let k = 0; k < cw * ch; k++) {
     const r1 = rnd(), r2 = rnd();                              // deux tirages par case, couverte ou non
-    if (Zb[k] === Infinity) continue;
+    if (Zb[k] === Infinity || (AW && AW[k] > 0.5)) continue;   // pas de neige sur l'eau
     const f = fog ? 1 - smoothstep(fog[0], fog[1], Zb[k]) : 1;
-    const rho = dens * f * (1 - wS + wS * Math.pow(AS[k], gam)) * smoothstep(n0, n1, AT[k]);
+    const rho = dens * f * (1 - wS + wS * Math.pow(AS[k], gam)) * smoothstep(n0, n1, AT[k]) * (opt.foyer ? halo(k) : 1);
     if (r1 < rho) cases.push([k % cw, Math.floor(k / cw), base * (0.4 + 0.6 * r2)]);
   }
   return { cases, c };
@@ -469,6 +581,77 @@ function silhouette(scene) {
   }
   const pts = Array.from(env, (y, k) => [Math.min(W, k * r), Math.min(H, y)]);
   return simplifier(pts, num("simplifier", 0) || 0.1);
+}
+
+// Aplats (livraison A2) : le relief compris entre deux altitudes, en fractions
+// de sa hauteur. Le champ min(h − bas, haut − h), bordé de −1 pour que chaque
+// région se ferme le long du bord des données, rend par le marching squares
+// les courbes de niveau elles-mêmes ; chaque point est reposé sur le relief,
+// puis projeté. Sans élagage : les contours restent fermés (règle pair-impair).
+// C'est la coupe du relief entre deux altitudes : juste vue du ciel, fausse en
+// perspective, où l'on voit la surface et non la coupe. aplatVu=1 : le même
+// champ calculé sur le relief vu (tramer, cases de `aplatMaille` px), le ciel
+// et les bords du cadre à −1 ; le bord de l'aplat suit alors aussi la crête et
+// ce qui passe devant.
+function aplats(scene) {
+  const { Nx, Ny, frac, monde } = scene.grille, { vue, ecran } = camera(scene);
+  const vu = num("aplatVu", 0) > 0 && tramer(scene, num("aplatMaille", 1.5)), m = num("aplatMaille", 1.5);
+  return opt.aplat.split(",").map((spec) => {
+    const [c, b0, b1] = spec.split(":");
+    if (!PALETTE[c]) throw new Error(`aplat : ${c} hors palette (papier, encre, bleu, bleu-clair)`);
+    if (vu) {
+      const PX = vu.cw + 2, PY = vu.ch + 2, F = new Float32Array(PX * PY).fill(-1);
+      for (let k = 0; k < vu.cw * vu.ch; k++) if (vu.Zb[k] !== Infinity)
+        F[(Math.floor(k / vu.cw) + 1) * PX + (k % vu.cw) + 1] = Math.min(vu.AT[k] - b0, b1 - vu.AT[k]);
+      const segs = courbesGrille(F, PX, (i) => (i - 0.5) * m, (j) => (j - 0.5) * m, [{ lv: 0, h: 0, mait: false }], PY);
+      return { c, segs: segs.map(([a, b]) => [[a[0], a[2]], [b[0], b[2]]]) };
+    }
+    const PX = Nx + 2, PY = Ny + 2, F = new Float32Array(PX * PY).fill(-1);
+    for (let j = 0; j < Ny; j++) for (let i = 0; i < Nx; i++) { const h = frac(i, j); F[(j + 1) * PX + i + 1] = Math.min(h - b0, b1 - h); }
+    const pose = (q) => ecran(vue(monde(Math.max(0, Math.min(Nx - 1, q[0])), Math.max(0, Math.min(Ny - 1, q[2])))));
+    const segs = courbesGrille(F, PX, (i) => i - 1, (j) => j - 1, [{ lv: 0, h: 0, mait: false }], PY);
+    return { c, segs: segs.map(([a, b]) => [pose(a), pose(b)]) };
+  });
+}
+
+// Abysse (livraison A2) : des points d'un pixel du cadre dans le lac, de plus
+// en plus serrés vers le centre. Chaque point du cadre est ramené sur le plan
+// d'eau par le rayon de la caméra ; sa distance au rivage, rapportée à la plus
+// grande, règle la probabilité densite × smoothstep(d0, d1, t)^gamma. Opacité
+// tirée entre .4 et 1, comme pixels.png. PNG transparent à l'échelle 2 (un
+// point = un carré de 2 px, net à l'export 1x comme 2x), encodé avec zlib.
+function pngAbysse(scene, fichier) {
+  const { surPlan } = camera(scene), { wy, versGrille, eauEn } = scene.eauPlan, A = scene.abysse;
+  const [d0, d1, dens, gam] = vec("abysse", [0, 1, 0.85, 1.4]), E = 2;
+  const hex = couleur("abysseCouleur", "encre"), rgb = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  let g = (num("graine", 7) >>> 0) || 7, points = 0;
+  const rnd = () => { g ^= g << 13; g >>>= 0; g ^= g >>> 17; g ^= g << 5; g >>>= 0; return g / 4294967296; };
+  const PW = W * E, PH = H * E, ligne = PW * 4 + 1, raw = Buffer.alloc(ligne * PH);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const r1 = rnd(), r2 = rnd(), p = surPlan(x + 0.5, y + 0.5, wy);
+    if (!p) continue;
+    const [gi, gj] = versGrille(p[0], p[2]);
+    if (eauEn(gi, gj) <= 0.5) continue;
+    const t = (bilin(A.D, A.Nx, A.Ny, gi * 4, gj * 4) - 0.5) / A.Dmax;
+    if (r1 >= dens * Math.pow(smoothstep(d0, d1, t), gam)) continue;
+    points++;
+    const a = Math.round((0.4 + 0.6 * r2) * 255);
+    for (let dy = 0; dy < E; dy++) for (let dx = 0; dx < E; dx++) {
+      const o = (y * E + dy) * ligne + 1 + (x * E + dx) * 4;
+      raw[o] = rgb[0]; raw[o + 1] = rgb[1]; raw[o + 2] = rgb[2]; raw[o + 3] = a;
+    }
+  }
+  const crc = (buf) => { let c = ~0; for (const b of buf) { c ^= b; for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xedb88320 & -(c & 1)); } return ~c >>> 0; };
+  const bloc = (type, data) => {
+    const len = Buffer.alloc(4), td = Buffer.concat([Buffer.from(type, "ascii"), data]), c = Buffer.alloc(4);
+    len.writeUInt32BE(data.length); c.writeUInt32BE(crc(td));
+    return Buffer.concat([len, td, c]);
+  };
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(PW, 0); ihdr.writeUInt32BE(PH, 4); ihdr[8] = 8; ihdr[9] = 6;
+  writeFileSync(fichier, Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), bloc("IHDR", ihdr),
+    bloc("IDAT", deflateSync(raw, { level: 9 })), bloc("IEND", Buffer.alloc(0))]));
+  return { points, profondeurMax: Math.round(A.cases * 1000) / 1000, png: [PW, PH] };
 }
 
 // Drapeaux d'Everest.js : mât de 4,4, fanion de (0,06 ; 4,4) à (2,7 ; 3,85) et
@@ -710,42 +893,80 @@ if (scene && scene.plein && scene.plein.length) {      // sans élagage : le riv
   const { vue, ecran } = camera(scene);
   plein2 = scene.plein.map(([p1, p2]) => [ecran(vue(p1)), ecran(vue(p2))]);
 }
+// Livraison A2 : aplats entre deux altitudes ; sur le lac, rivage tracé,
+// courbes de profondeur et échos. Rien de tout cela sans sa clé.
+const apl = scene && opt.aplat ? aplats(scene) : null;
+const au100 = (a) => Math.round(a * 100) / 100;
+let riv2 = [], isob2 = [];
+if (scene && scene.lignesEau) {
+  const { vue, ecran } = camera(scene), L = scene.lignesEau;
+  riv2 = L.rivage.map(([p1, p2]) => [ecran(vue(p1)), ecran(vue(p2))]);
+  isob2 = [...L.isobathes.map((n) => ({ ...n, nom: "profondeur" })), ...L.echos.map((n) => ({ ...n, nom: "echo" }))]
+    .map(({ segs, a, nom }) => ({ nom, a: au100(a), segs: projeter(scene, segs, a, a).map(([p, q]) => [p, q]) }));
+}
 const groupes = parOpacite(teintes ? [] : segs2);
 const fond = couleur("fond", null);
 const svg = [`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`];
 if (fond) svg.push(`<rect width="${W}" height="${H}" fill="${fond}"/>`);
 if (sil) {                                 // sous les courbes : la crête en aplat
   const r = (v) => Math.round(v * 10) / 10;
-  svg.push(`<path fill="${couleur("silhouette", "encre")}" d="M0 ${H}L${sil.map((p) => r(p[0]) + " " + r(p[1])).join("L")}L${W} ${H}Z"/>`);
+  svg.push(`<path${nomme("silhouette")} fill="${couleur("silhouette", "encre")}" d="M0 ${H}L${sil.map((p) => r(p[0]) + " " + r(p[1])).join("L")}L${W} ${H}Z"/>`);
   mesures.silhouette = sil.length;
 }
+// Sous les courbes aussi : leur bord est une courbe. Avec teinte et
+// aplatApres=couleur, l'aplat passe juste après les traits de cette couleur
+// (une calotte bleue qui cache l'encre et porte le papier).
+const aplatSvg = () => {
+  const a = num("aplatOpacite", 1);
+  for (const { c, segs } of apl) svg.push(`<path${nomme(`aplat ${c} ${a}`)} fill="${PALETTE[c]}" fill-opacity="${a}" fill-rule="evenodd" stroke="none" d="${chemins(segs).d}"/>`);
+  mesures.aplats = apl.map(({ c, segs }) => ({ c, segments: segs.length }));
+};
+if (apl && !(teintes && opt.aplatApres)) aplatSvg();
 let longueur = 0, segments = 0;
 const pasLogo = RECETTE === "logo" ? num("pas", 12) : 0;
 if (teintes) {                             // un groupe par couleur, dans l'ordre de la rampe
   for (const c of teintes.ordre) {
     const g = parOpacite(teintes.out.filter((s) => s[3] === c));
     if (!g.size) continue;
-    svg.push(`<g fill="none" stroke="${PALETTE[c]}" stroke-width="${TRAIT}" stroke-linejoin="round">`);
+    svg.push(`<g${nomme("tracés")} fill="none" stroke="${PALETTE[c]}" stroke-width="${TRAIT}" stroke-linejoin="round">`);
     for (const q of [...g.keys()].sort((a, b) => a - b)) {
       const { d, len } = chemins(g.get(q));
-      svg.push(`<path stroke-opacity="${q}" d="${d}"/>`);
+      svg.push(`<path${nomme(`${c === "papier" || c === "encre" ? "courbes" : c} ${q}`)} stroke-opacity="${q}" d="${d}"/>`);
       longueur += len; segments += g.get(q).length;
     }
     svg.push("</g>");
+    if (apl && opt.aplatApres === c) aplatSvg();
   }
   mesures.teinte = { mode: opt.teinte, rampe: opt.rampe || "encre:0,bleu:0.6,papier:1", sur, traces: teintes.out.length };
 } else {
-  svg.push(`<g fill="none" stroke="${mesures.couleur}" stroke-width="${TRAIT}" stroke-linejoin="round">`);
+  svg.push(`<g${nomme("tracés")} fill="none" stroke="${mesures.couleur}" stroke-width="${TRAIT}" stroke-linejoin="round">`);
   for (const q of [...groupes.keys()].sort((a, b) => a - b)) {
     const { d, len } = chemins(groupes.get(q), 1.5 * pasLogo, 12 * pasLogo);
-    svg.push(`<path stroke-opacity="${q}" d="${d}"/>`);
+    svg.push(`<path${nomme(`courbes ${q}`)} stroke-opacity="${q}" d="${d}"/>`);
     longueur += len; segments += groupes.get(q).length;
   }
   svg.push("</g>");
 }
 if (plein2.length) {                       // le lac plein, par-dessus les courbes qu'il recouvre
-  svg.push(`<path fill="${PALETTE.bleu}" fill-opacity="${num("plein", 1)}" fill-rule="evenodd" stroke="none" d="${chemins(plein2).d}"/>`);
+  const cp = couleur("pleinCouleur", "bleu");                   // papier : le terrain sous l'eau effacé
+  svg.push(`<path${nomme(`lac ${num("plein", 1)}`)} fill="${cp}" fill-opacity="${num("plein", 1)}" fill-rule="evenodd" stroke="none" d="${chemins(plein2).d}"/>`);
   mesures.rivage = plein2.length;
+}
+// Livraison A2 : sur le lac, les courbes de profondeur et les échos, puis le
+// rivage, dans la couleur du trait ou celle de `eauCouleur`.
+const eauTrait = couleur("eauCouleur", null) || mesures.couleur;
+for (const nom of ["profondeur", "echo"]) {
+  const liste = isob2.filter((n) => n.nom === nom && n.segs.length);
+  if (!liste.length) continue;
+  svg.push(`<g${nomme(nom)} fill="none" stroke="${eauTrait}" stroke-width="${TRAIT}" stroke-linejoin="round">`);
+  for (const { segs, a } of liste) svg.push(`<path${nomme(`${nom} ${a}`)} stroke-opacity="${a}" d="${chemins(segs).d}"/>`);
+  svg.push("</g>");
+  mesures[nom] = liste.map(({ a, segs }) => [a, segs.length]);
+}
+if (riv2.length) {
+  const a = au100(num("rivage", 1));
+  svg.push(`<path${nomme(`rivage ${a}`)} fill="none" stroke="${eauTrait}" stroke-opacity="${a}" stroke-width="${TRAIT}" stroke-linejoin="round" d="${chemins(riv2).d}"/>`);
+  mesures.rivageTrace = riv2.length;
 }
 if (pix) {                                 // une case allumée = un carré ; rangées fusionnées
   const parA = new Map();
@@ -757,7 +978,7 @@ if (pix) {                                 // une case allumée = un carré ; ra
     rangs.get(y).push(x);
   }
   const c = pix.c;
-  svg.push(`<g fill="${mesures.couleur}" stroke="none">`);
+  svg.push(`<g${nomme("neige")} fill="${mesures.couleur}" stroke="none">`);
   for (const q of [...parA.keys()].sort((a, b) => a - b)) {
     let d = "";
     for (const [y, xs] of parA.get(q)) {
@@ -769,7 +990,7 @@ if (pix) {                                 // une case allumée = un carré ; ra
         s = xs[i + 1];
       }
     }
-    svg.push(`<path fill-opacity="${q}" d="${d}"/>`);
+    svg.push(`<path${nomme(`neige ${q}`)} fill-opacity="${q}" d="${d}"/>`);
   }
   svg.push("</g>");
   mesures.pixels = { taille: c, allumes: pix.cases.length, niveaux: parA.size };
@@ -794,6 +1015,11 @@ const fichierSvg = resolve(OUT + ".svg");
 writeFileSync(fichierSvg, svg.join("\n"));
 Object.assign(mesures, { segments, niveauxOpacite: groupes.size, courbesEcartees: ecartees, longueur: Math.round(longueur),
   octetsSvg: svg.join("\n").length, ecartMoyen: Math.round(((W * H) / Math.max(1, longueur)) * 10) / 10 });
+// Livraison A2 : l'abysse, une texture à part, à poser sur l'aplat du lac.
+if (scene && opt.abysse) {
+  if (!scene.abysse) throw new Error("abysse : recette lac seulement");
+  mesures.abysse = pngAbysse(scene, resolve(OUT + "-abysse.png"));
+}
 
 /* ---- PNG : le SVG rendu par le navigateur sans fenêtre (CDP) ------------- */
 const proc = spawn(BROWSER, ["--headless=new", `--remote-debugging-port=${PORT}`, "--remote-allow-origins=*",
