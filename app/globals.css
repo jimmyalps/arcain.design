@@ -1676,7 +1676,7 @@ cal-modal-box{background:rgba(17,17,17,.65)!important}
 .ev-modal-shot>img,.ev-modal-shot>video{position:absolute;inset:0;
   width:100%;height:100%;object-fit:cover;display:block;
   -webkit-user-drag:none;user-select:none}
-/* Carte Portfolio : même montage que dans le carrousel (fond qui défile,
+/* Carte Arcain : même montage que dans le carrousel (fond qui défile,
    nuages, neige, logo animé) ; le centrage du logo est rétabli comme pour
    .pcard, .logorev{position:relative} l'écrasant sinon. */
 .ev-modal-shot .pcard-anim{position:absolute;left:50%;top:50%;

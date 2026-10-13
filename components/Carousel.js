@@ -30,7 +30,7 @@ export default function Carousel() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Logo animé des cartes qui en ont un (projet "portfolio") : mêmes options que
+  // Logo animé des cartes qui en ont un (projet "Arcain") : mêmes options que
   // index.html, avec le callback qui fait défiler les nuages et la neige.
   // Dépend de `mode` : en basculant entre cylindre et colonne, React reconstruit
   // le DOM des cartes, donc les logos montés précédemment disparaissent avec.
@@ -303,7 +303,7 @@ export default function Carousel() {
     };
   }, [mode, router]);
 
-  // En colonne : ordre imposé (Portfolio, puis Anya, puis les autres), et le
+  // En colonne : ordre imposé (Arcain, puis Anya, puis les autres), et le
   // jeu est rendu deux fois — l'animation translate le rail de la moitié de sa
   // hauteur, ce qui donne une boucle sans couture.
   const COLUMN_ORDER = ["redesign", "anya", "preshot", "bcc", "coin", "deviantart"];
