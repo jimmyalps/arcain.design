@@ -1776,3 +1776,36 @@ body.ev-full .ev{bottom:0}
 /* L'icône rejoint le coin, à la même distance des bords que le bouton du mode
    d'emploi en haut à droite. */
 body.ev-full .ev-full-btn{top:auto;bottom:clamp(18px,3vh,34px)}
+
+/* ============================================================
+   15. Footer — lien Mentions légales
+   ------------------------------------------------------------
+   Quatrième élément de la barre du bas, entre le copyright et la
+   localisation : police, taille, casse et couleur de .foot-copy et
+   .foot-loc, survol de .foot-topbtn.
+   Au-dessus de 900px il n'y a rien d'autre à régler : le space-between de
+   .foot-bot répartit les quatre éléments avec des écarts égaux. En dessous,
+   ils ne tiennent plus sur une ligne (« Haut de page » passait seul à la
+   ligne dès 860px) : les informations montent, les deux liens partagent la
+   dernière ligne et « Haut de page » reste calé à droite, comme sur desktop.
+   ============================================================ */
+.foot-legal{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#f4f6f573;transition:color .3s var(--e)}
+.foot-legal:hover{color:#F5F5F5}
+
+/* Tablette : copyright et localisation sur la première ligne, les deux
+   liens sur la seconde. Les écarts restent ceux de .foot-bot. */
+@media(max-width:900px){
+  .foot-bot{display:grid; grid-template-columns:1fr auto;}
+  .foot-copy{grid-row:1; grid-column:1;}
+  .foot-loc{grid-row:1; grid-column:2; justify-self:end;}
+  .foot-legal{grid-row:2; grid-column:1; justify-self:start;}
+  .foot-topbtn{grid-row:2; grid-column:2; justify-self:end;}
+}
+/* Téléphone : copyright et localisation chacun sur sa ligne, les deux liens
+   sur la dernière. */
+@media(max-width:760px){
+  .foot-copy{grid-column:1 / -1;}
+  .foot-loc{grid-row:2; grid-column:1 / -1; justify-self:start;}
+  .foot-legal{grid-row:3;}
+  .foot-topbtn{grid-row:3;}
+}

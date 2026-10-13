@@ -170,6 +170,7 @@ export default function Footer({ uid = "foot" }) {
           </div>
           <div className="foot-bot" data-rv style={{ "--rvd": "190ms" }}>
             <span className="foot-copy">{t("foot.copy")}</span>
+            <a className="foot-legal" href="/legal" onClick={(e) => go(e, "/legal")}>{t("foot.legal")}</a>
             <span className="foot-loc">{t("foot.loc")}</span>
             <button className="foot-topbtn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>{t("foot.top")}</button>
           </div>
