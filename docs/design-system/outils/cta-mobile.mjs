@@ -47,7 +47,7 @@ const STYLE11 = `(() => { const s = document.createElement('style'); s.id = 'ess
 for (const lang of ["fr", "en"]) {
   await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
   let loaded = once("Page.loadEventFired");
-  await send("Page.navigate", { url: "https://jimmyferon.com/" }); await loaded;
+  await send("Page.navigate", { url: "https://arcain.design/" }); await loaded;
   await evaluate(`localStorage.setItem('jf-lang', '${lang}'); true`);
   loaded = once("Page.loadEventFired");
   await send("Page.reload", {}); await loaded; await sleep(5000);
