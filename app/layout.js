@@ -11,7 +11,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { jsonLd } from "@/lib/schema";
 import { LangProvider } from "@/lib/LangContext";
 
-const SITE = "https://jimmyferon.com";
+const SITE = "https://arcain.design";
 const TITLE = "Jimmy Feron — Brand Designer & UI/UX";
 const DESC =
   "Brand designer et UI/UX basé entre Genève et la Haute-Savoie. Identité de marque, " +
