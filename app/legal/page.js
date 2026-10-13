@@ -17,10 +17,22 @@ export default function LegalPage() {
   const { lang } = useLang();
   const t = (k) => (I18N[lang] && I18N[lang][k]) || k;
 
-  // Le titre des métadonnées est figé en français au rendu serveur : l'onglet
-  // suit ici la langue choisie.
+  // Le titre des métadonnées est figé en français au rendu serveur, et React
+  // le réécrit en montant les métadonnées, parfois après cet effet. En
+  // anglais, on remplace donc ce titre-là, et lui seul, chaque fois qu'il
+  // revient. Un autre titre (page suivante) n'est jamais touché.
   useEffect(() => {
-    document.title = t("lg.tab");
+    const fr = I18N.fr["lg.tab"];
+    const want = t("lg.tab");
+    if (want === fr) return;
+    const apply = () => { if (document.title === fr) document.title = want; };
+    apply();
+    const mo = new MutationObserver(apply);
+    mo.observe(document.head, { subtree: true, childList: true, characterData: true });
+    return () => {
+      mo.disconnect();
+      if (document.title === want) document.title = fr;
+    };
   }, [lang]);
 
   return (
