@@ -10,7 +10,7 @@ import CalEmbed from "@/components/CalEmbed";
 import { Analytics } from "@vercel/analytics/next";
 import { jsonLd } from "@/lib/schema";
 import { LangProvider } from "@/lib/LangContext";
-import { TITLE, TEMPLATE, DESC, openGraph } from "@/lib/metadata";
+import { TITLE, TEMPLATE, DESC, openGraph, twitter } from "@/lib/metadata";
 
 const SITE = "https://arcain.design";
 
@@ -26,13 +26,7 @@ export const metadata = {
   creator: "Jimmy Feron",
   alternates: { canonical: "/" },
   openGraph: { ...openGraph, url: SITE },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESC,
-    creator: "@Sh0ocks",
-    images: ["/og.jpg"],
-  },
+  twitter,
   robots: {
     index: true,
     follow: true,
