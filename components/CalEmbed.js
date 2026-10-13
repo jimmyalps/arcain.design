@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-export const CAL_LINK = "jimmy-feron/intro-call";
+export const CAL_LINK = "arcain/intro-call";
 
 /**
  * Ouvre la réservation dans une modale plutôt que dans un nouvel onglet.

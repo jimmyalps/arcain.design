@@ -116,7 +116,7 @@ export default function Footer({ uid = "foot" }) {
             lettre par lettre, un fondu de bloc par-dessus l'écraserait. */}
         <div className="lt-inner">
           <p className="lt-big" ref={bigRef}>{t("lt.big")}</p>
-          <a className="btnf btnf-ghost lt-cta" data-rv style={{ "--rvd": "120ms" }} href="https://cal.com/jimmy-feron/intro-call" target="_blank" rel="noopener noreferrer" onClick={openCal}>
+          <a className="btnf btnf-ghost lt-cta" data-rv style={{ "--rvd": "120ms" }} href="https://cal.com/arcain/intro-call" target="_blank" rel="noopener noreferrer" onClick={openCal}>
             <Roll text={t("lt.cta")} /> <span className="arr" aria-hidden="true">→</span>
           </a>
         </div>
