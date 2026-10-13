@@ -151,7 +151,7 @@ export default function Footer({ uid = "foot" }) {
           </div>
           <div className="foot-mid" data-rv style={{ "--rvd": "90ms" }}>
             <p className="f-hook">{t("foot.hook")}</p>
-            <a className="f-mail" href="mailto:jimmyferon08@gmail.com">jimmyferon08@gmail.com</a>
+            <a className="f-mail" href="mailto:jimmy@arcain.design">jimmy@arcain.design</a>
             <div className="foot-cta-row">
               <div className="foot-cta-pair">
                 <a className="btnf btnf-blue" href="https://www.linkedin.com/in/jimmyferon/" target="_blank" rel="noopener noreferrer"><Roll text={t("cta.together")} /> <span className="arr" aria-hidden="true">↗</span></a>

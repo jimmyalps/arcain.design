@@ -226,7 +226,7 @@ export default function Header() {
               <div className="hx-contact">
                 <p className="hx-label">{t.lblContact}</p>
                 <p className="hx-hook">{t.hook}</p>
-                <a className="hx-mail" href="mailto:jimmyferon08@gmail.com">jimmyferon08@gmail.com</a>
+                <a className="hx-mail" href="mailto:jimmy@arcain.design">jimmy@arcain.design</a>
               </div>
             </div>
           </div>
