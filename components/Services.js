@@ -73,7 +73,7 @@ export default function Services() {
           <p className="sv2-lead" data-reveal style={{ "--rd": ".16s" }}>{t("sv.lead")}</p>
           <a
             className="btnf sv2-cta"
-            href="https://cal.com/jimmy-feron/intro-call"
+            href="https://cal.com/arcain/intro-call"
             target="_blank"
             rel="noopener noreferrer"
             onClick={openCal}
