@@ -10,12 +10,9 @@ import CalEmbed from "@/components/CalEmbed";
 import { Analytics } from "@vercel/analytics/next";
 import { jsonLd } from "@/lib/schema";
 import { LangProvider } from "@/lib/LangContext";
+import { TITLE, DESC, openGraph } from "@/lib/metadata";
 
 const SITE = "https://arcain.design";
-const TITLE = "Jimmy · Arcain — Brand Designer";
-const DESC =
-  "Brand designer et UI/UX basé entre Genève et la Haute-Savoie. Identité de marque, " +
-  "interfaces et direction artistique, de l'esport au sport outdoor.";
 
 export const metadata = {
   metadataBase: new URL(SITE),
@@ -28,15 +25,7 @@ export const metadata = {
   authors: [{ name: "Jimmy Feron", url: SITE }],
   creator: "Jimmy Feron",
   alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    url: SITE,
-    siteName: "Jimmy · Arcain",
-    title: TITLE,
-    description: DESC,
-    locale: "fr_FR",
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Jimmy · Arcain — Brand Designer" }],
-  },
+  openGraph: { ...openGraph, url: SITE },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
