@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useLang } from "@/lib/LangContext";
+import { I18N } from "@/lib/i18n";
 import Roll from "@/components/Roll";
 import useMagnetic from "@/lib/useMagnetic";
 
@@ -126,7 +127,7 @@ export default function Header() {
     <header className={cls}>
       <nav>
         <div className="nav-logo">
-          <a href="/" className="logo" aria-label="Accueil — Jimmy Feron" onClick={(e) => go(e, "/")}>
+          <a href="/" className="logo" aria-label={I18N[lang]["logo.home"]} onClick={(e) => go(e, "/")}>
             <svg viewBox="0 0 1140 1140" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip_logo)">
                 {LOGO_PATHS.map((d, i) => <path key={i} d={d} />)}

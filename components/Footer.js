@@ -129,7 +129,7 @@ export default function Footer({ uid = "foot" }) {
         <div className="foot-glow"></div>
         <div className="foot-pad">
           <div className="foot-top" data-rv>
-            <a href="/" className="foot-logo" aria-label="Jimmy Feron" onClick={(e) => go(e, "/")}>
+            <a href="/" className="foot-logo" aria-label={t("logo.home")} onClick={(e) => go(e, "/")}>
               <LogoSvg cid={`clip_${uid}`} />
             </a>
             <div className="foot-cols">

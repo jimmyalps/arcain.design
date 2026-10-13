@@ -117,7 +117,7 @@ export default function Home() {
         <div className="home-bottom">
           <div className="hb-top">
             <div className="home-msg">
-              <div className="nm" data-reveal style={{ "--rd": ".3s" }}>Jimmy Feron</div>
+              <div className="nm" data-reveal style={{ "--rd": ".3s" }}>{t("home.name")}</div>
               <p
                 data-reveal
                 style={{ "--rd": ".4s" }}

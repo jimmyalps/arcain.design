@@ -124,7 +124,7 @@ export default function About() {
         <figure className="ab-fig ab-fig--bleed" ref={figRef}>
           <img
             src="/images/montagne-illustration-bleue-1200.webp"
-            alt="Illustration de montagne bleue, direction artistique Jimmy Feron"
+            alt="Illustration de montagne bleue, direction artistique Jimmy"
             loading="lazy"
           />
           <span className="ab-snow" aria-hidden="true"></span>
@@ -132,7 +132,7 @@ export default function About() {
         <figure className="ab-fig">
           <img
             src="/images/jimmy-feron-trail-portrait-1200.webp"
-            alt="Jimmy Feron, brand designer, en trail dans les Alpes"
+            alt="Jimmy, brand designer, en trail dans les Alpes"
             loading="lazy"
           />
         </figure>

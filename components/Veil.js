@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useLang } from "@/lib/LangContext";
+import { I18N } from "@/lib/i18n";
 
 const LOGO_PATHS = [
   "M70.5042 908.157L-91.9997 796.155L239.558 718.319C239.558 718.319 345.421 693.25 427.851 750.062C510.28 806.875 524.529 914.729 524.529 914.729L569.792 1252.28L407.288 1140.28L354.232 856.876L70.5042 908.157Z",
@@ -28,6 +30,8 @@ export default function Veil() {
   const waitRef = useRef(false);
   const fromRef = useRef(null);
   const failsafeRef = useRef(0);
+  const { lang } = useLang();
+  const t = (k) => (I18N[lang] && I18N[lang][k]) || k;
 
   const lift = () => {
     const veil = veilRef.current;
@@ -90,7 +94,7 @@ export default function Veil() {
           </defs>
         </svg>
       </div>
-      <span className="veil-mark">Jimmy Feron — Portfolio 2026</span>
+      <span className="veil-mark">{t("veil.mark")}</span>
     </div>
   );
 }

@@ -12,14 +12,14 @@ import { jsonLd } from "@/lib/schema";
 import { LangProvider } from "@/lib/LangContext";
 
 const SITE = "https://arcain.design";
-const TITLE = "Jimmy Feron — Brand Designer & UI/UX";
+const TITLE = "Jimmy · Arcain — Brand Designer";
 const DESC =
   "Brand designer et UI/UX basé entre Genève et la Haute-Savoie. Identité de marque, " +
   "interfaces et direction artistique, de l'esport au sport outdoor.";
 
 export const metadata = {
   metadataBase: new URL(SITE),
-  title: { default: TITLE, template: "%s — Jimmy Feron" },
+  title: { default: TITLE, template: "%s — Jimmy · Arcain" },
   description: DESC,
   keywords: [
     "brand designer", "UI/UX", "direction artistique", "identité de marque",
@@ -31,11 +31,11 @@ export const metadata = {
   openGraph: {
     type: "website",
     url: SITE,
-    siteName: "Jimmy Feron",
+    siteName: "Jimmy · Arcain",
     title: TITLE,
     description: DESC,
     locale: "fr_FR",
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Jimmy Feron — Brand Designer" }],
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Jimmy · Arcain — Brand Designer" }],
   },
   twitter: {
     card: "summary_large_image",
