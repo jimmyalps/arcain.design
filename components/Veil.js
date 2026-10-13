@@ -20,7 +20,7 @@ const LOGO_PATHS = [
 // relever. Sans cela, il repartait au bout de 580 ms alors que le code de la
 // page visée n'était pas encore chargé : on revoyait l'ancienne page une
 // demi-seconde. Le deuxième passage semblait correct parce que le navigateur
-// avait gardé le fichier en mémoire. Les trois routes sont donc préchargées
+// avait gardé le fichier en mémoire. Toutes les routes sont donc préchargées
 // dès que le navigateur est disponible, et le relevé du rideau est déclenché
 // par le changement d'adresse, avec un délai de secours si rien ne bouge.
 export default function Veil() {
@@ -70,9 +70,9 @@ export default function Veil() {
     if (waitRef.current && pathname !== fromRef.current) lift();
   }, [pathname]);
 
-  /* Préchargement des trois routes, une fois le navigateur au repos. */
+  /* Préchargement des routes, une fois le navigateur au repos. */
   useEffect(() => {
-    const go = () => ["/", "/work", "/about"].forEach((r) => router.prefetch(r));
+    const go = () => ["/", "/work", "/about", "/legal"].forEach((r) => router.prefetch(r));
     const id = window.requestIdleCallback
       ? window.requestIdleCallback(go, { timeout: 3000 })
       : setTimeout(go, 1600);
