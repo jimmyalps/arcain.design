@@ -10,13 +10,13 @@ import CalEmbed from "@/components/CalEmbed";
 import { Analytics } from "@vercel/analytics/next";
 import { jsonLd } from "@/lib/schema";
 import { LangProvider } from "@/lib/LangContext";
-import { TITLE, DESC, openGraph } from "@/lib/metadata";
+import { TITLE, TEMPLATE, DESC, openGraph } from "@/lib/metadata";
 
 const SITE = "https://arcain.design";
 
 export const metadata = {
   metadataBase: new URL(SITE),
-  title: { default: TITLE, template: "%s — Jimmy · Arcain" },
+  title: { default: TITLE, template: TEMPLATE },
   description: DESC,
   keywords: [
     "brand designer", "UI/UX", "direction artistique", "identité de marque",
