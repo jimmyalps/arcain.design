@@ -1,5 +1,5 @@
 // Servi sur /robots.txt.
-const SITE = "https://jimmyferon.com";
+const SITE = "https://arcain.design";
 
 export default function robots() {
   return {

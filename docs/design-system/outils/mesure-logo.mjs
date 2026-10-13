@@ -4,7 +4,7 @@
 // Usage : node mesure-logo.mjs <navigateur.exe> <dossier profil> [<url>]
 import { spawn } from "node:child_process";
 
-const [, , BROWSER, PROFILE, URL = "https://jimmyferon.com/"] = process.argv;
+const [, , BROWSER, PROFILE, URL = "https://arcain.design/"] = process.argv;
 const PORT = 9343;
 const proc = spawn(BROWSER, ["--headless=new", `--remote-debugging-port=${PORT}`, "--remote-allow-origins=*",
   `--user-data-dir=${PROFILE}`, "--no-first-run", "--disable-extensions", "--hide-scrollbars", "about:blank"], { stdio: "ignore" });

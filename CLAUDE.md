@@ -97,7 +97,7 @@ seule. `impeccable-documenter`, `impeccable-asset-producer` et
 
 ### Déploiement
 
-Le site est en production sur **[jimmyferon.com](https://jimmyferon.com)**,
+Le site est en production sur **[arcain.design](https://arcain.design)**,
 déployé automatiquement par Vercel depuis `main`. Chaque PR génère une preview :
 c'est là que se vérifie un changement visuel, pas seulement en local.
 

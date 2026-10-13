@@ -129,7 +129,7 @@ export default function Services() {
                     <a
                       key={nm + i}
                       className="svx-row"
-                      href={`mailto:jimmyferon08@gmail.com?subject=${subject}`}
+                      href={`mailto:jimmy@arcain.design?subject=${subject}`}
                     >
                       <span className="svx-name">{nm}</span>
                       <span className="svx-type">{SVX_CATS[s.cat][lang] || SVX_CATS[s.cat].fr}</span>

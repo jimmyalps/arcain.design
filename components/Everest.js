@@ -74,10 +74,10 @@ export default function Everest() {
   const [heroEl, setHeroEl] = useState(null);      // le hero, hôte du bouton plein écran
   const fullBtnRef = useRef(null);
   const helpRef = useRef(null);
-  const animRef = useRef(null);                // logo animé de la carte Portfolio
+  const animRef = useRef(null);                // logo animé de la carte Arcain
 
   const SHORT = { anya: "Anya", deviantart: "DeviantArt", coin: "Team Coin",
-                  bcc: "BCC", preshot: "Preshot", redesign: "Portfolio" };
+                  bcc: "BCC", preshot: "Preshot", redesign: "Arcain" };
   const NM = MARKS.length;
 
   useEffect(() => { setMounted(true); }, []);
@@ -856,7 +856,7 @@ export default function Everest() {
     return () => { stopped = true; cleanup(); };
   }, []);
 
-  /* La carte Portfolio rejoue exactement l'animation du carrousel : le fond
+  /* La carte Arcain rejoue exactement l'animation du carrousel : le fond
      qui défile, les nuages, la neige et le logo qui se compose. */
   useEffect(() => {
     const el = animRef.current;

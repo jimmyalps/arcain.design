@@ -33,7 +33,7 @@ const evaluate = async (expr) => (await send("Runtime.evaluate", { expression: e
 await send("Page.enable");
 await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 const loaded = once("Page.loadEventFired");
-await send("Page.navigate", { url: "https://jimmyferon.com" + PATH }); await loaded;
+await send("Page.navigate", { url: "https://arcain.design" + PATH }); await loaded;
 await sleep(7000); // préchargement, rideau
 if (SCROLL) {
   const [BLOC, COURSE] = SCROLL.split("@");

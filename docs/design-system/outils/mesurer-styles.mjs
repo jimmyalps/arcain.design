@@ -6,7 +6,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-const [, , BROWSER, OUT, BASE = "https://jimmyferon.com"] = process.argv;
+const [, , BROWSER, OUT, BASE = "https://arcain.design"] = process.argv;
 const PORT = 9333;
 const profile = path.join(OUT, "profil-headless");
 fs.mkdirSync(profile, { recursive: true });
