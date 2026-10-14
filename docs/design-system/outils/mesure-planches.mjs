@@ -6,7 +6,7 @@
 // Une planche est une image affichée sur toute la largeur du contenu (1000 px et plus) : les vignettes
 // des projets suivants sont écartées. L'indice compte les planches de la page à partir de 0.
 // Usage : node mesure-planches.mjs <navigateur.exe> <dossier profil> <dossier des JSON> <page:indice> ...
-// Exemple : node mesure-planches.mjs brave.exe /tmp/profil /tmp/ref fugitive:1 fugitive:2 lumora:3
+// Exemple : node mesure-planches.mjs brave.exe /tmp/profil /tmp/ref un-projet:1 un-projet:2 un-projet:3
 import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
 

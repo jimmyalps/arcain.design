@@ -13,13 +13,7 @@ Règles
 8. Avance par parties et arrête-toi à chaque STOP pour que je valide.
 
 Partie 0 : Référence
-Étudie la façon de travailler de Drapz, un brand designer dont j'admire le niveau. Ouvre ses six projets avec ton navigateur sans fenêtre et capture-les en entier :
-https://drapz.design/projects/fugitive
-https://drapz.design/projects/radiantui
-https://drapz.design/projects/lumora
-https://drapz.design/projects/kinect
-https://drapz.design/projects/stomic
-https://drapz.design/projects/skillio
+Étudie la façon de travailler d'un brand designer dont j'admire le niveau. Ouvre six de ses projets avec ton navigateur sans fenêtre et capture-les en entier.
 Analyse comment il construit et présente un système visuel : motifs, fonds, compositions, grilles, typographie, usage de la couleur, rythme des pages de guidelines, mises en situation. Dégage ce qu'on reprend de sa méthode, appliqué à ma marque. Prends sa méthode, jamais ses visuels. STOP.
 
 Partie 1 : Motifs (page « Kit Motifs »)
@@ -396,8 +390,8 @@ Ce qu'elles changent :
 
 ## Retours sur la livraison 2 (10 octobre 2026)
 
-1. **Logo en courbes** : gardé. Ajouter des essais dans l'esprit de Lumora
-   (drapz.design/projects/lumora) : dégradés grainés dans la palette, logo en
+1. **Logo en courbes** : gardé. Ajouter des essais dans l'esprit de Lumora :
+   dégradés grainés dans la palette, logo en
    points ou en pixels comme l'animation de révélation du site, logo géant et
    translucide coupé par le bord, logo posé sur une grille fine.
 2. **Affiche bleue** : gardée comme poster simple. Ajouter des variantes avec du

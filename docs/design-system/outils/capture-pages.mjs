@@ -6,7 +6,7 @@
 // Un JSON par page : titre, hauteur, texte, polices des textes et images (taille d'origine, place).
 // Au-delà de 16 384 px de haut, Chromium tronque la capture entière ; les tranches restent justes.
 // Usage : node capture-pages.mjs <navigateur.exe> <dossier profil> <dossier sortie> <url> [<url>...]
-// Exemple : node capture-pages.mjs brave.exe /tmp/profil /tmp/ref https://drapz.design/projects/fugitive
+// Exemple : node capture-pages.mjs brave.exe /tmp/profil /tmp/ref https://example.com/projets/un-projet
 import { spawn } from "node:child_process";
 import { writeFileSync, mkdirSync } from "node:fs";
 

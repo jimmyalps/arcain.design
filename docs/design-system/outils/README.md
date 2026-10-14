@@ -108,10 +108,10 @@ node docs/design-system/outils/webp-jpeg.mjs <chemin du navigateur> <dossier de 
 # Structure du DESIGN.md (étape 4, partie 2)
 node docs/design-system/outils/verifier-design-md.mjs docs/design-system/DESIGN.md
 
-# Kit de marque, partie 0 : les six projets de Drapz en entier, puis les marges
-# des planches à fond uni (page:indice, indice compté à partir de 0)
-node docs/design-system/outils/capture-pages.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> https://drapz.design/projects/fugitive https://drapz.design/projects/radiantui https://drapz.design/projects/lumora https://drapz.design/projects/kinect https://drapz.design/projects/stomic https://drapz.design/projects/skillio
-node docs/design-system/outils/mesure-planches.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> fugitive:1 fugitive:2 fugitive:3 radiantui:1 radiantui:3 lumora:2 lumora:3 lumora:4 stomic:3 skillio:1 skillio:3
+# Kit de marque, partie 0 : les six projets de référence en entier, puis les
+# marges des planches à fond uni (page:indice, indice compté à partir de 0)
+node docs/design-system/outils/capture-pages.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> <url> [<url>...]
+node docs/design-system/outils/mesure-planches.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> <page:indice> [<page:indice>...]
 
 # Kit de marque, livraison 1 : les cinq rendus de la page Kit Direction (PNG en
 # 2x, 3840 px de large, fond transparent). <sortie> sans extension : le script
