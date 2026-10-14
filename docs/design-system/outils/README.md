@@ -37,6 +37,12 @@ Toutes les commandes se lancent depuis la racine du dépôt.
 | `mesure-logo.mjs` | Étape 4 : vide autour du logo du header, en haut de page et en compact, en 1440 × 900 puis en 390 × 844 au doigt. C'est la mesure qui fixe la zone de protection. |
 | `webp-jpeg.mjs` | Étape 4 : convertit une image WebP du site en JPEG avec le navigateur, car Figma n'affiche pas les WebP importés. |
 | `verifier-design-md.mjs` | Étape 4, partie 2 : contrôle de structure du `DESIGN.md`, sans dépendance ni réseau. Clés en double, couleurs et dimensions au format CSS, propriétés connues du format, références `{groupe.jeton}` résolues, ordre des huit sections canoniques. Les jetons qu'aucun composant ne cite sont comptés à part : le lint du format ne les signale qu'en avertissement. Sort en erreur s'il trouve un problème. |
+| `capture-pages.mjs` | Kit de marque, partie 0 : capture pleine page d'une liste d'URL de référence, en 1440 × 900. Défile lentement jusqu'en bas (images paresseuses, apparitions), masque les calques fixes du bas de l'écran, puis écrit une image entière, des tranches de 1800 px et un JSON par page (titre, texte, polices, images et leur taille d'origine). Les captures restent hors du dépôt. |
+| `mesure-planches.mjs` | Kit de marque, partie 0 : pour les planches d'une page capturée (images affichées sur toute la largeur), couleur du fond, marges, part du cadre occupée et écarts entre objets, en %, lus pixel par pixel en 2048 px. Ne vaut que pour une planche à fond uni. |
+| `rendu-courbes.mjs` | Kit de marque, nouvelle méthode : les courbes de niveau du site rendues hors du site, sans le toucher. Everest, Mont Blanc et lac d'Allos avec les données, le décodage, le marching squares et les opacités d'`Everest.js`, de `Benefits.js` et de `Lake3D.js` ; caméra de Three.js (champ vertical, `lookAt`) et fondu de `THREE.Fog` r128 (smoothstep), rendu en opacité pour se poser sur n'importe quel fond ; voie royale du Mont Blanc et hachures d'eau du lac par-dessus ; en option, les six drapeaux de l'Everest, avec le point d'ancrage de leur étiquette dans les mesures. Logo : le masque circulaire d'`app/icon.svg` appliqué d'abord (bords coupés au cercle, intersection exacte), puis la distance signée au contour de la forme coupée, dont les courbes de niveau sont les contours décalés. Écrit un SVG (un chemin par niveau d'opacité) et un PNG transparent rendu par le navigateur sans fenêtre ; le trait suit l'échelle d'export (1 px à 1, 2 px à 2). `simplifier=0.1 decimales=1` allège le SVG pour l'import dans Figma (0,012 % de pixels différents sur la crête). Palette fermée : papier, encre, bleu. Depuis la livraison 3, des clés pour les fonds abstraits, sans effet sur les rendus précédents (refaits à l'octet près) : `affiner` et `zone` (grille ré-échantillonnée par Catmull-Rom, pour les cadrages serrés), `teinte` et `rampe` (couleur du trait par altitude ou par distance à un foyer, mélange exact de deux couleurs de la palette par deux tracés superposés), `plein` (le lac rempli de bleu, masque d'eau lissé et sans trous), `pixels` (la montagne en neige pixel, densité réglée par l'éclairage et l'altitude, tampon de profondeur), `silhouette` (l'enveloppe haute du relief, en aplat), `courbes=0`. Livraison 3 A2, mêmes garanties (les rendus précédents se refont à l'octet près) : `bleu-clair` (le bleu clair d'interface, `color/accent/on-dark`, pour les variantes de comparaison), `aplat` (le relief entre deux altitudes rempli en aplat : la coupe, juste vue du ciel ; `aplatVu=1` en perspective, calculé sur le relief vu avec tampon de profondeur ; `aplatApres` le glisse entre deux couleurs de trait), sur le lac `rivage`, `isobathes` et `echos` (le rivage décalé à pas égal vers l'intérieur ou l'extérieur : distance euclidienne exacte au rivage, lissée par `lissage`), `abysse` (une texture PNG à part, des points d'encre de plus en plus serrés vers le centre, chaque point ramené sur le plan d'eau par le rayon de la caméra), `pleinCouleur` et `eauCouleur`, la neige pixel arrêtée au bord de l'eau et réglée par un `foyer` (`inverse=1`), et `noms=1` (chaque chemin porte un `id`, qui devient le nom du calque à l'import dans Figma). Livraison B, le logo dans les deux DA, mêmes garanties : `logos` (plusieurs logos dans un même champ, collés par leurs courbes), `soleil`, `relief` et `contraste` sur le logo (pris comme un relief, sa distance au bord pour altitude : courbes éclairées à la manière de Tanaka, neige dont la densité suit l'éclairage), `pixels`, `fondu`, `halo` et `couronne` (le logo en neige pixel, une neige qui s'éclaircit autour ou une clairière), `revelation` (l'animation de `LogoReveal.js` figée à un instant, mêmes tirages et mêmes courbes d'accélération, à graine fixe), `grille`, `points`, `cases` et `cote` (le logo sur une grille fine, filets ou points), `evider` (sur un relief, la forme des logos laissée vide, au pochoir) ; la distance au contour du logo est cherchée par cases, au bit près le même résultat que la boucle sur tous les segments. Livraison C2, mêmes garanties : `neige=t0,t1,t2,t3`, une tranche d'altitude (la neige s'allume de t0 à t1 et s'éteint de t2 à t3), pour les camps du carrousel. Livraison C3, mêmes garanties (onze recettes anciennes refaites à l'octet près) : `fenetre=x,y,l,h` (une partie du cadre seulement, caméra du cadre entier : les cinq slides d'un carrousel sont les cinq fenêtres d'un même panorama de 5400 × 1350 et se raccordent), `voie=gpx` (la voie royale du Nid d'Aigle au sommet, sans le raccord en ligne droite de Chamonix), `traceTrait` et `traceCouleur` (la trace épaissie, papier sur bleu), `reperes=a1,a2…` (où la trace atteint ces altitudes, dans les mesures), `teinte=trace` et `portee` (les courbes s'allument le long de la trace), `forme=rect`, `rect=x,y,l,h` et `dedans=0` sur le logo (le champ devient la distance à un rectangle : les courbes de niveau autour du visuel d'un projet). |
+| `fusion-svg.mjs` | Kit de marque, livraison C3 : réunit plusieurs rendus en un seul SVG, un chemin par rendu, chacun à son opacité. Sert au survol du logo en pose longue (douze poses du contour du logo sur la courbe du survol, `cubic-bezier(.65,0,.2,1)` sur 72°). Sans réseau ni navigateur. |
+| `grain-degrade.mjs` | Kit de marque, livraison 3 : le grain d'un dégradé, à la manière de `pixels.png` (points d'un pixel, opacité tirée entre .4 et 1). Chaque point s'allume dans une couleur de la palette avec une probabilité qui suit la hauteur, de `de` à `a` : le dégradé se défait en grain au lieu de fondre. PNG transparent à l'échelle 2 (un point = un carré de 2 px, net à l'export 1x comme 2x), encodé avec zlib, sans navigateur ni dépendance. |
+| `logo-colle.mjs` | Kit de marque, livraison C1 : le logo collé. Le pas de deux logos identiques poussés l'un vers l'autre jusqu'au contact, en rangée et en colonne, sur la géométrie réelle d'`app/icon.svg` (branches réunies et coupées par le cercle, lues comme `formeLogo()`) : la plus grande étendue de l'encre sur une ligne parallèle à la poussée. Donne aussi l'encre du logo dans son carré, et contrôle le résultat par la surface commune de deux logos, intégrée ligne à ligne (nulle au pas, non nulle un millième en dessous, nulle en diagonale de la grille droite). En option, les pas en px pour des tailles données. Sans réseau ni navigateur. |
 
 Commandes :
 
@@ -101,12 +107,216 @@ node docs/design-system/outils/webp-jpeg.mjs <chemin du navigateur> <dossier de 
 
 # Structure du DESIGN.md (étape 4, partie 2)
 node docs/design-system/outils/verifier-design-md.mjs docs/design-system/DESIGN.md
+
+# Kit de marque, partie 0 : les six projets de référence en entier, puis les
+# marges des planches à fond uni (page:indice, indice compté à partir de 0)
+node docs/design-system/outils/capture-pages.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> <url> [<url>...]
+node docs/design-system/outils/mesure-planches.mjs <chemin du navigateur> <dossier de profil> <dossier de sortie> <page:indice> [<page:indice>...]
+
+# Kit de marque, livraison 1 : les cinq rendus de la page Kit Direction (PNG en
+# 2x, 3840 px de large, fond transparent). <sortie> sans extension : le script
+# écrit <sortie>.svg et <sortie>.png. Everest, crête et Mont Blanc se
+# reproduisent à l'octet près ; les deux recettes logo non, depuis la
+# livraison 2 : le masque est appliqué avant le calcul, le logo n'a plus de pattes.
+node docs/design-system/outils/rendu-courbes.mjs . <chemin du navigateur> <dossier de profil> everest everest couleur=papier camera=-12.0,31.4,-33.4 cible=29.6,46.6,-24.6
+node docs/design-system/outils/rendu-courbes.mjs . <chemin du navigateur> <dossier de profil> logo logo couleur=papier centre=1350,560 diametre=1500 pas=6 dehors=18
+node docs/design-system/outils/rendu-courbes.mjs . <chemin du navigateur> <dossier de profil> crete montblanc cadre=1920x480 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.3,0.1 fov=13.5 brouillard=7.5,12.5 decalage=0 trace=0
+node docs/design-system/outils/rendu-courbes.mjs . <chemin du navigateur> <dossier de profil> montblanc montblanc couleur=encre camera=-0.2,4.25,-6.6 cible=0.2,1.12,-0.5 fov=36.5 brouillard=5.4,10.4
+node docs/design-system/outils/rendu-courbes.mjs . <chemin du navigateur> <dossier de profil> carte-recto logo cadre=748x484 couleur=papier centre=500,290 diametre=700 pas=5 dehors=10 maille=1
+# Aperçu sur fond, à l'échelle 1 : ajouter fond=encre (ou papier, bleu) echelle=1
+
+# Kit de marque, livraison 2 : les dix-sept rendus posés en vectoriel dans
+# Kit Direction. Chaque ligne s'ajoute à « rendu-courbes.mjs . <navigateur>
+# <profil> <sortie> » et se termine par « simplifier=0.1 decimales=1 echelle=1 ».
+#   a1-lac      lac cadre=1920x1080 cible=0,0.85,0
+#   a2-carte    lac cadre=1920x1080 camera=0.35,5.2,0.01 cible=0.35,0,0 fov=40
+#   a3-voie     montblanc cadre=1920x1080 couleur=papier camera=-2.0,4.6,-9.5 cible=0.25,2.2,-0.2 fov=17 brouillard=8,13
+#   a4-sommet   everest cadre=1920x1080 couleur=papier drapeaux=1 camera=-40,60,110 cible=29.6,34,-24.6 fov=16 brouillard=140,220 opacite=0.4 maitresse=0.4
+#   b-169       logo cadre=1920x1080 couleur=papier centre=1350,560 diametre=1500 pas=6 dehors=18 maille=1
+#   b-45        logo cadre=1080x1350 couleur=papier centre=540,980 diametre=1500 pas=6 dehors=18 maille=1
+#   b-11        logo cadre=1080x1080 couleur=papier centre=720,720 diametre=1300 pas=6 dehors=18 maille=1
+#   b-916       logo cadre=1080x1920 couleur=papier centre=540,1300 diametre=1600 pas=6 dehors=18 maille=1
+#   c-169       montblanc cadre=1920x480 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.3,0.1 fov=13.5 brouillard=7.5,12.5 decalage=0 trace=0
+#   c-45        montblanc cadre=1080x560 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.15,0.1 fov=21 brouillard=7.5,12.5 decalage=0 trace=0
+#   c-11        montblanc cadre=1080x460 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.2,0.1 fov=18 brouillard=7.5,12.5 decalage=0 trace=0
+#   c-916       montblanc cadre=1080x760 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.05,0.1 fov=24 brouillard=7.5,12.5 decalage=0 trace=0
+#   d-45        montblanc cadre=1080x1350 couleur=encre camera=-0.2,4.25,-6.6 cible=0.1,1.6,-0.5 fov=40 brouillard=5.4,10.4
+#   d-11        montblanc cadre=1080x1080 couleur=encre camera=-0.2,4.25,-6.6 cible=0.1,1.45,-0.5 fov=37 brouillard=5.4,10.4
+#   d-916       montblanc cadre=1080x1920 couleur=encre camera=-0.2,4.25,-6.6 cible=0.0,1.35,-0.5 fov=40 brouillard=5.4,10.4
+#   f-recto     logo cadre=748x484 couleur=papier centre=500,290 diametre=700 pas=5 dehors=10 maille=1
+#   f-verso     lac cadre=748x484 cible=-2.6,0.95,-2.15 fov=54
+
+# Kit de marque, livraison 3 A : les rendus des fonds abstraits (section
+# « 1 bis ») et de la montagne sur papier (section 4), même préfixe et même
+# fin de ligne que la livraison 2.
+#   a3-lac-bleu        lac cadre=1920x1080 camera=0.35,5.2,0.01 cible=0.35,0,0 fov=40 plein=1 eau=0
+#   a3-lac-couche      lac cadre=1920x1080 camera=-0.02,5.4,0.03 cible=-0.03,0,0.03 fov=40 plein=1 eau=0
+#   a3-lumiere         montblanc cadre=1920x1080 couleur=papier camera=-0.2,5.6,-5.4 cible=0.1,1.3,0.1 fov=38 brouillard=non trace=0 opacite=0.5 maitresse=1 teinte=lumiere foyer=950,500 portee=1050,640 rampe=papier:0,bleu:0.3,encre:1
+#   a3-altitude-b      everest cadre=1920x1080 couleur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 affiner=2 opacite=1 maitresse=1 teinte=altitude rampe=encre:0.56,bleu:0.78,papier:0.93
+#   a3-neige           everest cadre=1920x1080 couleur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 affiner=2 courbes=0 pixels=3 densite=1 relief=1 contraste=2 neige=0.6,0.93 soleil=-1,1.2,-0.2 opacite=1
+#   a3-macro           montblanc cadre=1920x1080 couleur=papier camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=2 brouillard=non trace=0 decalage=0 affiner=16 zone=0.25,0.55,0.35,0.64
+#   a3-crete-basse     montblanc cadre=1920x1080 camera=-6.0,3.75,-5.1 cible=0.25,4.0,0.1 fov=29.8 decalage=0 affiner=2 courbes=0 trace=0 silhouette=encre
+#   a3-everest-45      everest cadre=1080x1350 couleur=encre camera=-30,52,80 cible=29.6,32.6,-24.6 fov=21 brouillard=120,220 affiner=2
+#   a3-everest-11      everest cadre=1080x1080 couleur=encre camera=-30,52,80 cible=29.6,32.3,-24.6 fov=16.9 brouillard=120,220 affiner=2
+#   a3-everest-916     everest cadre=1080x1920 couleur=encre camera=-30,52,80 cible=29.6,26.8,-24.6 fov=29.5 brouillard=120,220 affiner=2
+#   a3-neige-bleue-45  everest cadre=1080x1350 couleur=bleu camera=-30,52,80 cible=29.6,32.6,-24.6 fov=21 brouillard=120,220 affiner=2 courbes=0 pixels=3 densite=1 relief=1 contraste=2 neige=0.45,0.93 soleil=-1,1.2,-0.2 opacite=1
+# Le grain des dégradés : l'aube (1k) et la brume (4d)
+node docs/design-system/outils/grain-degrade.mjs a3-aube-grain.png cadre=1920x1080 echelle=2 couleur=bleu de=140 a=1040 densite=0.9 gamma=1.7
+node docs/design-system/outils/grain-degrade.mjs a3-brume-grain-45.png cadre=1080x1350 echelle=2 couleur=bleu de=600 a=1300 densite=0.32 gamma=2.2
+
+# Kit de marque, livraison 3 A2 : les 43 variantes des sections « 1 ter » et
+# « 4 bis ». Chaque ligne s'ajoute à « rendu-courbes.mjs . <navigateur> <profil>
+# <sortie> » et se termine par « noms=1 simplifier=0.1 decimales=1 echelle=1 ».
+# Les deux lignes « abysse » écrivent aussi <sortie>-abysse.png.
+#   g1-papier          montblanc cadre=1920x1080 couleur=papier brouillard=non trace=0 opacite=0.5 maitresse=1 teinte=lumiere sur=encre camera=-0.2,5.6,-5.4 cible=0.1,1.3,0.1 fov=38 foyer=950,500 portee=1050,640 rampe=papier:0,encre:1
+#   g2-decentree       montblanc cadre=1920x1080 couleur=papier brouillard=non trace=0 opacite=0.5 maitresse=1 teinte=lumiere sur=encre camera=-0.2,5.6,-5.4 cible=-1.3,1.3,0.1 fov=34 foyer=600,440 portee=1080,760 rampe=papier:0,encre:1
+#   g3-coupee          montblanc cadre=1920x1080 couleur=papier brouillard=non trace=0 opacite=0.5 maitresse=1 teinte=lumiere sur=encre camera=-0.6,5.2,-3.0 cible=0.8,0.4,-1.0 fov=36 foyer=1476,94 portee=1500,900 rampe=papier:0,encre:1
+#   g4-couronne        montblanc cadre=1920x1080 couleur=papier brouillard=non trace=0 opacite=0.5 maitresse=1 teinte=lumiere sur=encre camera=-0.2,5.6,-5.4 cible=0.05,1.3,0.1 fov=30 foyer=982,400 portee=1000,620 rampe=encre:0,encre:0.28,papier:0.62,encre:1
+#   g5-masse-bleue     montblanc cadre=1920x1080 couleur=papier brouillard=non trace=0 opacite=0.5 maitresse=1 teinte=lumiere sur=bleu camera=-0.2,5.6,-5.4 cible=0.05,1.3,0.1 fov=30 foyer=982,380 portee=1100,700 rampe=papier:0,bleu:1 silhouette=bleu
+#   g7-neige           montblanc cadre=1920x1080 couleur=papier brouillard=non trace=0 sur=encre camera=-0.2,5.6,-5.4 cible=0.05,1.3,0.1 fov=30 courbes=0 pixels=3 densite=1 relief=0.6 contraste=1.5 neige=0,0.35 soleil=-1,1.2,-0.2 opacite=1 foyer=982,361 portee=950,600
+#   g6-bleu-clair      montblanc cadre=1920x1080 couleur=papier brouillard=non trace=0 opacite=0.5 maitresse=1 teinte=lumiere sur=encre camera=-0.2,5.6,-5.4 cible=0.1,1.3,0.1 fov=38 foyer=950,500 portee=1050,640 rampe=papier:0,bleu-clair:0.3,encre:1
+#   h1-papier          everest cadre=1920x1080 couleur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 affiner=2 opacite=1 maitresse=1 teinte=altitude sur=encre rampe=encre:0.58,papier:0.95
+#   h2-ceinture        everest cadre=1920x1080 couleur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 affiner=2 opacite=1 maitresse=1 teinte=altitude sur=encre rampe=encre:0.42,papier:0.62,encre:0.9
+#   h3-coupee          everest cadre=1920x1080 couleur=papier camera=-14,46,48 cible=29,27.6,-25 fov=14 brouillard=110,200 affiner=2 opacite=1 maitresse=1 teinte=altitude sur=encre rampe=encre:0.55,papier:0.97
+#   h4-vallees-bleues  everest cadre=1920x1080 couleur=papier camera=25,185,-14.99 cible=25,0,-15 fov=30 brouillard=non affiner=2 opacite=1 maitresse=1 teinte=altitude sur=encre rampe=encre:0.56,papier:0.97 aplat=bleu:0:0.42
+#   h5-mont-blanc      montblanc cadre=1920x1080 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.0,0.1 fov=22 decalage=0 brouillard=7.5,12.5 trace=0 affiner=2 opacite=0.6 maitresse=1 teinte=altitude sur=encre rampe=encre:0.45,papier:0.95
+#   h7-strate          everest cadre=1920x1080 couleur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 affiner=2 opacite=1 maitresse=1 teinte=altitude sur=encre rampe=encre:0.64,papier:0.7,papier:0.74,encre:0.8
+#   h6-bleu-clair      everest cadre=1920x1080 couleur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 affiner=2 opacite=1 maitresse=1 teinte=altitude sur=encre rampe=encre:0.56,bleu-clair:0.78,papier:0.93
+#   n1-coupee          everest cadre=1920x1080 couleur=papier sur=encre camera=-14,46,48 cible=29,27.6,-25 fov=14 brouillard=110,200 courbes=0 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 neige=0.55,0.93
+#   n2-contre-jour     everest cadre=1920x1080 couleur=papier sur=encre camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 courbes=0 densite=1 relief=1 contraste=1.3 soleil=1,0.9,0.2 opacite=1 affiner=2 pixels=3 neige=0.55,0.9
+#   n3-vue-du-ciel     everest cadre=1920x1080 couleur=papier sur=encre camera=28,140,-19.99 cible=28,0,-20 fov=16 brouillard=non courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 densite=1 contraste=3 neige=0.5,0.9
+#   n4-gros-pixels     everest cadre=1920x1080 couleur=papier sur=encre camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=5 densite=1 contraste=2 neige=0.55,0.93
+#   n7-poudre          everest cadre=1920x1080 couleur=papier sur=encre camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=2 densite=1 contraste=2 neige=0.6,0.93
+#   n5-masse-bleue     everest cadre=1920x1080 couleur=papier sur=encre camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=150,260 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 densite=1 contraste=2 neige=0.6,0.93 silhouette=bleu
+#   n6-mont-blanc      montblanc cadre=1920x1080 couleur=papier sur=encre camera=-6.0,3.75,-5.1 cible=0.25,2.0,0.1 fov=22 decalage=0 brouillard=7.5,12.5 trace=0 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 densite=1 contraste=2 neige=0.48,0.9
+#   j1-sommet          montblanc cadre=1920x1080 couleur=papier sur=encre brouillard=non trace=0 decalage=0 affiner=16 camera=0.84,9.6,0.4302 cible=0.84,0,0.43 fov=3 zone=0.55,0.78,0.63,0.87
+#   j2-col             montblanc cadre=1920x1080 couleur=papier sur=encre brouillard=non trace=0 decalage=0 affiner=16 camera=0.92,9.6,-0.8998 cible=0.92,0,-0.9 fov=3 zone=0.55,0.54,0.64,0.63
+#   j3-fondu           montblanc cadre=1920x1080 couleur=papier sur=encre camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=2 brouillard=non trace=0 decalage=0 affiner=16 zone=0.25,0.55,0.35,0.64 teinte=lumiere foyer=-150,540 portee=2250,1700 rampe=papier:0,papier:0.2,encre:1 opacite=0.9 maitresse=1
+#   j4-bande-bleue     montblanc cadre=1920x1080 couleur=papier sur=encre camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=2 brouillard=non trace=0 decalage=0 affiner=16 zone=0.25,0.55,0.35,0.64 aplat=bleu:0.6651:0.6772
+#   j5-masse-bleue     montblanc cadre=1920x1080 couleur=papier sur=encre camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=2 brouillard=non trace=0 decalage=0 affiner=16 zone=0.25,0.55,0.35,0.64 aplat=bleu:0.7256:1
+#   k1-profondeur      lac cadre=1920x1080 sur=encre camera=0.35,5.2,0.01 cible=0.35,0,0 fov=40 eau=0 plein=1 isobathes=9 profondeur=0.6,0.12 lissage=4
+#   k2-abysse          lac cadre=1920x1080 sur=encre camera=0.35,5.2,0.01 cible=0.35,0,0 fov=40 eau=0 plein=1 abysse=0.04,1,0.92,1.25 lissage=5
+#   k3-rivage          lac cadre=1920x1080 sur=encre camera=0.35,5.2,0.01 cible=0.35,0,0 fov=40 eau=0 rivage=1 opacite=0.16 maitresse=0.36
+#   k4-berges          lac cadre=1920x1080 sur=encre camera=0.35,5.2,0.01 cible=0.35,0,0 fov=40 eau=0 plein=1 courbes=0 pixels=3 densite=1 relief=0.5 contraste=1.5 neige=0.42,0.2 soleil=-1,1.1,-0.4 opacite=1
+#   k5-couche-profondeur lac cadre=1920x1080 sur=encre camera=-0.02,5.4,0.03 cible=-0.03,0,0.03 fov=40 eau=0 plein=1 isobathes=9 profondeur=0.6,0.12 lissage=4
+#   k6-couche-abysse   lac cadre=1920x1080 sur=encre camera=-0.02,5.4,0.03 cible=-0.03,0,0.03 fov=40 eau=0 plein=1 abysse=0.04,1,0.92,1.25 lissage=5
+#   k7-couche-echos    lac cadre=1920x1080 sur=encre camera=-0.02,5.4,0.03 cible=-0.03,0,0.03 fov=40 eau=0 courbes=0 rivage=1 isobathes=0 echos=10,0.55,0.06 lissage=3
+#   e2-coupee          everest cadre=1080x1350 couleur=bleu sur=papier camera=-14,46,48 cible=33,23.6,-25 fov=20 brouillard=110,200 courbes=0 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 neige=0.45,0.93
+#   e8-poudre          everest cadre=1080x1350 couleur=bleu sur=papier camera=-30,52,80 cible=29.6,32.6,-24.6 fov=21 brouillard=120,220 courbes=0 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=2 neige=0.45,0.93
+#   e5-vue-du-ciel     everest cadre=1080x1350 couleur=bleu sur=papier camera=28,140,-19.99 cible=28,0,-20 fov=22 brouillard=non courbes=0 densite=1 relief=1 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 contraste=3 neige=0.5,0.9
+#   e7-mont-blanc      montblanc cadre=1080x1350 couleur=bleu sur=papier camera=-6.0,3.75,-5.1 cible=0.25,1.75,0.1 fov=30 decalage=0 brouillard=7.5,12.5 trace=0 courbes=0 densite=1 relief=1 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 contraste=2 neige=0.45,0.9
+#   e3-inversee        everest cadre=1080x1350 couleur=papier sur=bleu camera=-30,52,80 cible=29.6,32.6,-24.6 fov=21 brouillard=120,220 courbes=0 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 neige=0.45,0.93
+#   p2-lumiere-bleue   montblanc cadre=1080x1350 couleur=encre sur=papier camera=-0.2,5.6,-5.4 cible=0.05,1.0,0.1 fov=40 brouillard=non trace=0 opacite=0.55 maitresse=1 teinte=lumiere foyer=560,470 portee=800,900 rampe=bleu:0,encre:0.4,papier:1
+#   p1-altitude-bleue  everest cadre=1080x1350 couleur=encre sur=papier camera=-30,52,80 cible=29.6,32.6,-24.6 fov=21 brouillard=120,220 affiner=2 opacite=0.6 maitresse=0.6 teinte=altitude rampe=papier:0.4,encre:0.66,bleu:0.93
+#   p5-calotte         everest cadre=1080x1350 couleur=encre sur=bleu camera=-30,52,80 cible=29.6,32.6,-24.6 fov=21 brouillard=120,220 affiner=2 opacite=0.4 maitresse=0.4 aplat=bleu:0.74:1 aplatVu=1 aplatMaille=0.75 aplatApres=encre teinte=altitude rampe=encre:0.735,papier:0.745
+#   p3-lac-bleu        lac cadre=1080x1350 couleur=encre sur=papier camera=0.25,6.4,0.01 cible=0.25,0,0 fov=46 eau=0 opacite=0.2 maitresse=0.45 plein=1 pleinCouleur=papier rivage=1 isobathes=9 profondeur=0.85,0.2 lissage=4 eauCouleur=bleu
+#   p4-macro-bande     montblanc cadre=1080x1350 couleur=encre sur=papier camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=2.6 brouillard=non trace=0 decalage=0 affiner=16 zone=0.23,0.52,0.37,0.67 opacite=0.4 maitresse=0.9 aplat=bleu:0.6651:0.6772
+
+# Kit de marque, livraison B : les 20 rendus des sections « 2 bis » (logo),
+# « 3 bis » (affiche bleue) et « 7 bis » (logo collé). Même préfixe et même fin
+# de ligne que la livraison 3 A2 ; dans un terminal, mettre entre guillemets
+# les valeurs de logos=…, à cause des points-virgules. Relancées, elles
+# refont à l'octet près les 20 SVG importés dans Figma. Les crêtes de
+# l'affiche (1920 × 480) se posent à y = 600, comme celle de 3-affiche-16x9 ;
+# la macro couvre toute la planche.
+#   2e-centre        logo cadre=1920x1080 couleur=bleu centre=960,540 diametre=600 pas=6 dehors=5 maille=1 opacite=0.5 maitresse=1
+#   2f-revelation    logo cadre=1920x1080 couleur=bleu courbes=0 centre=960,540 diametre=600 revelation=1.25 particules=4000 net=1
+#   2g-tanaka        logo cadre=1920x1080 couleur=papier centre=960,540 diametre=600 pas=6 dehors=0 maille=1 opacite=1 maitresse=1 soleil=-1,-1.2 relief=0.9 contraste=1.5
+#   2h-neige         logo cadre=1920x1080 couleur=papier courbes=0 centre=960,540 diametre=600 pixels=3 densite=1 soleil=-1,-1.2 relief=0.7 contraste=2
+#   2i-geant         logo cadre=1920x1080 couleur=papier centre=1640,1180 diametre=2600 pas=8 dehors=0 maille=2 opacite=0.2 maitresse=0.6
+#   2j-geant         logo cadre=1920x1080 couleur=papier courbes=0 centre=1640,1180 diametre=2600 pixels=4 densite=0.75 soleil=-1,-1.2 relief=0.8 contraste=2
+#   2k-grille        logo cadre=1920x1080 couleur=bleu centre=960,540 diametre=600 pas=6 dehors=0 maille=1 opacite=0.5 maitresse=1 grille=30 origine=0,0 grilleCouleur=encre grilleOpacite=0.08
+#   2l-grille        logo cadre=1920x1080 couleur=bleu courbes=0 centre=960,540 diametre=600 grille=6 origine=0,0 points=1 cases=1 cote=5 grilleCouleur=encre grilleOpacite=0.22 soleil=-1,-1.2 relief=0.6 contraste=2
+#   2m-degrade       logo cadre=1920x1080 couleur=papier centre=960,540 diametre=520 pas=8 dehors=70 maille=2 opacite=0.4 maitresse=0.9
+#   2n-clairiere     logo cadre=1920x1080 couleur=papier courbes=0 centre=960,540 diametre=520 pixels=3 densite=1 soleil=-1,-1.2 relief=0.7 contraste=2 couronne=40,760,1.6
+#   3e-lumiere       montblanc cadre=1920x480 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.3,0.1 fov=13.5 brouillard=7.5,12.5 decalage=0 trace=0 teinte=lumiere sur=bleu foyer=1130,150 portee=950,380 rampe=papier:0,bleu:1 opacite=0.7 maitresse=1
+#   3f-sommet        montblanc cadre=1920x480 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.3,0.1 fov=13.5 brouillard=7.5,12.5 decalage=0 trace=0 teinte=altitude sur=bleu rampe=bleu:0.66,papier:0.8 opacite=0.9 maitresse=1
+#   3g-macro         montblanc cadre=1920x1080 couleur=papier sur=bleu camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=2.6 brouillard=non trace=0 decalage=0 affiner=16 zone=0.22,0.52,0.38,0.68 opacite=0.9 maitresse=1 teinte=lumiere foyer=960,1180 portee=1500,700 rampe=papier:0,bleu:1
+#   3h-neige         montblanc cadre=1920x480 couleur=papier sur=bleu camera=-6.0,3.75,-5.1 cible=0.25,2.3,0.1 fov=13.5 brouillard=7.5,12.5 decalage=0 trace=0 courbes=0 pixels=3 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 neige=0.25,0.85 affiner=2 opacite=1
+#   3i-contre-jour   montblanc cadre=1920x480 couleur=papier sur=bleu camera=-6.0,3.75,-5.1 cible=0.25,2.3,0.1 fov=13.5 brouillard=7.5,12.5 decalage=0 trace=0 courbes=0 pixels=3 densite=1 relief=1 contraste=1.3 soleil=1,0.9,0.2 neige=0.3,0.85 affiner=2 opacite=1
+#   3j-congere       montblanc cadre=1920x480 couleur=papier sur=bleu camera=-6.0,3.75,-5.1 cible=0.25,2.3,0.1 fov=13.5 brouillard=7.5,12.5 decalage=0 trace=0 courbes=0 pixels=3 densite=1 relief=0.3 contraste=1 soleil=-1,1.2,-0.2 neige=0.85,0.15 affiner=2 opacite=1
+#   7e-chaine        logo cadre=1920x1080 couleur=papier logos=-40,880,400;360,880,400;760,880,400;1160,880,400;1560,880,400;1960,880,400 pas=7 dehors=40 maille=1 opacite=0.5 maitresse=1
+#   7f-congere       logo cadre=1920x1080 couleur=papier courbes=0 logos=-40,880,400;360,880,400;760,880,400;1160,880,400;1560,880,400;1960,880,400 pixels=3 densite=1 soleil=-1,-1.2 relief=0.7 contraste=2 fondu=640,980
+#   7g-pochoir       everest cadre=1920x1080 couleur=bleu camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=120,220 affiner=2 opacite=0.55 maitresse=0.55 logos=-60,820,340;280,820,340;620,820,340;960,820,340;1300,820,340;1640,820,340;1980,820,340 evider=1
+#   7h-pochoir       everest cadre=1920x1080 couleur=bleu sur=papier camera=-30,52,80 cible=29.6,30,-24.6 fov=20 brouillard=120,220 courbes=0 densite=1 relief=0.7 contraste=2 soleil=-1,1.2,-0.2 opacite=1 affiner=2 pixels=3 neige=0,0.6 logos=-60,820,340;280,820,340;620,820,340;960,820,340;1300,820,340;1640,820,340;1980,820,340 evider=1
+
+# Kit de marque, livraison C1 : le pas de contact du logo collé, puis en px pour
+# les tailles de la section « 7 ter » (bandes de 180, 240, 256, 270 et 54 px)
+node docs/design-system/outils/logo-colle.mjs 180 240 256 270 54
+
+# Kit de marque, livraison C2 : les 23 fonds de la page Kit Templates. Chaque
+# ligne s'ajoute à « rendu-courbes.mjs . <navigateur> <profil> <sortie> » et se
+# termine par « noms=1 simplifier=0.1 decimales=1 echelle=1 ». Relancées, elles
+# refont à l'octet près les 23 SVG importés (SHA-1 égal à l'imageHash de
+# Figma). Les cinq autres fonds sont des copies de planches de Kit Direction :
+# 4-everest-4x5 (annonce et citation), 4e5-inversee, 4e-neige-bleue-4x5 et la
+# crête de 3-affiche-9x16 (Reel). Les crêtes des affiches se posent en bas du
+# cadre (A4 à y = 533, A3 à y = 754), celle du Reel à y = 1160.
+#   t-a4       montblanc couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.15,0.1 fov=21 brouillard=7.5,12.5 decalage=0 trace=0 cadre=595x309
+#   t-a3       montblanc couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.15,0.1 fov=21 brouillard=7.5,12.5 decalage=0 trace=0 cadre=842x437
+#   t-projet   everest cadre=1080x1350 couleur=papier camera=-30,52,80 cible=29.6,63.7,-24.6 fov=42.9 brouillard=150,260 affiner=2 opacite=1 maitresse=1 teinte=altitude sur=encre rampe=encre:0.58,papier:0.95
+#   t-car1     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 opacite=0.6 maitresse=1 teinte=altitude sur=encre rampe=encre:0.045,papier:0.075,papier:0.365,encre:0.395
+#   t-car2     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 opacite=0.6 maitresse=1 teinte=altitude sur=encre rampe=encre:0.335,papier:0.365,papier:0.627,encre:0.657
+#   t-car3     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 opacite=0.6 maitresse=1 teinte=altitude sur=encre rampe=encre:0.597,papier:0.627,papier:0.841,encre:0.871
+#   t-car4     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 opacite=0.6 maitresse=1 teinte=altitude sur=encre rampe=encre:0.811,papier:0.841,papier:1
+#   t-car5     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 opacite=0.6 maitresse=1 teinte=altitude sur=encre rampe=papier:0,papier:1
+#   t-story    everest cadre=1080x1920 camera=-30,52,80 cible=29.6,41.5,-24.6 fov=29.5 brouillard=120,220 affiner=2 couleur=encre
+#   t-linkedin everest cadre=1584x396 couleur=papier camera=-14,46,48 cible=53.6,33,-24.3 fov=14 brouillard=110,200 affiner=2 opacite=0.7 maitresse=1 teinte=lumiere sur=encre foyer=444,130 portee=440,420 rampe=papier:0,encre:1
+#   t-x        everest cadre=1500x500 couleur=papier camera=-14,46,48 cible=49.9,33,-27.6 fov=14 brouillard=110,200 affiner=2 opacite=0.7 maitresse=1 teinte=lumiere sur=encre foyer=420,162 portee=400,460 rampe=papier:0,encre:1
+#   p-a4       montblanc couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.15,0.1 fov=21 brouillard=7.5,12.5 decalage=0 trace=0 cadre=595x309 courbes=0 pixels=2 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 neige=0.25,0.85 affiner=2 opacite=1
+#   p-a3       montblanc couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.15,0.1 fov=21 brouillard=7.5,12.5 decalage=0 trace=0 cadre=842x437 courbes=0 pixels=2 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 neige=0.25,0.85 affiner=2 opacite=1
+#   p-projet   everest cadre=1080x1350 couleur=papier camera=-30,52,80 cible=29.6,63.7,-24.6 fov=42.9 brouillard=150,260 affiner=2 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=0.6,0.93
+#   p-car1     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=0.045,0.075,0.365,0.395
+#   p-car2     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=0.335,0.365,0.627,0.657
+#   p-car3     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=0.597,0.627,0.841,0.871
+#   p-car4     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=0.811,0.841
+#   p-car5     montblanc cadre=1080x1350 couleur=papier camera=-8.5,6.2,-8.0 cible=0.25,3.32,0.1 fov=52 decalage=0 brouillard=7.5,14 trace=0 affiner=2 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=-1,0
+#   p-story    everest cadre=1080x1920 camera=-30,52,80 cible=29.6,41.5,-24.6 fov=29.5 brouillard=120,220 affiner=2 couleur=bleu courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=0.45,0.93
+#   p-reel     montblanc cadre=1080x760 couleur=papier camera=-6.0,3.75,-5.1 cible=0.25,2.05,0.1 fov=24 brouillard=7.5,12.5 decalage=0 trace=0 courbes=0 pixels=3 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 neige=0.25,0.85 affiner=2 opacite=1
+#   p-linkedin everest cadre=1584x396 couleur=papier camera=-14,46,48 cible=53.6,33,-24.3 fov=14 brouillard=110,200 affiner=2 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=0.55,0.93 foyer=444,130 portee=440,420
+#   p-x        everest cadre=1500x500 couleur=papier camera=-14,46,48 cible=49.9,33,-27.6 fov=14 brouillard=110,200 affiner=2 courbes=0 relief=1 soleil=-1,1.2,-0.2 opacite=1 pixels=3 densite=1 contraste=2 neige=0.55,0.93 foyer=420,162 portee=400,460
+
+# Kit de marque, livraison C3 : les 29 fonds de la page Kit Templates (sections
+# 6 à 9). Chaque ligne s'ajoute à « rendu-courbes.mjs . <navigateur> <profil>
+# <sortie> » et se termine par « noms=1 simplifier=0.1 decimales=1 echelle=1 ».
+# Relancées, elles refont les SVG importés à l'octet près (SHA-1 égal à
+# l'imageHash de Figma). Le carrousel : un panorama de 5400 × 1350 vu du sud,
+# en plongée de 32°, la voie royale du Nid d'Aigle (slide 1) au sommet
+# (slide 5) ; chaque slide en est une fenêtre de 1080 × 1350 (fenetre=x,0,1080,1350
+# avec x = 0, 1080, 2160, 3240, 4320, slides 1 à 5). Caméra commune :
+#   C = camera=-0.933,6.35,6.168 cible=-1.593,2.22,-0.659 fov=6.74 decalage=0
+#   car-neige-k    montblanc cadre=5400x1350 fenetre=x,0,1080,1350 couleur=papier C brouillard=7,12.5 trace=1 voie=gpx traceTrait=6 courbes=0 pixels=3 densite=1 relief=1 contraste=2 soleil=-1,1.2,-0.2 neige=0.2,0.8 affiner=2 opacite=1
+#   car-trait-k    montblanc cadre=5400x1350 fenetre=x,0,1080,1350 couleur=papier C brouillard=10,18 trace=1 voie=gpx traceTrait=6
+#   car-couloir-k  montblanc cadre=5400x1350 fenetre=x,0,1080,1350 couleur=papier C brouillard=non trace=1 voie=gpx traceTrait=6 teinte=trace portee=420 sur=encre rampe=papier:0,encre:1 opacite=0.7 maitresse=1
+# Bannières, LinkedIn 1584 × 396 et X 1500 × 500 :
+#   ban-macro-li        montblanc cadre=1584x396 couleur=papier camera=-1.92,9.6,-0.8598 cible=-1.92,0,-0.86 fov=1.2 brouillard=non trace=0 decalage=0 affiner=16 zone=0.25,0.55,0.35,0.64 aplat=bleu:0.6651:0.6772
+#   ban-macro-x         montblanc cadre=1500x500 couleur=papier camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=1.52 brouillard=non trace=0 decalage=0 affiner=16 zone=0.25,0.55,0.35,0.64 aplat=bleu:0.6651:0.6772
+#   ban-logoneige-li    logo cadre=1584x396 couleur=papier courbes=0 centre=1000,330 diametre=1500 pixels=4 densite=0.8 soleil=-1,-1.2 relief=0.8 contraste=2
+#   ban-logoneige-x     logo cadre=1500x500 couleur=papier courbes=0 centre=950,420 diametre=1600 pixels=4 densite=0.8 soleil=-1,-1.2 relief=0.8 contraste=2
+#   ban-lac-li          lac cadre=1584x396 couleur=encre camera=-0.02,5.4,0.03 cible=-0.03,0,-0.35 fov=17 eau=0 courbes=0 rivage=1 isobathes=0 echos=14,0.6,0.05 lissage=3
+#   ban-lac-x           lac cadre=1500x500 couleur=encre camera=-0.02,5.4,0.03 cible=-0.03,0,-0.35 fov=21 eau=0 courbes=0 rivage=1 isobathes=0 echos=14,0.6,0.05 lissage=3
+#   ban-logocourbes-li  logo cadre=1584x396 couleur=papier centre=1180,250 diametre=1300 pas=7 dehors=12 maille=1 opacite=0.45 maitresse=1
+#   ban-logocourbes-x   logo cadre=1500x500 couleur=papier centre=1110,320 diametre=1400 pas=7 dehors=12 maille=1 opacite=0.45 maitresse=1
+# Fonds avec le logo, 1080 × 1350 :
+#   fl-centre-neige     logo cadre=1080x1350 couleur=papier courbes=0 centre=540,675 diametre=480 pixels=3 densite=1 soleil=-1,-1.2 relief=0.7 contraste=2
+#   fl-geant-courbes    logo cadre=1080x1350 couleur=encre centre=860,1150 diametre=1900 pas=8 dehors=6 maille=2 opacite=0.3 maitresse=0.8
+#   fl-debordent        logo cadre=1080x1350 couleur=papier centre=230,1150 diametre=300 pas=9 dehors=90 maille=2 opacite=0.4 maitresse=0.9
+#   fl-defont           logo cadre=1080x1350 couleur=papier courbes=0 centre=540,1000 diametre=900 pixels=3 densite=1 soleil=-1,-1.2 relief=0.7 contraste=2 fondu=200,1100
+#   fl-survol-a         logo cadre=1080x1350 couleur=papier centre=540,675 diametre=560 pas=2 dedans=0 dehors=0 maille=1 rotation=a opacite=1 maitresse=1
+#     pour a = 0.45, 2.08, 5.67, 13.06, 28.87, 48.61, 59.49, 65.37, 68.78, 70.73,
+#     71.71 et 72.00 : les angles de la courbe du survol tous les 50 ms. Puis :
+node docs/design-system/outils/fusion-svg.mjs fl-survol.svg survol "fl-survol-0.45.svg=pose 0.45°:0.3" "fl-survol-2.08.svg=pose 2.08°:0.3" "fl-survol-5.67.svg=pose 5.67°:0.3" "fl-survol-13.06.svg=pose 13.06°:0.3" "fl-survol-28.87.svg=pose 28.87°:0.3" "fl-survol-48.61.svg=pose 48.61°:0.3" "fl-survol-59.49.svg=pose 59.49°:0.3" "fl-survol-65.37.svg=pose 65.37°:0.3" "fl-survol-68.78.svg=pose 68.78°:0.3" "fl-survol-70.73.svg=pose 70.73°:0.3" "fl-survol-71.71.svg=pose 71.71°:0.3" "fl-survol-72.00.svg=pose 72.00°:1"
+# Post projet, la macro de C :
+#   pp-macro            montblanc cadre=1080x1350 couleur=papier sur=encre camera=-1.92,9.6,-0.8798 cible=-1.92,0,-0.88 fov=2.4 brouillard=non trace=0 decalage=0 affiner=16 zone=0.25,0.55,0.35,0.64 teinte=lumiere foyer=1180,-100 portee=1500,1300 rampe=papier:0,papier:0.2,encre:1 opacite=0.9 maitresse=1
 ```
 
 `grain-rendu.mjs` utilise le port 9336, `grain-mesure.mjs` le 9337,
 `cta-mobile.mjs` le 9338, `mesure-petits-composants.mjs` le 9339,
 `mesure-grands-composants.mjs` le 9340, `capture-scene.mjs` le 9342,
-`mesure-logo.mjs` le 9343, `webp-jpeg.mjs` le 9344.
+`mesure-logo.mjs` le 9343, `webp-jpeg.mjs` le 9344,
+`capture-pages.mjs` le 9345, `mesure-planches.mjs` le 9346,
+`rendu-courbes.mjs` le 9348. `grain-degrade.mjs`, `logo-colle.mjs` et
+`fusion-svg.mjs` n'en utilisent aucun : ils travaillent sans navigateur.
 
 ## Mesurer une preview plutôt que la prod
 
