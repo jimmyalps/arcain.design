@@ -712,7 +712,7 @@ Les visuels de projet sont des WebP plein cadre (`object-fit:cover`), dans la vi
 **`menu-button`** : le bouton menu mobile (`.menu-btn`, sous 900), encre, `{typography.nav}`, flocon de 12 px en tête, padding 9px 14px, écart 8 : 34 de haut. Il s'inverse en papier sur fond sombre. Pas de survol.
 
 ### Liens
-- **`nav-link`** : liens du header desktop, `{typography.nav}` en roll, `{colors.muted}` ; survol et page courante en bleu, la page courante en Bold.
+- **`nav-link`** : liens du header desktop, `{typography.nav}` en roll, `{colors.muted}` ; survol et page courante en bleu sur fond clair, en `{colors.paper}` sur fond sombre, la page courante en Bold.
 - Liens du footer : `{typography.meta}`, papier, padding 4px 0, suivis d'une flèche oblique ; survol `{colors.blue-on-dark}`, décalé de 4.
 - **`footer-email`** : `{typography.email}`, soulignement bleu de 3 px qui se déroule au survol (.5 s).
 - **`footer-top-link`** : « Haut de page », `{colors.footer-top}`.
