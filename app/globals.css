@@ -24,7 +24,7 @@
 /* ===== bloc CSS ===== */
 
 :root{
-    --paper:#F5F5F5; --ink:#111111; --blue:#1E29FF;
+    --paper:#F5F5F5; --ink:#111111; --blue:#1E29FF; --blue-on-dark:#5A63FF;
     --line:rgba(17,17,17,.13); --line-2:rgba(17,17,17,.26);
     --muted:rgba(17,17,17,.55); --muted-2:rgba(17,17,17,.38);
     --display:'Bricolage Grotesque', system-ui, sans-serif;
@@ -101,8 +101,8 @@
   header.on-dark::before{background:rgba(245,245,245,.14)}
   header.on-dark .logo{color:var(--paper)}
   header.on-dark .nav-mid a{color:rgba(245,245,245,.5)}
-  header.on-dark .nav-mid a:hover{color:var(--blue)}
-  header.on-dark .nav-mid a[data-active="true"]{color:var(--blue)}
+  header.on-dark .nav-mid a:hover{color:var(--paper)}
+  header.on-dark .nav-mid a[data-active="true"]{color:var(--paper)}
   header.on-dark .lang-trigger{color:rgba(245,245,245,.5)}
   header.on-dark .lang:hover .lang-trigger,header.on-dark .lang.open .lang-trigger{color:var(--paper)}
   header.on-dark .lang-menu{background:#161616;border-color:rgba(245,245,245,.16);box-shadow:0 12px 30px -12px rgba(0,0,0,.6)}
@@ -547,7 +547,7 @@
   .foot-cols{display:flex;gap:clamp(40px,6vw,92px)}
   .foot-col h4{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#f4f6f573;margin-bottom:14px}
   .foot-col a{display:block;position:relative;z-index:5910;font-family:var(--mono);font-weight:400;font-size:12px;color:#F5F5F5;padding:4px 0;transition:color .3s var(--e),transform .3s var(--e)}
-  .foot-col a:hover{color:var(--blue);transform:translateX(4px)}
+  .foot-col a:hover{color:var(--blue-on-dark);transform:translateX(4px)}
   .foot-mid{padding-block:clamp(28px,5vh,52px)}
   .f-hook{font-family:var(--mono);font-weight:400;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#f4f6f573;margin-bottom:14px}
   .f-mail{display:inline-block;font-family:var(--display);font-weight:700;letter-spacing:-.02em;line-height:1.08;font-size:38px;color:var(--paper);position:relative;word-break:break-all}

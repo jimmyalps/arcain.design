@@ -187,7 +187,9 @@ export default function Benefits() {
             gGpx.setAttribute("position",new THREE.BufferAttribute(Float32Array.from(pos),3));
             gGpx.setDrawRange(0,0);
             gpxYs=ys;
-            const mat=new THREE.LineBasicMaterial({color:0x1E29FF,transparent:true,opacity:.95,depthTest:false,depthWrite:false});
+            /* Three.js ne lit pas les variables CSS : on lui passe la valeur du jeton --blue-on-dark */
+            const trace=getComputedStyle(sec).getPropertyValue("--blue-on-dark").trim();
+            const mat=new THREE.LineBasicMaterial({color:trace,transparent:true,opacity:.95,depthTest:false,depthWrite:false});
             scene.add(new THREE.Line(gGpx,mat));
           }
           /* sommet réel -> point 3D pour épingler le fanion */
@@ -364,7 +366,7 @@ export default function Benefits() {
         <div className="bn3-flagpin" aria-hidden="true">
           <svg width="26" height="46" viewBox="0 0 26 46">
             <line x1="3" y1="0" x2="3" y2="46" stroke="rgba(245,245,245,.8)" strokeWidth="2" />
-            <path d="M5 3 L24 9 L5 15 Z" fill="#1E29FF" />
+            <path d="M5 3 L24 9 L5 15 Z" style={{ fill: "var(--blue-on-dark)" }} />
           </svg>
         </div>
         <div className="bn3-head" data-rv-group="1">
