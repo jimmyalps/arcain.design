@@ -234,6 +234,9 @@ export default function Benefits() {
       const rad = 6.8 - 0.5 * e;
       camera.position.set(Math.sin(ang) * rad, 2.6 + 3.6 * e, Math.cos(ang) * rad);
       camera.lookAt(0.1, 0.55 + 0.35 * e, 0);
+      /* lookAt() change l'orientation sans mettre à jour la matrice que lit project() : sans
+         cette ligne, le fanion suit la caméra de l'image précédente et quitte le sommet en rotation. */
+      camera.updateMatrixWorld();
       scene.position.y = -0.52 - 0.43 * e;
       if(flagEl && SPT){
         const v = SPT.clone(); v.y += scene.position.y; v.project(camera);
