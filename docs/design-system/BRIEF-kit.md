@@ -1,3 +1,5 @@
+> Note du 14 octobre 2026 : la marque s'appelle désormais Arcain, et non plus Jimmy Ocks. Ce qui suit date d'avant et se lit comme un historique.
+
 Charge les skills figma-use et figma-generate-library. Repasse sur main à jour, en gardant ma modification de CLAUDE.md hors des commits. Ouvre une branche brand-kit, enregistre ce brief dans docs/design-system/BRIEF-kit.md, puis lance la partie 0.
 
 Mission : agis comme un brand designer expert et crée le kit de marque complet de Jimmy Ocks dans le fichier Figma Portfolio, à partir du design system qui s'y trouve (pages Fondations, Composants, Marque, Motion).
