@@ -214,6 +214,7 @@ export default function Header() {
                   <a href="https://instagram.com/jimmy.ocks" target="_blank" rel="noopener noreferrer">Instagram</a>
                   <a href="https://x.com/Sh0ocks" target="_blank" rel="noopener noreferrer">X</a>
                   <a href="https://www.malt.fr/profile/jimmyferon1" target="_blank" rel="noopener noreferrer">Malt</a>
+                  <a href="https://github.com/jimmyferon" target="_blank" rel="noopener noreferrer">GitHub</a>
                 </div>
               </div>
             </div>
