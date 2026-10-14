@@ -44,7 +44,7 @@ await shot("grain-motif-240.png", { x: 0, y: 0, width: 240, height: 240 });
 await send("Emulation.setDefaultBackgroundColorOverride", {});
 await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 loaded = once("Page.loadEventFired");
-await send("Page.navigate", { url: "https://jimmyferon.com/work" }); await loaded; await sleep(6000);
+await send("Page.navigate", { url: "https://arcain.design/work" }); await loaded; await sleep(6000);
 await shot("site-work-1440.png");
 
 ws.close(); proc.kill();

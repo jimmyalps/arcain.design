@@ -60,7 +60,7 @@ await send("Page.enable");
 await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 await send("Emulation.setTouchEmulationEnabled", { enabled: false, maxTouchPoints: 1 });
 let loaded = once("Page.loadEventFired");
-await send("Page.navigate", { url: "https://jimmyferon.com/" }); await loaded;
+await send("Page.navigate", { url: "https://arcain.design/" }); await loaded;
 await sleep(7000); // préchargement de 3 s, rideau, dessin des courbes
 const D = {};
 D.header = await measure([["header"], ["nav"], [".logo svg"], [".nav-mid"], [".nav-mid a", 3], [".lang-trigger"], [".lang-trigger .arr svg"], [".cta"], [".cta .cta-arr"]]);
@@ -109,7 +109,7 @@ result.desktop = D;
 await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
 await send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
 loaded = once("Page.loadEventFired");
-await send("Page.navigate", { url: "https://jimmyferon.com/" }); await loaded;
+await send("Page.navigate", { url: "https://arcain.design/" }); await loaded;
 await sleep(7000);
 const M = {};
 M.header = await measure([["header"], ["nav"], [".logo svg"], [".menu-btn"], [".menu-btn .flake"]]);

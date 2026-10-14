@@ -116,7 +116,7 @@ export default function Footer({ uid = "foot" }) {
             lettre par lettre, un fondu de bloc par-dessus l'écraserait. */}
         <div className="lt-inner">
           <p className="lt-big" ref={bigRef}>{t("lt.big")}</p>
-          <a className="btnf btnf-ghost lt-cta" data-rv style={{ "--rvd": "120ms" }} href="https://cal.com/jimmy-feron/intro-call" target="_blank" rel="noopener noreferrer" onClick={openCal}>
+          <a className="btnf btnf-ghost lt-cta" data-rv style={{ "--rvd": "120ms" }} href="https://cal.com/arcain/intro-call" target="_blank" rel="noopener noreferrer" onClick={openCal}>
             <Roll text={t("lt.cta")} /> <span className="arr" aria-hidden="true">→</span>
           </a>
         </div>
@@ -129,7 +129,7 @@ export default function Footer({ uid = "foot" }) {
         <div className="foot-glow"></div>
         <div className="foot-pad">
           <div className="foot-top" data-rv>
-            <a href="/" className="foot-logo" aria-label="Jimmy Feron" onClick={(e) => go(e, "/")}>
+            <a href="/" className="foot-logo" aria-label={t("logo.home")} onClick={(e) => go(e, "/")}>
               <LogoSvg cid={`clip_${uid}`} />
             </a>
             <div className="foot-cols">
@@ -151,7 +151,7 @@ export default function Footer({ uid = "foot" }) {
           </div>
           <div className="foot-mid" data-rv style={{ "--rvd": "90ms" }}>
             <p className="f-hook">{t("foot.hook")}</p>
-            <a className="f-mail" href="mailto:jimmyferon08@gmail.com">jimmyferon08@gmail.com</a>
+            <a className="f-mail" href="mailto:jimmy@arcain.design">jimmy@arcain.design</a>
             <div className="foot-cta-row">
               <div className="foot-cta-pair">
                 <a className="btnf btnf-blue" href="https://www.linkedin.com/in/jimmyferon/" target="_blank" rel="noopener noreferrer"><Roll text={t("cta.together")} /> <span className="arr" aria-hidden="true">↗</span></a>
@@ -170,6 +170,7 @@ export default function Footer({ uid = "foot" }) {
           </div>
           <div className="foot-bot" data-rv style={{ "--rvd": "190ms" }}>
             <span className="foot-copy">{t("foot.copy")}</span>
+            <a className="foot-legal" href="/legal" onClick={(e) => go(e, "/legal")}>{t("foot.legal")}</a>
             <span className="foot-loc">{t("foot.loc")}</span>
             <button className="foot-topbtn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>{t("foot.top")}</button>
           </div>

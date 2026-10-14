@@ -322,7 +322,7 @@ node docs/design-system/outils/fusion-svg.mjs fl-survol.svg survol "fl-survol-0.
 ## Mesurer une preview plutôt que la prod
 
 `mesurer-styles.mjs` et `polices-rendues.mjs` prennent l'URL en dernier
-argument (par défaut `https://jimmyferon.com`). Pour comparer une preview
+argument (par défaut `https://arcain.design`). Pour comparer une preview
 Vercel à la prod, lancer la mesure deux fois, avec deux dossiers de sortie,
 puis comparer les deux `mesures.json`.
 

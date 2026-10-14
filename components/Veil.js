@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useLang } from "@/lib/LangContext";
+import { I18N } from "@/lib/i18n";
 
 const LOGO_PATHS = [
   "M70.5042 908.157L-91.9997 796.155L239.558 718.319C239.558 718.319 345.421 693.25 427.851 750.062C510.28 806.875 524.529 914.729 524.529 914.729L569.792 1252.28L407.288 1140.28L354.232 856.876L70.5042 908.157Z",
@@ -18,7 +20,7 @@ const LOGO_PATHS = [
 // relever. Sans cela, il repartait au bout de 580 ms alors que le code de la
 // page visée n'était pas encore chargé : on revoyait l'ancienne page une
 // demi-seconde. Le deuxième passage semblait correct parce que le navigateur
-// avait gardé le fichier en mémoire. Les trois routes sont donc préchargées
+// avait gardé le fichier en mémoire. Toutes les routes sont donc préchargées
 // dès que le navigateur est disponible, et le relevé du rideau est déclenché
 // par le changement d'adresse, avec un délai de secours si rien ne bouge.
 export default function Veil() {
@@ -28,6 +30,8 @@ export default function Veil() {
   const waitRef = useRef(false);
   const fromRef = useRef(null);
   const failsafeRef = useRef(0);
+  const { lang } = useLang();
+  const t = (k) => (I18N[lang] && I18N[lang][k]) || k;
 
   const lift = () => {
     const veil = veilRef.current;
@@ -66,9 +70,9 @@ export default function Veil() {
     if (waitRef.current && pathname !== fromRef.current) lift();
   }, [pathname]);
 
-  /* Préchargement des trois routes, une fois le navigateur au repos. */
+  /* Préchargement des routes, une fois le navigateur au repos. */
   useEffect(() => {
-    const go = () => ["/", "/work", "/about"].forEach((r) => router.prefetch(r));
+    const go = () => ["/", "/work", "/about", "/legal"].forEach((r) => router.prefetch(r));
     const id = window.requestIdleCallback
       ? window.requestIdleCallback(go, { timeout: 3000 })
       : setTimeout(go, 1600);
@@ -90,7 +94,7 @@ export default function Veil() {
           </defs>
         </svg>
       </div>
-      <span className="veil-mark">Jimmy Feron — Portfolio 2026</span>
+      <span className="veil-mark">{t("veil.mark")}</span>
     </div>
   );
 }

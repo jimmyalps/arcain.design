@@ -81,7 +81,7 @@ export default function Home() {
         <div className="hero-mcta" data-reveal style={{ "--rd": "1.05s" }}>
           <a
             className="btnf btnf-ink"
-            href="https://cal.com/jimmy-feron/intro-call"
+            href="https://cal.com/arcain/intro-call"
             target="_blank"
             rel="noopener noreferrer"
             onClick={openCal}
@@ -117,7 +117,7 @@ export default function Home() {
         <div className="home-bottom">
           <div className="hb-top">
             <div className="home-msg">
-              <div className="nm" data-reveal style={{ "--rd": ".3s" }}>Jimmy Feron</div>
+              <div className="nm" data-reveal style={{ "--rd": ".3s" }}>{t("home.name")}</div>
               <p
                 data-reveal
                 style={{ "--rd": ".4s" }}

@@ -26,7 +26,7 @@ const evaluate = async (expr) => (await send("Runtime.evaluate", { expression: e
 await send("Page.enable");
 await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 const loaded = once("Page.loadEventFired");
-await send("Page.navigate", { url: "https://jimmyferon.com/" }); await loaded;
+await send("Page.navigate", { url: "https://arcain.design/" }); await loaded;
 await sleep(6000); // préchargement de 3 s, puis apparitions
 await evaluate(`document.querySelector('.svx-toggle')?.click(); true`);
 await sleep(1500);

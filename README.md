@@ -1,11 +1,11 @@
-# jimmyferon.com
+# arcain.design
 
 Portfolio de **Jimmy Feron**, brand designer & UI/UX basé entre Genève et la Haute-Savoie.
 
 Site conçu, dessiné et développé de bout en bout : direction artistique, design system,
 puis intégration. Le fil rouge est la montagne — le site se parcourt comme une ascension.
 
-**En ligne : [jimmyferon.com](https://jimmyferon.com)**
+**En ligne : [arcain.design](https://arcain.design)**
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-087EA4?logo=react&logoColor=white)
@@ -82,10 +82,10 @@ Le site tourne alors sur [localhost:3000](http://localhost:3000).
 
 ## Me contacter
 
-- **Site** — [jimmyferon.com](https://jimmyferon.com)
+- **Site** — [arcain.design](https://arcain.design)
 - **LinkedIn** — [linkedin.com/in/jimmyferon](https://linkedin.com/in/jimmyferon)
 - **Instagram** — [@jimmy.ocks](https://instagram.com/jimmy.ocks)
-- **Un projet en tête ?** — [réserver un appel](https://cal.com/jimmy-feron/intro-call)
+- **Un projet en tête ?** — [réserver un appel](https://cal.com/arcain/intro-call)
 
 ---
 

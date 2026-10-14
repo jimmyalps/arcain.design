@@ -1,5 +1,5 @@
 // Plan du site généré par Next.js à la compilation, servi sur /sitemap.xml.
-const SITE = "https://jimmyferon.com";
+const SITE = "https://arcain.design";
 
 export default function sitemap() {
   const now = new Date();

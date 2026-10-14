@@ -73,7 +73,7 @@ export default function Services() {
           <p className="sv2-lead" data-reveal style={{ "--rd": ".16s" }}>{t("sv.lead")}</p>
           <a
             className="btnf sv2-cta"
-            href="https://cal.com/jimmy-feron/intro-call"
+            href="https://cal.com/arcain/intro-call"
             target="_blank"
             rel="noopener noreferrer"
             onClick={openCal}
@@ -129,7 +129,7 @@ export default function Services() {
                     <a
                       key={nm + i}
                       className="svx-row"
-                      href={`mailto:jimmyferon08@gmail.com?subject=${subject}`}
+                      href={`mailto:jimmy@arcain.design?subject=${subject}`}
                     >
                       <span className="svx-name">{nm}</span>
                       <span className="svx-type">{SVX_CATS[s.cat][lang] || SVX_CATS[s.cat].fr}</span>
