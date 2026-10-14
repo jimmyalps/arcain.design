@@ -24,7 +24,7 @@
 /* ===== bloc CSS ===== */
 
 :root{
-    --paper:#F5F5F5; --ink:#111111; --blue:#1E29FF;
+    --paper:#F5F5F5; --ink:#111111; --blue:#1E29FF; --blue-on-dark:#5A63FF;
     --line:rgba(17,17,17,.13); --line-2:rgba(17,17,17,.26);
     --muted:rgba(17,17,17,.55); --muted-2:rgba(17,17,17,.38);
     --display:'Bricolage Grotesque', system-ui, sans-serif;
