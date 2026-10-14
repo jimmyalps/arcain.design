@@ -103,6 +103,54 @@ c'est là que se vérifie un changement visuel, pas seulement en local.
 
 Projet Vercel `portfolio-next`, Node 24 (aligné dans `.nvmrc`).
 
+### Le responsive fait partie de la livraison
+
+Ce n'est pas une finition, c'est une règle de structure.
+
+Le responsive vit **uniquement en media queries, en fin de `globals.css`**,
+dans une nouvelle section numérotée. On ne modifie jamais une règle desktop
+pour arranger le mobile : on ajoute une surcharge en bas, la cascade fait le
+reste.
+
+Points de rupture : **760 / 900 / 1024 / 1400**.
+
+La bascule du hero se joue à 1024 :
+
+- au-dessus de 1024 px, le hero est la scène Everest (`components/Everest.js`) ;
+- à 1024 px et en dessous, tablette et téléphone partagent le même hero, avec
+  la colonne de projets (`components/Carousel.js`).
+
+Pas de survol ni d'animation superflue sous 1025 px. Toute nouvelle section se
+livre avec son responsive, jamais dans un second temps.
+
+### Ne jamais inventer une valeur
+
+Couleurs, typographies, rayons, espacements, courbes d'animation : tout existe
+déjà dans le `:root` et les sections de `globals.css`. Si une valeur semble
+manquer, la demander plutôt que d'en créer une.
+
+Deux sources uniques à respecter :
+
+- `lib/projects.js` pour les six projets (identifiant, titre, catégorie, rôle,
+  année, images, vidéos) ;
+- `lib/i18n.js` pour tous les textes affichés, jamais écrits en dur dans le JSX.
+
+**Chaque clé i18n doit exister en FR et en EN.** Une clé présente dans une seule
+langue est un bug, pas un oubli.
+
+### Les états liés à la largeur se décident après le montage
+
+Un composant qui dépend de la largeur de fenêtre ne doit rien trancher au
+premier rendu : l'état part à `null`, il est résolu dans un `useEffect`, et le
+rendu serveur reste identique dans tous les cas. Sans ça, l'hydratation diverge
+et le hero peut afficher la mauvaise version pendant une image.
+
+### Contrôles avant de livrer
+
+En plus du build et de la vérification visuelle : syntaxe JSX de chaque fichier
+touché, imports résolus, assets réellement présents dans `public/`, accolades
+équilibrées dans `globals.css`, parité des clés FR/EN dans `lib/i18n.js`.
+
 ## Le projet
 
 Portfolio de Jimmy Feron, brand designer & UI/UX. Next.js App Router, React,
