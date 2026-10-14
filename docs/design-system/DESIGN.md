@@ -9,7 +9,8 @@ colors:
   blue: "#1E29FF"
   white: "#FFFFFF"
   blue-hover: "#0F17C2"
-  blue-on-dark: "#7D86FF"
+  blue-on-dark: "#5A63FF"
+  blue-light: "#7D86FF"
   card: "#E0E2E8"
   header-line: "#E5E5E5"
   ink-soft: "#161616"
@@ -560,7 +561,8 @@ La typographie a trois voix. Bricolage Grotesque porte les titres, serrés de �
 ### Interface
 - **Blanc** (`{colors.white}`) : texte sur un aplat bleu ou encre, fond des questions FAQ (`color/bg/surface`).
 - **Bleu survol** (`{colors.blue-hover}`, #0F17C2) : survol des boutons bleus et du CTA du header.
-- **Bleu sur encre** (`{colors.blue-on-dark}`, #7D86FF) : libellé du camp dans la modale.
+- **Bleu sur fond sombre** (`{colors.blue-on-dark}`, #5A63FF, `--blue-on-dark`) : valeur sombre de l'accent. Survol des liens des colonnes Menu et Connect du footer ; tracé de l'itinéraire et drapeau du Mont Blanc.
+- **Bleu clair** (`{colors.blue-light}`, #7D86FF) : libellé du camp dans la modale.
 - **Gris carte** (`{colors.card}`, #E0E2E8) : fond des cartes Services.
 - **Filet du header** (`{colors.header-line}`, #E5E5E5) : bordure du header clair.
 - **Encres voisines** : `{colors.ink-soft}` (#161616, menu de langue sur fond sombre) et `{colors.ink-deep}` (#0E0E0E, visuel de la modale). Elles gardent leur valeur : le système ne fusionne rien.
@@ -711,7 +713,7 @@ Les visuels de projet sont des WebP plein cadre (`object-fit:cover`), dans la vi
 
 ### Liens
 - **`nav-link`** : liens du header desktop, `{typography.nav}` en roll, `{colors.muted}` ; survol et page courante en bleu, la page courante en Bold.
-- Liens du footer : `{typography.meta}`, papier, padding 4px 0, suivis d'une flèche oblique ; survol bleu, décalé de 4.
+- Liens du footer : `{typography.meta}`, papier, padding 4px 0, suivis d'une flèche oblique ; survol `{colors.blue-on-dark}`, décalé de 4.
 - **`footer-email`** : `{typography.email}`, soulignement bleu de 3 px qui se déroule au survol (.5 s).
 - **`footer-top-link`** : « Haut de page », `{colors.footer-top}`.
 - Menu mobile : liens principaux en `{typography.menu}` avec un filet court à .1, liens secondaires en `{typography.body-menu}` à .85.
@@ -738,7 +740,7 @@ Les visuels de projet sont des WebP plein cadre (`object-fit:cover`), dans la vi
 **`icon-button-solid`** (38, cartes), **`icon-button-tint`** (40, flèches de la modale), **`icon-button-close`** (36, fermer la modale ; survol `icon-button-close-hover`). Les boutons nus de la scène Everest font 30 (mode d'emploi) et 26 (plein écran), avec le focus du code.
 
 ### Modale projet
-**`modal-veil`**, **`modal-box`** et **`modal-text`** : voile de 1440 × 900 en `{colors.overlay-modal}` flouté à 4 ; fiche de 1180 × 423,66 en deux colonnes (1,35fr / 1fr), `{rounded.brand}`, ombre `shadow/modal`, grain ; visuel au ratio 1,6 sur `{colors.ink-deep}` ; texte à padding 30 : camp `{colors.blue-on-dark}`, titre `{typography.heading-3-modal}`, catégorie, résumé `{typography.body-xs-modal}` limité à 48ch, méta, bouton « Voir le projet ». Navigation sous la fiche, à 18 : précédent, compteur, suivant.
+**`modal-veil`**, **`modal-box`** et **`modal-text`** : voile de 1440 × 900 en `{colors.overlay-modal}` flouté à 4 ; fiche de 1180 × 423,66 en deux colonnes (1,35fr / 1fr), `{rounded.brand}`, ombre `shadow/modal`, grain ; visuel au ratio 1,6 sur `{colors.ink-deep}` ; texte à padding 30 : camp `{colors.blue-light}`, titre `{typography.heading-3-modal}`, catégorie, résumé `{typography.body-xs-modal}` limité à 48ch, méta, bouton « Voir le projet ». Navigation sous la fiche, à 18 : précédent, compteur, suivant.
 
 ### FAQ
 **`faq-item`** et **`faq-answer`** : question blanche, `{rounded.brand}`, padding 2px 26px ; question à padding 20px 0, numéro, intitulé `{typography.heading-6}`, signe ± ; réponse sous un filet, padding 16px 0 22px, `{typography.body}`. 1216 × 69 fermée, 156 ouverte. Une seule question ouverte à la fois.
