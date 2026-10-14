@@ -101,8 +101,8 @@
   header.on-dark::before{background:rgba(245,245,245,.14)}
   header.on-dark .logo{color:var(--paper)}
   header.on-dark .nav-mid a{color:rgba(245,245,245,.5)}
-  header.on-dark .nav-mid a:hover{color:var(--blue)}
-  header.on-dark .nav-mid a[data-active="true"]{color:var(--blue)}
+  header.on-dark .nav-mid a:hover{color:var(--paper)}
+  header.on-dark .nav-mid a[data-active="true"]{color:var(--paper)}
   header.on-dark .lang-trigger{color:rgba(245,245,245,.5)}
   header.on-dark .lang:hover .lang-trigger,header.on-dark .lang.open .lang-trigger{color:var(--paper)}
   header.on-dark .lang-menu{background:#161616;border-color:rgba(245,245,245,.16);box-shadow:0 12px 30px -12px rgba(0,0,0,.6)}
