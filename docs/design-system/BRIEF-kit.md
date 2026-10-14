@@ -20,7 +20,7 @@ https://drapz.design/projects/lumora
 https://drapz.design/projects/kinect
 https://drapz.design/projects/stomic
 https://drapz.design/projects/skillio
-Analyse comment il construit et présente un système visuel : motifs, fonds, compositions, grilles, typographie, usage de la couleur, rythme des pages de guidelines, mises en situation. Écris docs/design-system/reference-drapz.md : ce qu'on reprend de sa méthode, appliqué à ma marque. Prends sa méthode, jamais ses visuels. STOP.
+Analyse comment il construit et présente un système visuel : motifs, fonds, compositions, grilles, typographie, usage de la couleur, rythme des pages de guidelines, mises en situation. Dégage ce qu'on reprend de sa méthode, appliqué à ma marque. Prends sa méthode, jamais ses visuels. STOP.
 
 Partie 1 : Motifs (page « Kit Motifs »)
 Tuiles raccordables tirées de l'univers graphique : courbes de niveau dans le style de la règle 2, trace en lacets, neige pixel, crête, logo en répétition, grain. Chacune est déclinée dans les combinaisons de ma palette (papier, encre, bleu) qui gardent un bon contraste. STOP.
@@ -51,7 +51,7 @@ Un document en pages de 1920×1080, exportable en PDF : couverture, sommaire, la
 
 ## Arbitrages de la partie 0 (9 octobre 2026)
 
-Référence validée : `docs/design-system/reference-drapz.md`. Les six questions sont au §5 du document ; leurs réponses font foi ici.
+Référence validée. Elle posait six questions ; leurs réponses, ci-dessous, font foi.
 
 - A1 — Filigrane : le logo peut être agrandi et coupé par le bord du cadre, en papier .12 sur encre, comme le logo du menu du footer. C'est un usage graphique, pas une signature : il ne remplace jamais le logo, qui garde ailleurs sa zone de protection (13/34 D) et sa taille minimum (34 px). Il se documente comme tel, dans la page Kit Motifs et dans les guidelines.
 - A2 — Nom : « Jimmy Ocks » s'écrit en mention Space Mono, en capitales, à côté du logo, comme le rideau écrit « JIMMY FERON — PORTFOLIO 2026 ». Pas de logotype.
@@ -99,7 +99,7 @@ Ce que la méthode change dans les arbitrages de la partie 0 :
 - **A1 reste** (filigrane papier .12 sur encre), mais la page Kit Motifs qui
   devait le documenter n'existe plus : il ira aux guidelines (partie 4).
 - **Le logo en courbes de niveau** (point 3) lève, pour ce rendu, l'interdit
-  « pas de contour ni de trame » de `reference-drapz.md` (§3.2). Le dessin du
+  « pas de contour ni de trame » posé à la partie 0. Le dessin du
   logo ne change pas : ses courbes sont calculées à partir de son SVG.
 
 ## Livraison 1 : planches maîtresses (9 octobre 2026)
@@ -390,7 +390,7 @@ Ce qu'elles changent :
   (« Jimmy Ocks », @jimmy.ocks) attendent le nom de la marque.
 - **Les cartes de visite** sortent du kit (partie 3 et section 6) ; la section
   existante reste sur la page.
-- **Les dégradés** : `reference-drapz.md` (§4) les écartait. Les retours
+- **Les dégradés** : la partie 0 les écartait. Les retours
   ci-dessous en demandent, dans la palette : ils sont admis, comme mélanges des
   seules couleurs de la palette (papier, encre, bleu), grainés.
 
@@ -576,7 +576,7 @@ Les fonds :
 
 Ce que ces retours changent :
 
-- **Le bleu sur encre** : `reference-drapz.md` (§3.7) le gardait « à la trace,
+- **Le bleu sur encre** : la partie 0 le gardait « à la trace,
   une ligne d'accent ». Sur les fonds, c'est l'inverse : jamais en trait fin
   sur l'encre, seulement en aplat ou en grande masse.
 - **Le bleu clair d'interface** : `color/accent/on-dark` (`#7D86FF`, primitive
@@ -801,7 +801,7 @@ Chaque essai se propose dans les deux DA quand ça a du sens.
 ### Ce que ces retours changent
 
 - **Le logo en pixels de neige** lève à son tour l'interdit « pas de trame »
-  de `reference-drapz.md` (§3.2), comme le logo en courbes avait levé celui du
+  de la partie 0, comme le logo en courbes avait levé celui du
   contour : le dessin du logo ne change pas, ses pixels sont tirés de son SVG,
   comme le fait l'animation de révélation du site (`components/LogoReveal.js`).
 - **Le bleu clair** : `color/accent/on-dark` garde sa portée (le texte seul).

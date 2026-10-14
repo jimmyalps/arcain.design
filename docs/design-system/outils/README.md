@@ -5,8 +5,7 @@ celles des étapes suivantes : [`../fondations.md`](../fondations.md),
 [`../composants.md`](../composants.md),
 [`../marque-motion.md`](../marque-motion.md) et
 [`../documentation.md`](../documentation.md), avec le contrôle de
-[`../DESIGN.md`](../DESIGN.md). Pour le kit de marque :
-[`../reference-drapz.md`](../reference-drapz.md).
+[`../DESIGN.md`](../DESIGN.md).
 
 Ils ne font que lire : ni le code du site ni le fichier Figma ne sont modifiés.
 Aucune dépendance à installer. Il faut Node 24 (voir `.nvmrc`), et un
