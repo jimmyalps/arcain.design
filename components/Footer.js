@@ -144,9 +144,9 @@ export default function Footer({ uid = "foot" }) {
                 <h4>{t("foot.connect")}</h4>
                 <a href="https://www.linkedin.com/in/jimmyferon/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
                 <a href="https://instagram.com/jimmy.ocks" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a>
-                <a href="https://x.com/Sh0ocks" target="_blank" rel="noopener noreferrer">X <span aria-hidden="true">↗</span></a>
-                <a href="https://www.malt.fr/profile/jimmyferon1" target="_blank" rel="noopener noreferrer">Malt <span aria-hidden="true">↗</span></a>
                 <a href="https://github.com/jimmyferon" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+                <a href="https://www.malt.fr/profile/jimmyferon1" target="_blank" rel="noopener noreferrer">Malt <span aria-hidden="true">↗</span></a>
+                <a href="https://x.com/Sh0ocks" target="_blank" rel="noopener noreferrer">X <span aria-hidden="true">↗</span></a>
               </div>
             </div>
           </div>
