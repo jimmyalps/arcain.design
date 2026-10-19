@@ -153,7 +153,7 @@ touché, imports résolus, assets réellement présents dans `public/`, accolade
 
 ## Le projet
 
-Portfolio de Jimmy Feron, brand designer & UI/UX. Next.js App Router, React,
+Portfolio de Jimmy, brand designer & UI/UX. Next.js App Router, React,
 Three.js pour les scènes WebGL, CSS natif sans framework, aucune dépendance
 d'interface — chaque composant est écrit à la main.
 

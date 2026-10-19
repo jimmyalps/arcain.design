@@ -2,8 +2,8 @@
   "name": "jimmyferon-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Portfolio de Jimmy Feron, brand designer & UI/UX — Next.js 16, React 19, WebGL.",
-  "author": "Jimmy Feron <jimmy@arcain.design> (https://arcain.design)",
+  "description": "Portfolio de Jimmy, brand designer & UI/UX — Next.js 16, React 19, WebGL.",
+  "author": "Jimmy <jimmy@arcain.design> (https://arcain.design)",
   "license": "UNLICENSED",
   "homepage": "https://arcain.design",
   "engines": {
