@@ -131,7 +131,7 @@ export default function About() {
         </figure>
         <figure className="ab-fig">
           <img
-            src="/images/jimmy-feron-trail-portrait-1200.webp"
+            src="/images/jimmy-trail-portrait-1200.webp"
             alt="Jimmy, brand designer, en trail dans les Alpes"
             loading="lazy"
           />

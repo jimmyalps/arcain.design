@@ -140,7 +140,7 @@ avec `.btnf`, dont ils ne changent que les survols.
 
 ### Flèche de 12 px dans les boutons
 
-Mesure sur jimmyferon.com en 1440 × 900 (`outils/mesure-petits-composants.mjs`) :
+Mesure sur arcain.design en 1440 × 900 (`outils/mesure-petits-composants.mjs`) :
 
 | Glyphe | Boîte | Encre, canevas | Encre, pixels | Icône à 12 px |
 |---|---|---|---|---|

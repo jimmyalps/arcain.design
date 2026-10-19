@@ -1,8 +1,8 @@
-> Note du 14 octobre 2026 : la marque s'appelle désormais Arcain, et non plus Jimmy Ocks. Ce qui suit date d'avant et se lit comme un historique.
+> Note du 14 octobre 2026 : la marque s'appelle désormais Arcain. Ce qui suit date d'avant, quand elle portait un nom provisoire, et se lit comme un historique. Mise à jour du 19 octobre 2026 : l'adresse, les comptes et les noms cités sont les actuels (arcain.design, @jimmyalps, Jimmy).
 
 Charge les skills figma-use et figma-generate-library. Repasse sur main à jour, en gardant ma modification de CLAUDE.md hors des commits. Ouvre une branche brand-kit, enregistre ce brief dans docs/design-system/BRIEF-kit.md, puis lance la partie 0.
 
-Mission : agis comme un brand designer expert et crée le kit de marque complet de Jimmy Ocks dans le fichier Figma Portfolio, à partir du design system qui s'y trouve (pages Fondations, Composants, Marque, Motion).
+Mission : agis comme un brand designer expert et crée mon kit de marque complet dans le fichier Figma Portfolio, à partir du design system qui s'y trouve (pages Fondations, Composants, Marque, Motion).
 
 Règles
 1. Composition libre, valeurs fermées : tu n'utilises que les variables, styles, composants et motifs du design system. Aucune nouvelle couleur, police ou valeur.
@@ -32,7 +32,7 @@ Pour chaque format, au moins trois fonds : un sur bleu, un sur encre, un sur pap
 > Parties 1 et 2 remplacées le 9 octobre 2026 par la nouvelle méthode : voir « Partie 1 rejetée, nouvelle méthode », plus bas.
 
 Partie 3 : Templates (page « Kit Templates »)
-Avec mes vrais contenus (Jimmy Ocks, « Pour que ta marque tienne en altitude », jimmyferon.com, @jimmy.ocks) :
+Avec mes vrais contenus (le nom de la marque, « Pour que ta marque tienne en altitude », arcain.design, @jimmyalps) :
 - affiches A4 et A3 ;
 - posts : annonce, citation, projet, et un carrousel de 5 slides ;
 - story et couverture de Reel ;
@@ -50,7 +50,7 @@ Un document en pages de 1920×1080, exportable en PDF : couverture, sommaire, la
 Référence validée. Elle posait six questions ; leurs réponses, ci-dessous, font foi.
 
 - A1 — Filigrane : le logo peut être agrandi et coupé par le bord du cadre, en papier .12 sur encre, comme le logo du menu du footer. C'est un usage graphique, pas une signature : il ne remplace jamais le logo, qui garde ailleurs sa zone de protection (13/34 D) et sa taille minimum (34 px). Il se documente comme tel, dans la page Kit Motifs et dans les guidelines.
-- A2 — Nom : « Jimmy Ocks » s'écrit en mention Space Mono, en capitales, à côté du logo, comme le rideau écrit « JIMMY FERON — PORTFOLIO 2026 ». Pas de logotype.
+- A2 — Nom : le nom de la marque s'écrit en mention Space Mono, en capitales, à côté du logo, comme le rideau écrit « JIMMY — PORTFOLIO 2026 ». Pas de logotype.
 - A3 — Cadres écran : construits à la moitié de la taille demandée et exportés en PNG 2x, pour obtenir exactement les pixels voulus avec les styles du site à leur taille. 1080 × 1350 → 540 × 675 ; 1080 × 1080 → 540 × 540 ; 1080 × 1920 → 540 × 960 ; 1920 × 1080 → 960 × 540 ; LinkedIn 1584 × 396 → 792 × 198 ; X 1500 × 500 → 750 × 250 ; fond d'écran 2560 × 1440 → 1280 × 720 ; pages des guidelines 1920 × 1080 → 960 × 540. Fond d'écran mobile : 393 × 852, exporté en 3x (1179 × 2556). L'impression reste en points, export PDF, comme proposé au §5 : A4 595 × 842, A3 842 × 1191, carte de visite 85 × 55 mm.
 - A4 — Mises en situation : à plat, avec les seuls éléments du système. Pas de photo.
 - A5 — Les branches du logo ne reçoivent aucun sens nouveau : la composition qui posait les cinq étapes de Benefits sur les cinq branches est écartée.
@@ -155,7 +155,7 @@ du code sont gardées telles quelles.
   ne couvre : Bricolage Grotesque SemiBold, en phrase, serrés à −3 %, comme
   les titres du site.
 - **Textes** : ceux du site (`lib/i18n.js`, `data/evmarks.json`,
-  `Benefits.js`, `Footer.js`) et le nom « Jimmy Ocks » (A2). Libellés propres
+  `Benefits.js`, `Footer.js`) et le nom de la marque (A2). Libellés propres
   au kit : Titres, Texte, Mentions, les noms des trois familles, et
   « 85 × 55 mm ».
 - **Mentions** à 56 px des bords, comme le menu du header.
@@ -371,7 +371,7 @@ Elles s'ajoutent aux règles du brief et font foi à partir de la livraison 3.
 
 - Ne supprime rien de ce qui existe : tu ajoutes des variantes à côté.
 - Plus aucun nom : je n'ai pas encore choisi le nom de la marque de mon
-  portfolio. Retire « Jimmy Ocks » partout sur la page. Là où une signature est
+  portfolio. Retire le nom provisoire partout sur la page. Là où une signature est
   indispensable, mets le logo seul.
 - Les fonds n'ont aucun texte : ni mentions, ni lieux, ni altitudes, ni
   drapeaux. Le texte viendra plus tard, dans les compositions.
@@ -381,9 +381,9 @@ Elles s'ajoutent aux règles du brief et font foi à partir de la livraison 3.
 
 Ce qu'elles changent :
 
-- **A2 tombe** : plus de mention « JIMMY OCKS » à côté du logo ; le pseudo
-  @jimmy.ocks, qui porte le nom, sort avec lui. Les textes réels de la partie 3
-  (« Jimmy Ocks », @jimmy.ocks) attendent le nom de la marque.
+- **A2 tombe** : plus de nom à côté du logo ; le pseudo Instagram, qui le
+  portait, sort avec lui. Les textes réels de la partie 3 (le nom et le pseudo)
+  attendent le nom de la marque.
 - **Les cartes de visite** sortent du kit (partie 3 et section 6) ; la section
   existante reste sur la page.
 - **Les dégradés** : la partie 0 les écartait. Les retours
@@ -490,7 +490,7 @@ adresse, lieu, altitude) sont retirés : ce sont des fonds.
 - **Images** : en plus du grain, deux textures en PNG, le grain de l'aube
   (3840 × 2160) et celui de la brume (2160 × 2700), bleu de la palette fixé
   dans l'image (une image ne se lie pas à une variable).
-- **Nom** : « Jimmy Ocks » retiré des quatre planches de la section 1. Les
+- **Nom** : le nom provisoire retiré des quatre planches de la section 1. Les
   sections de la livraison B (2, 3, 5, 7) et les cartes (6) le portent
   encore : il en sort en B.
 
@@ -531,9 +531,8 @@ adresse, lieu, altitude) sont retirés : ce sont des fonds.
 3. **1f, le lac couché** : variante à garder ou à écarter.
 4. **`effect/grain-carte`** : nouveau style Figma, tiré de la valeur du site.
 5. **Textures en PNG** : les deux seules images du kit avec le grain.
-6. **Pour la livraison B** : l'adresse jimmyferon.com porte un nom, sans être
-   celui de la marque. La garder là où une mention sert, ou n'y laisser que le
-   logo ?
+6. **Pour la livraison B** : garder l'adresse arcain.design là où une mention
+   sert, ou n'y laisser que le logo ?
 
 ## Réponses et retours sur la livraison A (10 octobre 2026)
 
@@ -546,7 +545,7 @@ Les six choix :
    vide sous le filet.
 4. **1f, le lac couché** : gardé.
 5. **Textures en PNG** : les deux sont validées.
-6. **jimmyferon.com** : seulement là où une mention de contact sert, comme sur
+6. **arcain.design** : seulement là où une mention de contact sert, comme sur
    l'affiche ; ailleurs, le logo seul (livraison B).
 
 Les fonds :
@@ -781,7 +780,7 @@ Relevé à l'ouverture de la session suivante :
    filet de séparation passe en bleu.
 4. **Logo collé** : les essais restent. D'autres, plus abstraits et originaux,
    avec le trait, les pixels de neige, le grain et des montagnes bleues en fond.
-5. **« Jimmy Ocks »** sort des sections 2, 3, 5, 6 et 7 ; jimmyferon.com reste
+5. **Le nom provisoire** sort des sections 2, 3, 5, 6 et 7 ; arcain.design reste
    seulement là où une mention de contact sert.
 
 Chaque essai se propose dans les deux DA quand ça a du sens.
@@ -812,15 +811,15 @@ sortent des planches existantes.
 
 ### Le nom retiré
 
-32 textes retirés des sections 2, 3, 5, 6 et 7 : les 25 qui portaient
-« Jimmy Ocks », les 5 qui portaient le pseudo @jimmy.ocks, et jimmyferon.com
-là où il ne servait pas de contact (7b, 7c ; avec le nom en 2-logo-1x1, avec le
+32 textes retirés des sections 2, 3, 5, 6 et 7 : les 25 qui portaient le nom
+provisoire, les 5 qui portaient le pseudo Instagram, et l'adresse du site là où
+elle ne servait pas de contact (7b, 7c ; avec le nom en 2-logo-1x1, avec le
 pseudo en 2-logo-16x9). Sur les quatre versos des cartes, la ligne du pseudo
 sort des coordonnées.
 
-- **Gardé** : jimmyferon.com en haut à droite des quatre affiches ; sur les
-  cartes, jimmyferon.com et l'e-mail, et « Jimmy Feron, Brand Designer &
-  UI/UX », qui nomment la personne et non la marque.
+- **Gardé** : arcain.design en haut à droite des quatre affiches ; sur les
+  cartes, arcain.design et l'e-mail, comme contact, et « Jimmy, Brand Designer
+  & UI/UX », qui nomme la personne et non la marque.
 - **Signature** : sur le verso des cartes, le logo reste seul en haut à gauche.
   Les affiches n'en reçoivent pas : le coin du nom reste vide.
 
@@ -840,7 +839,7 @@ texte.
 ### Section 3 bis · Affiche bleue — variantes (`422:180`)
 
 Chaque variante est une copie de `3-affiche-16x9` après le retrait du nom :
-titre, jimmyferon.com, altimètre, grain et exports identiques ; seule la crête
+titre, arcain.design, altimètre, grain et exports identiques ; seule la crête
 change.
 
 | DA | Planche | Nœud | L'idée |
@@ -932,9 +931,9 @@ corriger à part.
 2. **Révélation** : figée à 1,25 s, le logo presque posé. Plus tôt, il se forme
    encore et un nuage tourne au centre.
 3. **Affiches** : le coin du nom reste vide. Y mettre le logo seul ?
-4. **Cartes** : « Jimmy Feron » et le métier gardés ; jimmyferon.com et
+4. **Cartes** : « Jimmy » et le métier gardés ; arcain.design et
    l'e-mail aussi, comme contact.
-5. **7b et 7c** : jimmyferon.com retiré, faute de contact à servir.
+5. **7b et 7c** : arcain.design retiré, faute de contact à servir.
 6. **Rayon du logo** : corriger les instances de 7a à 7d (rayon égal à la
    moitié de la taille), et le composant, dans un chantier à part ?
 7. **5b** : le filet bleu fait un pixel ; plus présent ?
@@ -950,7 +949,7 @@ section 2 bis ne sont plus dans le fichier. Le reste est inchangé.
    reviendra.
 2. **Affiches** : le logo seul en haut à gauche.
 3. **Cartes** : Jimmy les fait lui-même ; laissées en l'état.
-4. **7b et 7c** : jimmyferon.com retiré, validé.
+4. **7b et 7c** : arcain.design retiré, validé.
 5. **Rayon du logo** : à corriger sur les instances de 7a à 7d ; le composant,
    dans un chantier à part (ci-dessous).
 6. **5b** : le filet bleu reste à 1 px pour l'instant.
@@ -995,7 +994,7 @@ Direction :
 - bannières LinkedIn (1584 × 396) et X (1500 × 500).
 
 Les textes viennent du site, sont modifiables et liés aux styles du kit. Pas de
-nom de marque : le logo seul sert de signature, et jimmyferon.com n'apparaît
+nom de marque : le logo seul sert de signature, et arcain.design n'apparaît
 qu'en mention de contact. STOP.
 
 Chaque capture est jugée avant d'être montrée, un commit à chaque STOP.
@@ -1011,7 +1010,7 @@ section 7 bis. Huit planches, chacune exportée en PNG 1x et 2x.
 - **Affiches** : le logo seul, papier, de 44 px, en haut à gauche des quatre
   affiches (section 3) et des cinq variantes de la section 3 bis, qui en sont
   des copies. L'encre du logo est à 56 px du haut et du bord gauche, comme
-  celle de jimmyferon.com en face : le haut du logo s'aligne sur le haut des
+  celle d'arcain.design en face : le haut du logo s'aligne sur le haut des
   capitales de la mention. 44 px est la taille du logo du footer ; sa zone de
   protection (17 px) s'arrête vers 116 px, à 44 px des capitales du titre.
 - **Rayon** : les 31 instances de 7a à 7d portent un rayon égal à la moitié de
@@ -1124,7 +1123,7 @@ maquettes du site, n'est pas touchée.
 
 - **Signature** : le logo seul, 44 px, encre à 56 px des bords (34 px à 40 px
   sur l'A4). Aucun nom de marque.
-- **jimmyferon.com**, seulement en mention de contact : affiches, annonce,
+- **arcain.design**, seulement en mention de contact : affiches, annonce,
   projet, dernière slide du carrousel, story, bannières. Ni sur la citation,
   ni sur les slides 1 à 4, ni sur le Reel.
 - **Textes** du site, modifiables, chacun lié à un style `kit/…` ; couleurs
@@ -1248,7 +1247,7 @@ la vallée de Chamonix dans le bas du cadre.
 5. **Story et Reel** : bandeau à 250 px, pour la zone sûre d'Instagram, au
    lieu de 56.
 6. **Bannières** : la règle de 1g2-decentree appliquée à 1h3 et 1i1.
-7. **Projet** : Anya en exemple, avec son filet ; jimmyferon.com en contact.
+7. **Projet** : Anya en exemple, avec son filet ; arcain.design en contact.
 
 ## Réponses et retours sur la livraison C2 (10 octobre 2026)
 
@@ -1366,7 +1365,7 @@ elle.
 | B · Trait et repères | `473:219`, `473:249`, `473:270`, `473:289`, `473:306` | `473:325` à `473:412` | `473:431` à `473:518` | le panorama en courbes ; un repère carré de 16 px sur la trace, au milieu de chaque slide, et le camp écrit à côté, dans le vide que laisse la trace : au-dessus à gauche sur les slides 1 et 2, au-dessous à droite sur les 3 à 5 |
 | C · Couloir de lumière | `473:4355`, `473:4466`, `473:4572`, `473:4677`, `473:4783` | `473:4869` à `473:5297` | `473:5383` à `473:5811` | les courbes ne s'allument que le long de la trace (`teinte=trace`, sur 420 px) ; l'altitude en `kit/display-180` et le titre en haut tant que la trace est basse (1 à 3), en bas une fois qu'elle a grimpé (4 et 5) |
 
-Le logo ouvre la slide 1, en haut à droite ; jimmyferon.com ferme la slide 5,
+Le logo ouvre la slide 1, en haut à droite ; arcain.design ferme la slide 5,
 au même endroit.
 
 ### Section 8 · Bannières (`464:170`)
@@ -1410,7 +1409,7 @@ trois par post, aucun sur les bannières et les fonds.
 | Anya · Branding & UI/UX · 2026 | `cw.p1n`, `cw.p1t`, `cw.p1y` (`lib/i18n.js`) |
 | Solid Foundations, One Consistent Image, Interfaces That Convert, A Roped-Team Pace, Your Brand at the Summit | `bn3.c1t` à `bn3.c5t` |
 | +1 250 m … +4 810 m | `Benefits.js`, espaces insécables |
-| jimmyferon.com | contact |
+| arcain.design | contact |
 
 ### Valeurs
 

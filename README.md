@@ -1,6 +1,6 @@
 # arcain.design
 
-Portfolio de **Jimmy Feron**, brand designer & UI/UX basé entre Genève et la Haute-Savoie.
+Portfolio de **Jimmy**, brand designer & UI/UX basé entre Genève et la Haute-Savoie.
 
 Site conçu, dessiné et développé de bout en bout : direction artistique, design system,
 puis intégration. Le fil rouge est la montagne — le site se parcourt comme une ascension.
@@ -84,7 +84,7 @@ Le site tourne alors sur [localhost:3000](http://localhost:3000).
 
 - **Site** — [arcain.design](https://arcain.design)
 - **LinkedIn** — [linkedin.com/in/jimmyferon](https://linkedin.com/in/jimmyferon)
-- **Instagram** — [@jimmy.ocks](https://instagram.com/jimmy.ocks)
+- **Instagram** — [@jimmyalps](https://www.instagram.com/jimmyalps/)
 - **Un projet en tête ?** — [réserver un appel](https://cal.com/arcain/intro-call)
 
 ---
@@ -92,5 +92,5 @@ Le site tourne alors sur [localhost:3000](http://localhost:3000).
 ## Licence
 
 Le code est public à des fins de démonstration. Les contenus — textes, images,
-photographies, identité visuelle — restent la propriété de Jimmy Feron et ne peuvent pas
+photographies, identité visuelle — restent la propriété de Jimmy et ne peuvent pas
 être réutilisés sans autorisation. Voir [LICENSE](./LICENSE).
