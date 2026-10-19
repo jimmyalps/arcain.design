@@ -87,7 +87,7 @@ Le site ne change pas : l'écart est documenté, pas corrigé.
 
 ### Zone de protection : 13 px pour 34
 
-Mesure sur jimmyferon.com par `outils/mesure-logo.mjs` :
+Mesure sur arcain.design par `outils/mesure-logo.mjs` :
 
 | Écran | Logo | Au-dessus | Au-dessous | À gauche |
 |---|---|---|---|---|
@@ -151,7 +151,7 @@ Construit ici à l'étape 4, il est sur le site depuis la PR #20 du 9 octobre :
 
 ### Scènes
 
-Capturées sur jimmyferon.com par `outils/capture-scene.mjs`, à l'échelle 2,
+Capturées sur arcain.design par `outils/capture-scene.mjs`, à l'échelle 2,
 sur fond transparent, et posées sur leur fond :
 
 | Scène | Commande (sélecteur, défilement, attente, cadre) | Image |

@@ -1,4 +1,4 @@
-# Audit du design system — jimmyferon.com
+# Audit du design system — arcain.design
 
 Étape 1 du brief (`docs/design-system/BRIEF.md`) : inventaire de tout ce que le
 site utilise, doublons et incohérences, recommandation pour chacun.
@@ -39,7 +39,7 @@ Rien n'a encore été créé dans Figma, rien n'a été modifié dans le code.
   durée, courbe, rayon, ombre, espacement, requête média) a été relevée par
   script, avec son contexte `@media` et son nombre d'usages.
 - **Mesure dans le navigateur.** Les styles *calculés* ont été lus sur
-  jimmyferon.com (Chromium headless piloté par le protocole DevTools), pages
+  arcain.design (Chromium headless piloté par le protocole DevTools), pages
   `/`, `/work` et `/about` :
   - **D** = desktop 1440 × 900, souris ;
   - **M** = mobile 390 × 844, tactile émulé (`hover:none`, `pointer:coarse`).
@@ -1056,7 +1056,7 @@ Découverts en chemin. Rien n'a été touché ; chacun mérite sa propre branche
 4. **Textes écrits en dur hors `lib/i18n.js`** :
    - menu (`Header.js:9-22`) ;
    - « See the project » (`layout.js:103`) ;
-   - « Jimmy Feron — Portfolio 2026 » (`Veil.js:93`) ;
+   - « Jimmy — Portfolio 2026 » (`Veil.js:93`) ;
    - « CHAMONIX → MONT BLANC » et « ALT. » (`Benefits.js:375`) ;
    - « Figma® Expert » (`Footer.js:160`).
 5. **Navigation au clavier** : aucun focus visible en dehors de la scène
