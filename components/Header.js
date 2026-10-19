@@ -212,7 +212,7 @@ export default function Header() {
                 <div className="hx-links">
                   <a href="https://www.linkedin.com/in/jimmyferon/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                   <a href="https://instagram.com/jimmy.ocks" target="_blank" rel="noopener noreferrer">Instagram</a>
-                  <a href="https://github.com/jimmyferon" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a href="https://github.com/jimmyalps" target="_blank" rel="noopener noreferrer">GitHub</a>
                   <a href="https://www.malt.fr/profile/jimmyferon1" target="_blank" rel="noopener noreferrer">Malt</a>
                   <a href="https://x.com/jimmyalps" target="_blank" rel="noopener noreferrer">X</a>
                 </div>
