@@ -176,8 +176,11 @@ Three.js est chargé depuis cdnjs en **r128**, épinglé, via un marqueur
 
 ## État actuel
 
-Versions : **Next 16.3.5**, **React / React-DOM 19.3.0**, `@vercel/analytics`
-1.6.1, Node 24. `npm audit` : 0 vulnérabilité.
+Versions : **Next 16.4.2**, **React / React-DOM 19.3.0**, `@vercel/analytics`
+1.6.1, Node 24. `npm audit` : 0 vulnérabilité au 19/10/2026, après la montée
+Next 16.3.5 → 16.4.2, qui a aussi passé sharp en 0.35.5, et le passage de
+source-map-js en 1.2.2. Ce chiffre vieillit vite : relancer `npm audit` avant
+de s'y fier.
 
 Turbopack est le bundler par défaut depuis la v16 et remplace webpack. Le CSS
 passe donc par **Lightning CSS** et non plus Autoprefixer — voir le piège des
