@@ -1,7 +1,7 @@
 ---
 version: alpha
-name: jimmyferon-design-system
-description: "Le système de jimmyferon.com, portfolio de Jimmy Feron, brand designer et UI/UX. Trois couleurs de marque, papier #F5F5F5, encre #111111 et bleu #1E29FF, et une courbe maison. Bricolage Grotesque pour les titres, Roboto pour le texte courant, Space Mono en capitales espacées pour tout ce qui se lit comme une donnée : nav, boutons, libellés, altitudes. Un rayon de marque de 5 px, un grain posé sur tout le site, des sections claires et sombres qui se chevauchent sous une crête de montagne, et trois scènes WebGL (Everest, Mont Blanc, lac d'Allos) qui racontent le métier en altitude. Chaque valeur est celle du code : rien n'est arrondi à une échelle."
+name: arcain-design-system
+description: "Le système d'arcain.design, portfolio de Jimmy, brand designer et UI/UX. Trois couleurs de marque, papier #F5F5F5, encre #111111 et bleu #1E29FF, et une courbe maison. Bricolage Grotesque pour les titres, Roboto pour le texte courant, Space Mono en capitales espacées pour tout ce qui se lit comme une donnée : nav, boutons, libellés, altitudes. Un rayon de marque de 5 px, un grain posé sur tout le site, des sections claires et sombres qui se chevauchent sous une crête de montagne, et trois scènes WebGL (Everest, Mont Blanc, lac d'Allos) qui racontent le métier en altitude. Chaque valeur est celle du code : rien n'est arrondi à une échelle."
 
 colors:
   paper: "#F5F5F5"
@@ -534,7 +534,7 @@ components:
 
 ## Overview
 
-jimmyferon.com est le portfolio de Jimmy Feron, brand designer et UI/UX. Le site parle de marques qui « tiennent en altitude », et toute son interface suit cette image : le hero desktop est une scène WebGL de l'Everest dont chaque sommet porte un projet, la section Benefits gravit le Mont Blanc au fil du défilement, Let's talk s'ouvre sur le lac d'Allos au-dessus de 1400 px. Les altimètres, les drapeaux de sommet, la trace bleue et la crête qui découpe les sections viennent de là.
+arcain.design est le portfolio de Jimmy, brand designer et UI/UX. Le site parle de marques qui « tiennent en altitude », et toute son interface suit cette image : le hero desktop est une scène WebGL de l'Everest dont chaque sommet porte un projet, la section Benefits gravit le Mont Blanc au fil du défilement, Let's talk s'ouvre sur le lac d'Allos au-dessus de 1400 px. Les altimètres, les drapeaux de sommet, la trace bleue et la crête qui découpe les sections viennent de là.
 
 Sous cette mise en scène, le système est sobre. Trois couleurs de marque : `{colors.paper}` (#F5F5F5) pour les fonds clairs, `{colors.ink}` (#111111) pour le texte et les blocs sombres, `{colors.blue}` (#1E29FF) comme unique accent. Le site alterne des sections claires et un vrai mode sombre par section (bloc Client work et Benefits, footer, modale, menu mobile, header au-dessus d'un fond sombre) : chaque rôle a sa valeur claire et sa valeur sombre.
 
