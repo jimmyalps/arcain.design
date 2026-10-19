@@ -84,7 +84,7 @@ Le site tourne alors sur [localhost:3000](http://localhost:3000).
 
 - **Site** — [arcain.design](https://arcain.design)
 - **LinkedIn** — [linkedin.com/in/jimmyferon](https://linkedin.com/in/jimmyferon)
-- **Instagram** — [@jimmy.ocks](https://instagram.com/jimmy.ocks)
+- **Instagram** — [@jimmyalps](https://www.instagram.com/jimmyalps/)
 - **Un projet en tête ?** — [réserver un appel](https://cal.com/arcain/intro-call)
 
 ---
