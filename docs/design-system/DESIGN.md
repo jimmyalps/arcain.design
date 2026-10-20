@@ -691,7 +691,7 @@ Arrière-plan : 14 px (header), 8 px (étiquettes de sommet), 4 px (voile de la 
 Les pastilles (flocon des surtitres, points de statut) sont des cercles.
 
 ### Logo
-Cinq branches dans un cercle de découpe (viewBox 1140, `rx 570`), pensées sur des axes à 72° : le survol fait tourner le logo de 72° en .6 s. Encre sur fond clair, papier sur fond sombre, bleu pour le logo animé des cartes. Taille minimum 34 px (le header) ; seul le favicon descend en dessous. Zone de protection : 13/34 du diamètre.
+Cinq branches identiques, réparties à 72° autour du centre d'un cercle de découpe (viewBox 1140, `rx 570`) : le survol fait tourner le logo de 72° en .6 s, et il retombe exactement sur lui-même. Les tracés débordent du cercle et c'est la découpe qui dessine les arcs : le trait du logo animé ne les parcourt pas. Encre sur fond clair, papier sur fond sombre, bleu pour le logo animé des cartes. Le logo seul, en blanc, est servi par `public/arcain-logo.svg`. Taille minimum 34 px (le header) ; seul le favicon descend en dessous. Zone de protection : 13/34 du diamètre.
 
 Le favicon (`app/icon.svg`) pose le logo `{colors.paper}` sur un carré `{colors.blue}` : carré de 32, rayon `{rounded.brand}`, marge de 4, logo de 24. Il reste lisible sur les onglets clairs comme sombres.
 
