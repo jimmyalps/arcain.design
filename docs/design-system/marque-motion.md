@@ -68,6 +68,26 @@ annotation.
 
 ### Construction à 72°
 
+**Mise à jour du 20 octobre 2026 : un tracé symétrique.** Le logo a été
+redessiné, d'après la [page Matière du Figma](https://www.figma.com/design/kMLD5Ti9yCpnKU4jdVfWDJ/Portfolio?node-id=625-105)
+(frame `625:105`). Il est posé dans la même construction que l'ancien, pour
+que les animations n'aient rien à changer : cinq tracés de 13 points dans le
+même ordre, viewBox 1140, découpe `rx 570`, et des branches qui débordent du
+cercle jusqu'au rayon 660, la découpe redessinant les arcs.
+`public/arcain-logo.svg` porte le même tracé. Même outil, même fichier
+(`app/icon.svg`) :
+
+| Mesure | Ancien tracé | Nouveau tracé |
+|---|---|---|
+| Forme des branches | quatre identiques à 0,01 unité, celle du haut à 9,85 | cinq identiques, à 0,23 unité près (l'arrondi des coordonnées) |
+| Rotation d'une branche à la suivante | 71,1° · 75,4° · 70,0° · 71,8° · 71,8° | 72,0° à chaque fois |
+| Centre qui va le mieux à 72° | à 26 unités du centre du cercle | le centre du cercle, (570, 570) |
+| Logo tourné de 72° (le survol) | retombe sur lui-même à 59 unités près : 1,8 px à 34 px, 4,4 px à 84 px | à 0,3 unité près : 0,01 px à 34 px, 0,02 px à 84 px |
+| Pointes des branches, vues du centre | 200,7 à 260,1 unités, de −10,4° à +5,6° de leur axe | 224,0 unités, sur leur axe (phase 54°, branche du haut à la verticale) |
+
+L'écart décrit ci-dessous est donc corrigé par le dessin lui-même : le tableau
+et le paragraphe qui suivent décrivent l'ancien tracé.
+
 Les cinq tracés sont identiques dans `Header.js`, `Footer.js`, `Veil.js`,
 `LogoReveal.js` et `app/icon.svg` : viewBox 1140 × 1140, découpe ronde
 `rx 570`. Mesure du tracé par `outils/geometrie-logo.mjs` :
